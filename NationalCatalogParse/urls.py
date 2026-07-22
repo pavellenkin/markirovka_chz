@@ -55,7 +55,9 @@ path('accounts/', include('django.contrib.auth.urls')),
     path('upload-articles/', views.upload_articles_file, name='upload_articles'),
     path('download-articles/', views.download_articles_file, name='download_articles'),
     path('download-template/', views.download_articles_template, name='download_template'),
-    path('dispenser-tasks/', dispenser_tasks, name='dispenser_tasks'),
+    path('dispenser-tasks/', document_list, name='document_list'),
+    path('create/', create_document_task, name='create_document_task'),
+    path('status/<str:doc_id>/', get_document_status, name='get_document_status'),
 
 ]
 

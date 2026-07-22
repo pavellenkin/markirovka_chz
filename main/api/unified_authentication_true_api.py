@@ -43,6 +43,7 @@ def auth():
     if post_auth_api.status_code == 200:
         try:
             token_dict = json.loads(post_auth_api.content.decode())
+
             with open('temp.cfg', 'w') as file:
                 file.write(token_dict['token'])
                 print("SAVE TOKEN")

@@ -1,5 +1,1003 @@
-{% extends 'main_template.html' %}
 {% load static %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Честный знак - Документы</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-{% endblock %}
+    <style>
+        :root {
+            --cz-primary: #f6f32e;
+            --cz-primary-dark: #d4d11a;
+            --cz-primary-light: #fefdcc;
+            --cz-secondary: #555d67;
+            --cz-secondary-light: #7a8491;
+            --cz-dark: #2d3238;
+            --cz-success: #00B87A;
+            --cz-warning: #FFB800;
+            --cz-danger: #FF4D4F;
+            --cz-bg: #f8f9fa;
+            --cz-card-shadow: 0 4px 20px rgba(85, 93, 103, 0.1);
+            --cz-border-radius: 12px;
+            --cz-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--cz-bg);
+            color: var(--cz-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .cz-header {
+            background: white;
+            border-bottom: 3px solid var(--cz-primary);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(85, 93, 103, 0.08);
+        }
+
+        .cz-header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cz-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .cz-logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--cz-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cz-secondary);
+            font-weight: 800;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(246, 243, 46, 0.4);
+        }
+
+        .cz-logo-text {
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--cz-secondary);
+            letter-spacing: -0.5px;
+        }
+
+        .cz-logo-text span {
+            color: var(--cz-primary-dark);
+            background: var(--cz-primary);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+        }
+
+        .cz-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .cz-user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px 6px 10px;
+            background: var(--cz-bg);
+            border-radius: 50px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .cz-user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--cz-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* Main Content */
+        .cz-main {
+            padding: 32px 0 60px;
+        }
+
+        .cz-page-header {
+            margin-bottom: 32px;
+        }
+
+        .cz-page-title {
+            font-weight: 700;
+            font-size: 28px;
+            color: var(--cz-secondary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cz-page-title .badge-count {
+            background: var(--cz-primary);
+            color: var(--cz-secondary);
+            font-size: 14px;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 50px;
+        }
+
+        .cz-page-subtitle {
+            color: var(--cz-secondary-light);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Stats Cards */
+        .cz-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .cz-stat-card {
+            background: white;
+            padding: 20px 24px;
+            border-radius: var(--cz-border-radius);
+            box-shadow: var(--cz-card-shadow);
+            border-left: 4px solid var(--cz-primary);
+            transition: var(--cz-transition);
+        }
+
+        .cz-stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(85, 93, 103, 0.15);
+        }
+
+        .cz-stat-card:nth-child(2) {
+            border-left-color: var(--cz-secondary);
+        }
+        .cz-stat-card:nth-child(3) {
+            border-left-color: #4CAF50;
+        }
+        .cz-stat-card:nth-child(4) {
+            border-left-color: var(--cz-danger);
+        }
+
+        .cz-stat-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--cz-secondary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cz-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--cz-secondary);
+            margin-top: 4px;
+        }
+
+        .cz-stat-value .trend {
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .trend-up { color: var(--cz-success); }
+        .trend-down { color: var(--cz-danger); }
+
+        /* Filter Section */
+        .cz-filter-section {
+            background: white;
+            border-radius: var(--cz-border-radius);
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: var(--cz-card-shadow);
+            border: 1px solid rgba(85, 93, 103, 0.08);
+        }
+
+        .cz-filter-label {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--cz-secondary);
+            margin-bottom: 6px;
+        }
+
+        .cz-filter-section .form-select,
+        .cz-filter-section .form-control {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 14px;
+            transition: var(--cz-transition);
+            background-color: white;
+        }
+
+        .cz-filter-section .form-select:focus,
+        .cz-filter-section .form-control:focus {
+            border-color: var(--cz-primary);
+            box-shadow: 0 0 0 4px rgba(246, 243, 46, 0.2);
+        }
+
+        .cz-btn-primary {
+            background: var(--cz-primary);
+            color: var(--cz-secondary);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: var(--cz-transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cz-btn-primary:hover {
+            background: var(--cz-primary-dark);
+            color: var(--cz-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(246, 243, 46, 0.4);
+        }
+
+        .cz-btn-secondary {
+            background: white;
+            color: var(--cz-secondary);
+            border: 2px solid #e5e7eb;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--cz-transition);
+        }
+
+        .cz-btn-secondary:hover {
+            background: var(--cz-bg);
+            border-color: var(--cz-secondary);
+            color: var(--cz-secondary);
+        }
+
+        .cz-btn-create {
+            background: var(--cz-primary);
+            color: var(--cz-secondary);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: var(--cz-transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 16px rgba(246, 243, 46, 0.3);
+        }
+
+        .cz-btn-create:hover {
+            background: var(--cz-primary-dark);
+            color: var(--cz-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(246, 243, 46, 0.5);
+        }
+
+        .cz-btn-create i {
+            font-size: 18px;
+        }
+
+        /* Table */
+        .cz-table-container {
+            background: white;
+            border-radius: var(--cz-border-radius);
+            padding: 0;
+            box-shadow: var(--cz-card-shadow);
+            border: 1px solid rgba(85, 93, 103, 0.08);
+            overflow: hidden;
+        }
+
+        .cz-table {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .cz-table thead {
+            background: linear-gradient(to right, var(--cz-primary), var(--cz-primary-light));
+            border-bottom: 2px solid var(--cz-primary);
+        }
+
+        .cz-table thead th {
+            padding: 16px 20px;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--cz-secondary);
+            border: none;
+        }
+
+        .cz-table tbody td {
+            padding: 16px 20px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .cz-table tbody tr {
+            transition: var(--cz-transition);
+        }
+
+        .cz-table tbody tr:hover {
+            background: #555d671f;
+        }
+
+        .cz-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .cz-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .cz-status-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-emitted {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        .status-emitted .dot { background: #4CAF50; }
+
+        .status-applied {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        .status-applied .dot { background: #2196F3; }
+
+        .status-circulation {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+        .status-circulation .dot { background: #FF9800; }
+
+        .status-written_off {
+            background: #F5F5F5;
+            color: #616161;
+        }
+        .status-written_off .dot { background: #9E9E9E; }
+
+        .status-retired {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        .status-retired .dot { background: #F44336; }
+
+        /* Table Actions */
+        .cz-action-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            color: var(--cz-secondary);
+            transition: var(--cz-transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .cz-action-btn:hover {
+            background: var(--cz-primary);
+            color: var(--cz-secondary);
+            border-color: var(--cz-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(246, 243, 46, 0.3);
+        }
+
+        .cz-action-btn.view:hover {
+            background: var(--cz-primary);
+            border-color: var(--cz-primary);
+        }
+
+        .cz-action-btn.update:hover {
+            background: #ffb300;
+            border-color: #ffb300;
+        }
+
+        .cz-action-btn.delete:hover {
+            background: var(--cz-danger);
+            border-color: var(--cz-danger);
+            color: white;
+        }
+
+        /* Code styling */
+        .cz-code {
+            font-family: 'SF Mono', 'Menlo', monospace;
+            font-size: 13px;
+            background: var(--cz-primary-light);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: var(--cz-secondary);
+            font-weight: 500;
+        }
+
+        /* Pagination */
+        .cz-pagination .page-link {
+            border: 1px solid #e5e7eb;
+            color: var(--cz-secondary);
+            padding: 8px 16px;
+            font-size: 14px;
+            transition: var(--cz-transition);
+        }
+
+        .cz-pagination .page-link:hover {
+            background: var(--cz-primary-light);
+            border-color: var(--cz-primary);
+            color: var(--cz-secondary);
+        }
+
+        .cz-pagination .page-item.active .page-link {
+            background: var(--cz-primary);
+            border-color: var(--cz-primary);
+            color: var(--cz-secondary);
+            font-weight: 700;
+        }
+
+        /* Modal */
+        .cz-modal .modal-content {
+            border: none;
+            border-radius: var(--cz-border-radius);
+            box-shadow: 0 20px 60px rgba(85, 93, 103, 0.2);
+        }
+
+        .cz-modal .modal-header {
+            border-bottom: 3px solid var(--cz-primary);
+            padding: 24px 28px;
+            background: var(--cz-primary-light);
+        }
+
+        .cz-modal .modal-header .modal-title {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--cz-secondary);
+        }
+
+        .cz-modal .modal-body {
+            padding: 28px;
+        }
+
+        .cz-modal .modal-footer {
+            border-top: 1px solid #f3f4f6;
+            padding: 20px 28px;
+            background: var(--cz-bg);
+            border-radius: 0 0 var(--cz-border-radius) var(--cz-border-radius);
+        }
+
+        .cz-modal .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--cz-secondary);
+        }
+
+        .cz-modal .form-control,
+        .cz-modal .form-select {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 14px;
+            transition: var(--cz-transition);
+        }
+
+        .cz-modal .form-control:focus,
+        .cz-modal .form-select:focus {
+            border-color: var(--cz-primary);
+            box-shadow: 0 0 0 4px rgba(246, 243, 46, 0.2);
+        }
+
+        /* Empty State */
+        .cz-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .cz-empty-state-icon {
+            font-size: 64px;
+            color: #d1d5db;
+            margin-bottom: 20px;
+        }
+
+        .cz-empty-state h4 {
+            color: var(--cz-secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .cz-empty-state p {
+            color: var(--cz-secondary-light);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Toast Messages */
+        .cz-alert {
+            border: none;
+            border-radius: var(--cz-border-radius);
+            padding: 16px 20px;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(85, 93, 103, 0.1);
+            border-left: 4px solid;
+        }
+
+        .cz-alert-success {
+            background: #E8F5E9;
+            color: #1B5E20;
+            border-left-color: #4CAF50;
+        }
+
+        .cz-alert-error {
+            background: #FFEBEE;
+            color: #B71C1C;
+            border-left-color: #F44336;
+        }
+
+        .cz-alert-info {
+            background: #E3F2FD;
+            color: #0D47A1;
+            border-left-color: #2196F3;
+        }
+
+        .cz-alert-warning {
+            background: #FFF3E0;
+            color: #E65100;
+            border-left-color: #FF9800;
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cz-fade-in {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cz-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cz-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cz-primary-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cz-page-title {
+                font-size: 22px;
+            }
+
+            .cz-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cz-header-actions .cz-user-info span {
+                display: none;
+            }
+
+            .cz-table thead th,
+            .cz-table tbody td {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cz-stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cz-btn-create {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            .cz-btn-create span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="cz-header">
+        <div class="container">
+            <a href="https://xn--80ajghhoc2aj1c8b.xn--p1ai/" class="cz-logo">
+                <img src="/static/img/cz-logo-new.svg" height="50">
+            </a>
+            <div class="cz-header-actions">
+
+                <button class="btn btn-link text-secondary" onclick=" window.location = '/';" style="text-decoration: none;">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="cz-main">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="cz-page-header d-flex flex-wrap justify-content-between align-items-start gap-3">
+                <div>
+                    <h1 class="cz-page-title">
+                        <i class="fas fa-file-invoice" style="color: var(--cz-secondary);"></i>
+                        Выгрузка кодов маркировки
+
+                    </h1>
+                    <p class="cz-page-subtitle">
+                        Получение списка КИ участника оборота товаров по заданному фильтру
+                    </p>
+                </div>
+                <button class="cz-btn-create" data-bs-toggle="modal" data-bs-target="#createDocumentModal">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Создать задание</span>
+                </button>
+            </div>
+
+
+
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="cz-alert cz-alert-{{ message.tags }} mb-4" role="alert">
+                        {% if message.tags == 'success' %}
+                            <i class="fas fa-check-circle me-2"></i>
+                        {% elif message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                        {% elif message.tags == 'warning' %}
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                        {% else %}
+                            <i class="fas fa-info-circle me-2"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+
+
+            <!-- Table -->
+            <div class="cz-table-container cz-fade-in">
+                <div class="table-responsive">
+                    <table class="cz-table table">
+                        <thead>
+                            <tr>
+                                <th>ID документа</th>
+                                <th>Название</th>
+                                <th>Дата создания</th>
+                                <th>Статус</th>
+                                <th>ИНН организации</th>
+                                <th style="text-align: right;">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doc in documents %}
+                            <tr>
+                                <td>
+                                    <span class="cz-code">{{ doc.doc_id|truncatechars:12 }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ doc.name }}</strong>
+                                </td>
+                                <td>
+                                    <i class="far fa-clock me-1" style="color: var(--cz-secondary-light);"></i>
+                                    {{ doc.create_date|date:"d.m.Y H:i" }}
+                                </td>
+                                <td>
+                                    <span class="cz-status-badge status-{{ doc.current_status|lower }}">
+                                        <span class="dot"></span>
+                                        {{ doc.get_current_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="font-weight: 500;">{{ doc.org_inn }}</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <button class="cz-action-btn view me-1"
+                                            onclick="viewDocument('{{ doc.doc_id }}')"
+                                            title="Просмотреть">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="cz-action-btn update"
+                                            onclick="updateStatus('{{ doc.doc_id }}')"
+                                            title="Обновить статус">
+                                        <i class="fas fa-sync"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6">
+                                    <div class="cz-empty-state">
+                                        <div class="cz-empty-state-icon">
+                                            <i class="fas fa-inbox"></i>
+                                        </div>
+                                        <h4>Нет созданных документов</h4>
+                                        <p>Создайте новое задание на выгрузку, чтобы начать работу</p>
+                                        <button class="cz-btn-create mt-3" data-bs-toggle="modal" data-bs-target="#createDocumentModal">
+                                            <i class="fas fa-plus-circle"></i>
+                                            <span>Создать задание</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                {% if documents.has_other_pages %}
+                <div class="px-4 py-3 border-top border-light">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination cz-pagination justify-content-between mb-0">
+                            <div class="d-flex gap-1">
+                                {% if documents.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ documents.previous_page_number }}">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for num in documents.paginator.page_range %}
+                                    {% if documents.number == num %}
+                                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                                    {% elif num > documents.number|add:'-3' and num < documents.number|add:'3' %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if documents.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ documents.next_page_number }}">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </div>
+                            <span class="text-secondary" style="font-size: 14px;">
+                                Показано {{ documents.start_index }}–{{ documents.end_index }} из {{ documents.paginator.count }}
+                            </span>
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal fade cz-modal" id="createDocumentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus-circle me-2" style="color: var(--cz-secondary);"></i>
+                        Создание задания на выгрузку
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="post" action="{% url 'create_document_task' %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-tag me-1"></i>Статус кодов <span class="text-danger">*</span>
+                                </label>
+                                <select name="current_status" class="form-select" required>
+                                    <option value="">Выберите статус</option>
+                                    <option value="EMITTED">Эмитирован</option>
+                                    <option value="APPLIED">Нанесён</option>
+                                    <option value="CIRCULATION">В обороте</option>
+                                    <option value="WRITTEN_OFF">Списан</option>
+                                    <option value="RETIRED">Выбыл</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-building me-1"></i>ИНН организации <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="org_inn" class="form-control"
+                                       {% if inn %} value="{{ inn }}" {% endif %}"
+                                       placeholder="Введите ИНН" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-tag me-1"></i>Тип упаковки <span class="text-danger">*</span>
+                                </label>
+                                <select name="current_status" class="form-select" required>
+                                    <option value="">Выберите тип</option>
+                                    <option value="UNIT">Единица товара</option>
+                                    <option value="GROUP">Групповая упаковка</option>
+                                    <option value="BOX">Транспортная упаковка</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-tag me-1"></i>Товарная группа <span class="text-danger">*</span>
+                                </label>
+                                <select name="current_status" class="form-select" required>
+                                    <option value="">Выберите группу</option>
+                                    <option value="UNIT">Единица товара</option>
+                                    <option value="GROUP">Групповая упаковка</option>
+                                    <option value="BOX">Транспортная упаковка</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar-plus me-1"></i>Эмиссия (от)
+                                </label>
+                                <input type="datetime-local" name="emission_date_from" class="form-control">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar-minus me-1"></i>Эмиссия (до)
+                                </label>
+                                <input type="datetime-local" name="emission_date_to" class="form-control">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-pen me-1"></i>Нанесение (от)
+                                </label>
+                                <input type="datetime-local" name="application_date_from" class="form-control">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-pen me-1"></i>Нанесение (до)
+                                </label>
+                                <input type="datetime-local" name="application_date_to" class="form-control">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">
+                                    <i class="fas fa-file-signature me-1"></i>Название документа <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="name" class="form-control"
+                                       placeholder="Введите название документа" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">
+                                    <i class="fas fa-fingerprint me-1"></i>ID документа <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="doc_id" class="form-control"
+                                       placeholder="Введите ID документа" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="cz-btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Отмена
+                        </button>
+                        <button type="submit" class="cz-btn-primary">
+                            <i class="fas fa-check me-2"></i>Создать задание
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function viewDocument(docId) {
+            // Здесь можно открыть модальное окно с деталями документа
+            alert(`Просмотр документа: ${docId}`);
+        }
+
+        function updateStatus(docId) {
+            if (confirm(`Обновить статус документа ${docId}?`)) {
+                fetch(`/documents/status/${docId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        alert('Ошибка при обновлении статуса');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Произошла ошибка при обновлении статуса');
+                });
+            }
+        }
+
+        // Auto-dismiss alerts
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.cz-alert');
+                alerts.forEach(function(alert) {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

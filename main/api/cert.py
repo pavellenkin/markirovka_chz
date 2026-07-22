@@ -73,11 +73,11 @@ def load_cert(zapis):
 
 
 
-    # print(cert.SerialNumber)
+
 
     try:
         signer = pycades.Signer()
-        signer.Certificate = certs.Item(3)
+        signer.Certificate = certs.Item(5)
         signer.CheckCertificate = True
         signedData = pycades.SignedData()
         signedData.Content = zapis
@@ -119,7 +119,7 @@ def true_cert(zapis):
     print("COUNT: ", certs.Count)
     print(pycades.ModuleVersion())
     signer = pycades.Signer()
-    signer.Certificate = certs.Item(3)
+    signer.Certificate = certs.Item(5)
     # signer.CheckCertificate = True
     signer.Options = pycades.CAPICOM_CERTIFICATE_INCLUDE_END_ENTITY_ONLY
     signed_data = pycades.SignedData()

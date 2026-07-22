@@ -1,0 +1,15 @@
+{% extends 'main_template.html' %}
+{% load static %}
+{% block content %}
+<script>
+    window.onload = function(){
+
+    document.title = "Заказ кодов вэд";
+     }
+</script>
+<div class="card-body text-white">
+
+    Total: {{ codes }}
+
+    </div>
+{% endblock %}

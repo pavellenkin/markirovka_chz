@@ -1,0 +1,13 @@
+{% extends 'main_template.html' %}
+{% load static %}
+{% block content %}
+<script>
+    window.onload = function(){ document.body.style = "background-color: #9b6a5a" }
+</script>
+<div class=" position-absolute top-50 start-50 translate-middle text-center" style="" id="main_check">
+          <img src="/static/img/error500.png" alt="" class="logo__img_sm logo__img_sm1" style="width: 250px; height: 250px;">
+            <div class="m-3" id="button_close">
+                <button type="button" class="btn btn-warning" onclick=" window.location = '/';">Закрыть</button>
+            </div>
+</div>
+{% endblock %}

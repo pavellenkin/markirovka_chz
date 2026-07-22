@@ -1,0 +1,130 @@
+{% extends 'main_template.html' %}
+{% load static %}
+{% block content %}
+<script>
+    window.onload = function(){
+
+    document.title = "ADMIN: экспорт";
+     }
+</script>
+
+<style>
+    .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+</style>
+
+<div class="card center_page_content d-none d-lg-block" id="" style="width: 65vw; height: 90vh;">
+  <h5 class="card-header">Экспорт</h5>
+  <div class="card-body">
+
+      <div class="section">
+
+    <button onclick="downloadFileWithDate()" class="btn btn-primary">
+    Скачать TSD_smart.xlsx
+</button>
+
+      </div>
+
+<script>
+function downloadFileWithDate() {
+    fetch('/download/tsd/')  // ваш URL
+        .then(response => {
+            // Извлекаем имя файла из заголовка
+            const contentDisposition = response.headers.get('Content-Disposition');
+            let filename = 'TSD_smart.xlsx';
+
+            if (contentDisposition) {
+                // Регулярное выражение для извлечения имени файла
+                const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1].replace(/['"]/g, '');
+                }
+            }
+
+            console.log('Скачиваем файл с именем:', filename);
+
+            return response.blob().then(blob => {
+                // Создаем ссылку для скачивания
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;  // Принудительно устанавливаем имя файла
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            });
+        })
+        .catch(error => {
+            console.error('Ошибка при скачивании:', error);
+            alert('Ошибка при скачивании файла');
+        });
+}
+</script>
+
+
+<!--    <a href="#" class="btn btn-primary">Go somewhere</a>-->
+  </div>
+</div>
+<aside class="menu-sidebar d-none d-lg-block">
+            <div class="logo">
+                <a href="/settings/">
+                    <img src="/static/barcode.png" alt="Cool Admin" width="60" height="60">
+                </a>	&emsp;<b>ADMIN PANEL</b>
+            </div>
+            <div class="menu-sidebar__content js-scrollbar1 ps">
+                <nav class="navbar-sidebar">
+                    <ul class="list-unstyled navbar__list">
+<!--                        <li class="active has-sub">-->
+<!--                            <a class="" href="#">-->
+<!--                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>-->
+
+<!--                        </li>-->
+                        <li>
+                            <a href="/certs/">
+                                <i class="fas fa-chart-bar"></i>Сертификат</a>
+                        </li>
+                        <li>
+                            <a href="/models/">
+                                <i class="fas fa-table"></i>Модели</a>
+                        </li>
+                        <li>
+                            <a href="/service/">
+                                <i class="far fa-check-square"></i>Сервис</a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-calendar-alt"></i>Логи</a>
+                        </li>
+
+                        <li class="has-sub">
+                            <a class="" href="/export/">
+                                <i class="fas fa-copy"></i>Экспорт</a>
+
+                        </li>
+                        <li class="has-sub">
+                            <a class="" href="#">
+                                <i class="fas fa-desktop"></i>Настройки</a>
+
+                        </li>
+                        <hr class="hr hr-blurry" />
+                        <li class="has-sub">
+                            <form id="logout" method="POST" action="{% url 'admin:logout' %}">
+                                {% csrf_token %}
+                                <a class="" href="#" onclick="document.getElementById('logout').submit(); return false;">
+                                <i class="fa fa-sign-out"></i>Выход
+                                </a>
+                            </form>
+
+
+                        </li>
+                    </ul>
+                </nav>
+            <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+</aside>
+{% endblock %}

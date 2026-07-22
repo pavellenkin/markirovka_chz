@@ -1,0 +1,147 @@
+{% extends 'main_template.html' %}
+{% load static %}
+{% block content %}
+<script>
+    window.onload = function(){
+
+    document.title = "ADMIN: сертификаты";
+     }
+</script>
+<aside class="menu-sidebar d-none d-lg-block">
+            <div class="logo">
+                <a href="/settings/">
+                    <img src="/static/barcode.png" alt="Cool Admin" width="60" height="60">
+                </a>	&emsp;<b>ADMIN PANEL</b>
+            </div>
+            <div class="menu-sidebar__content js-scrollbar1 ps">
+                <nav class="navbar-sidebar">
+                    <ul class="list-unstyled navbar__list">
+<!--                        <li class="active has-sub">-->
+<!--                            <a class="" href="#">-->
+<!--                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>-->
+
+<!--                        </li>-->
+                        <li>
+                            <a href="/certs/">
+                                <i class="fas fa-chart-bar"></i>Сертификат</a>
+                        </li>
+                        <li>
+                            <a href="/models/">
+                                <i class="fas fa-table"></i>Модели</a>
+                        </li>
+                        <li>
+                            <a href="/service/">
+                                <i class="far fa-check-square"></i>Сервис</a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-calendar-alt"></i>Логи</a>
+                        </li>
+
+                        <li class="has-sub">
+                            <a class="" href="/export/">
+                                <i class="fas fa-copy"></i>Экспорт</a>
+
+                        </li>
+                        <li class="has-sub">
+                            <a class="" href="#">
+                                <i class="fas fa-desktop"></i>Настройки</a>
+
+                        </li>
+                        <hr class="hr hr-blurry" />
+                        <li class="has-sub">
+                            <form id="logout" method="POST" action="{% url 'admin:logout' %}">
+                                {% csrf_token %}
+                                <a class="" href="#" onclick="document.getElementById('logout').submit(); return false;">
+                                <i class="fa fa-sign-out"></i>Выход
+                                </a>
+                            </form>
+
+
+                        </li>
+                    </ul>
+                </nav>
+            <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+</aside>
+
+<div class="card center_page_content d-none d-lg-block" id="" style="width: 65vw; height: 90vh;">
+  <h5 class="card-header">Установленные сертификаты</h5>
+  <div class="card-body">
+      <div class="container p-3">
+          <div class="row">
+              <div class="col text-start">
+            <h5 class="card-title">Используемое хранилище {{ store }}</h5>
+            <p class="card-text">Количество найденных сертификатов: {{ count }}</p>
+                  </div>
+              <div class="col text-end">
+                  <div class="card">
+  <div class="card-body">
+    <form id="uploadForm" action="/certs/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Установка сертификата</label>
+        <div class="input-group">
+          <input type="file" class="form-control" id="inputGroupFile" name="myfile" required>
+          <button class="btn btn-outline-secondary" type="button" id="btnBrowse">Обзор</button>
+        </div>
+        <div class="form-text">Максимальный размер: 10MB</div>
+      </div>
+        <div class="input-group">
+          <input type="text" class="form-control" id="" name="pass" required>
+
+        </div>
+        <div class="form-text mb-3">Пароль сертификата</div>
+
+
+      <div class="d-flex justify-content-between">
+        <button type="reset" class="btn btn-secondary">Очистить</button>
+        <button type="submit" class="btn btn-primary px-4">
+          <span class="spinner-border spinner-border-sm d-none" id="loadingSpinner"></span>
+          Установить
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+              </div>
+          </div>
+
+    </div>
+      <div class="container p-3">
+          <div class="row">
+              <div class="col text-start">
+      <div class="accordion " id="accordionExample" >
+          {% for item in items %}
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{ item.item_number }}" aria-expanded="" aria-controls="collapseOne">
+                {{ item.item_number }} - {{ item.subject }}
+              </button>
+            </h2>
+            <div id="collapse_{{ item.item_number }}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <strong> {{ item.issuer }} <br>
+                    Серийный номер: <code>{{ item.serial }}</code><br>
+                    SHA1 отпечаток: <code>{{ item.thumbprint }}</code><br>
+                    Выдан: <code>{{ item.valid_from }}</code><br>
+                    Истекает: <code>{{ item.valid_to }}</code><br>
+                    Ссылка на ключ : <code>{{ item.private_key }}</code>
+                </strong>
+              </div>
+
+            </div>
+          </div>
+          {% endfor %}
+
+      </div>
+                  </div>
+          </div>
+
+    </div>
+
+<!--    <a href="#" class="btn btn-primary">Go somewhere</a>-->
+  </div>
+</div>
+{% endblock %}

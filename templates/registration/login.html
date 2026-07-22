@@ -1,0 +1,51 @@
+{% extends 'main_template.html' %}
+{% load static %}
+{% block content %}
+<script>
+    window.onload = function(){
+
+    document.title = "ADMIN. Маркировка";
+     }
+</script>
+<div class="position-relative" id="admin_button">
+    <div class="position-absolute top-0 end-0 m-5">
+        <button type="button" class="btn btn-success m-1 shadow" onclick=" window.location = '/';">Закрыть</button>
+
+    </div>
+</div>
+<div class=" position-absolute top-50 start-50 translate-middle text-center text-white" style="" id="main_check">
+
+
+        <img src="/static/img/datam.jpg" alt="" class="logo__img_sm logo__img_sm1 shadow" style="width: 115px; height: 115px;">
+        <h5 class="m-3">ADMIN. Маркировка</h5>
+       <div class="container" style="zoom: 65%; width: 28rem;">
+            <form name="auth" method="post" action="{% url 'login' %}" id="Auth">
+              {% csrf_token %}
+
+            <div data-mdb-input-init class="form-outline mb-5 mt-5 ">
+              <input type="text" name="username" id="typeEmailX-2" class="form-control" />
+              <label class="form-label text-white fw-bolder" for="typeEmailX-2">Имя пользователя</label>
+            </div>
+
+            <div data-mdb-input-init class="form-outline mb-5">
+              <input type="password" name="password" id="typePasswordX-2" class="form-control" />
+              <label class="form-label text-white fw-bolder" for="typePasswordX-2">Пароль</label>
+            </div>
+
+            <!-- Alert -->
+                  {% if form.errors %}
+                  <div class="alert alert-danger d-flex align-items-center mb-5" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                        <div class="fw-bolder">
+                                Неверное имя пользователя или пароль
+                        </div>
+                    </div>
+                  {% endif %}
+
+
+            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-secondary btn-lg btn-block mb-5 fw-bolder" onclick="ClearStorageFull();" type="submit">&ensp;&ensp;&ensp;&ensp;Войти&ensp;&ensp;&ensp;&ensp;</button>
+             </form>
+
+       </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+
+services:
+  web:
+    build: .
+    container_name: mark_cis
+    command: gunicorn NationalCatalogParse.wsgi:application --bind 0.0.0.0:9797 --workers 4 --timeout 120
+    volumes:
+      - ./NationalCatalogParse:/NationalCatalogParse
+      - static_volume:/staticfiles
+
+    ports:
+      - "9797:9797"
+
+
+volumes:
+  static_volume:

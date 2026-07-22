@@ -1,0 +1,43 @@
+{% extends 'main_template.html' %}
+{% load static %}
+{% block content %}
+<script>
+    window.onload = function(){
+
+    document.title = "Главная: меню";
+     }
+</script>
+<div class="position-relative" id="admin_button">
+    <div class="position-absolute top-0 end-0 m-5">
+        <button type="button" class="btn btn-success m-1 shadow" onclick=" window.location = '/settings/';">ADMIN</button>
+
+    </div>
+</div>
+<div class=" position-absolute top-50 start-50 translate-middle text-center text-white" style="" id="main_check">
+
+
+        <img src="/static/img/datam.jpg" alt="" class="logo__img_sm logo__img_sm1 shadow" style="width: 115px; height: 115px;">
+        <h5 class="m-3">Маркировка. Меню</h5>
+       <div class="container">
+            <div class="row">
+                <div class="col-xl-12 col-sm-12" id="main_button">
+                    <div class="d-grid gap-2">
+
+
+                    <button type="button" class="btn btn-primary m-1 shadow" onclick=" window.location = '/check_code/';" >Проверка кода маркировки</button>
+
+
+                    <button type="button" class="btn btn-success m-1 shadow" onclick=" window.location = '/change_date/';">Корректировка сведений</button>
+
+                    <button type="button" class="btn btn-warning m-1 shadow" onclick=" window.location = '/invent/';">Инвентаризация</button>
+
+                    <button type="button" id="nk_button" class="btn btn-warning m-1 shadow" onclick=" window.location = '/natcat/';">Национальный каталог</button>
+
+<!--                    <button type="button" id="ved_button" class="btn btn-danger m-1 shadow" onclick=" window.location = '/ordering_economic/';">Заказ кодов (ВЭД)</button>-->
+
+                        </div>
+                    </div>
+            </div>
+    </div>
+</div>
+{% endblock %}

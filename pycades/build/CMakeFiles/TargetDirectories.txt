@@ -1,0 +1,3 @@
+/home/lenkin-p/linux-amd64_deb/pycades/build/CMakeFiles/pycades.dir
+/home/lenkin-p/linux-amd64_deb/pycades/build/CMakeFiles/edit_cache.dir
+/home/lenkin-p/linux-amd64_deb/pycades/build/CMakeFiles/rebuild_cache.dir

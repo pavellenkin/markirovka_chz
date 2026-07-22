@@ -1,0 +1,104 @@
+{% extends 'main_template.html' %}
+{% load static %}
+{% block content %}
+<script>
+    window.onload = function(){
+
+    document.title = "Корректировка данных";
+     }
+</script>
+        <div class="card position-absolute top-50 start-50 translate-middle shadow" style="background-color: #F7F7F7" id="main_check">
+           <div class="card-header bg-success text-light text-center">
+                <div class="container">
+                    <div class="row justify-content-md-start">
+                        <div class="col-1 position-absolute top-5 start-0">
+                           <button type="button" class="btn btn-sm btn-dark" onclick=" window.location = '/';" title="меню">&#9776</button>
+                        </div>
+                        <div class="col">
+                            <div class="mt-1">Корректировка сведений</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center p-3"></h5>
+
+                <div class="input-group py-1 px-3">
+                        <input inputmode="none" id="searchInput" onfocus="ChangeDate();" autofocus="autofocus" name="change_code"  class="form-control" placeholder="" autocomplete="off">
+                </div>
+              <div class="logo logo_sm text-center py-3">
+<!--                    <b>CHECK CODE	&emsp;</b>-->
+                    <img src="{% static '/img/barcode_scanner_2.png' %}" alt="" class="logo__img_sm logo__img_sm1" style="width: 80px !important; height: 80px !important;">
+              </div>
+
+          </div>
+          <div class="card-footer text-center" style="zoom:80%">
+            Отсканируй код маркировки на товаре
+          </div>
+        </div>
+        <div class="card position-absolute top-50 start-50 translate-middle bg-white" style="display: none" id="apply_change">
+          <div class="card-body text-center p-5">
+
+                <p id="apply-bar-text" class="card-text text-center p-1"></p>
+                    <hr class="hr hr-blurry" />
+                  <button type="button" class="btn btn-sm btn-success" onclick="ButtonClose();">Закрыть</button>
+
+          </div>
+        </div>
+        <div class="card position-absolute top-50 start-50 translate-middle bg-white" style=" display: none" id="apply_change_error">
+              <div class="card-body text-center p-5">
+                    <p id="apply-bar-text-error" class="p-1"></p>
+              </div>
+        </div>
+         <div class="card position-absolute top-50 start-50 translate-middle bg-white" style=" display: none" id="producer_valid">
+          <div class="card-body text-center p-3" style="zoom:85%;">
+
+                <p id="bar-text" class="card-text text-center p-1"></p>
+                    <input hidden type="text" name="ki" readonly class="form-control" id="ki" aria-describedby="kiHelp">
+
+                  <div class="mb-3 ">
+                    <label for="pr_date" class="form-label text-success">Новая дата производства</label>
+                    <input type="text" class="form-control" name="pr_date" id="pr_date" aria-describedby="exp_dateHelp">
+
+                      <div class="invalid-feedback">
+                          Недопустимый формат значения поля "Дата производства".
+                        </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="exp_date" class="form-label text-success">Новый срок годности</label>
+                    <input type="text" class="form-control" name="exp_date" id="exp_date" aria-describedby="exp_dateHelp">
+
+                      <div class="invalid-feedback">
+                          Недопустимый формат значения поля "Cрок годности".
+                        </div>
+                  </div>
+                    <hr class="hr hr-blurry" />
+                    <div class="row justify-content-center">
+                            <div class="col text-center">
+                                <button type="button" class="btn btn-sm btn-danger" onclick="ButtonClose();">Закрыть</button>
+                            </div>
+                            <div class="col text-center">
+                                <button type="button" class="btn btn-sm btn-success" onclick="ApplyChangeDate()">Сохранить</button>
+                            </div>
+                    </div>
+
+
+
+
+          </div>
+        </div>
+        <div class="card position-absolute top-50 start-50 translate-middle bg-white" style=" display: none" id="producer_invalid">
+          <div class="card-body" style="zoom:85%;">
+
+
+
+
+                    <p id="message-bar-text" class="card-text text-center p-1" style="zoom: 95%"></p>
+                    <div class="text-center" id="button_close" style="display: none">
+                        <hr class="hr hr-blurry" />
+                        <button type="button" class="btn btn-sm btn-success" onclick="ButtonClose();">Закрыть</button>
+                    </div>
+
+          </div>
+        </div>
+{% endblock %}

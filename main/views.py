@@ -5,18 +5,9 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
 from main.api.guide_api import status_codes, types_of_packaging
-from main.search import (
-    get_nac_cat,
-    send_link,
-    search_inn,
-    search_inn_to_file,
-    search_inn_to_file_priority,
-    search_inn_to_file_priority_gtin,
-get_nac_cat_all,
-get_nac_cat_all_tm,
+from main.search import *
 
-# check_tnved, auth_nk
-)
+
 from main.api.cises_info import info_ki
 from main.api.information_change import information_change
 

@@ -18,17 +18,8 @@ from django.contrib import admin
 from django.urls import path
 from remark.views import remark
 from ordering_economic.views import ordering_economic
-from main.views import (
-    header_mainapp,
-    post_input_code,
-    st, nc_find,
-    check_code,
-    change_date,
-    error_server,
-    error_not_found,
-    main_menu,
-    read_code,
-)
+from main.views import *
+from dispenser_tasks.views import *
 from invent.views import invent
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.generic.base import RedirectView
@@ -64,6 +55,7 @@ path('accounts/', include('django.contrib.auth.urls')),
     path('upload-articles/', views.upload_articles_file, name='upload_articles'),
     path('download-articles/', views.download_articles_file, name='download_articles'),
     path('download-template/', views.download_articles_template, name='download_template'),
+    path('dispenser-tasks/', dispenser_tasks, name='dispenser_tasks'),
 
 ]
 

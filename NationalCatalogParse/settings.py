@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'remark',
     'invent',
     'settings',
-    'error_log'
+    'error_log',
+    'dispenser_tasks'
 ]
 
 MIDDLEWARE = [

@@ -4,11 +4,11 @@ from django.utils import timezone
 
 class Document(models.Model):
     STATUS_CHOICES = [
-        ('EMITTED', 'Эмитирован'),
-        ('APPLIED', 'Нанесён'),
-        ('CIRCULATION', 'В обороте'),
-        ('WRITTEN_OFF', 'Списан'),
-        ('RETIRED', 'Выбыл'),
+        ('PREPARATION', 'Подготовка'),
+        ('COMPLETED', 'Выполнено'),
+        ('CANCELED', 'Отменено'),
+        ('ARCHIVE', 'Архив'),
+        ('FAILED', 'Ошибка'),
     ]
 
     doc_id = models.CharField(max_length=100, unique=True, db_index=True)
@@ -16,12 +16,8 @@ class Document(models.Model):
     create_date = models.DateTimeField()
     current_status = models.CharField(max_length=50, choices=STATUS_CHOICES)
     org_inn = models.CharField(max_length=20, db_index=True)
-
-    # Дополнительные поля для фильтрации
-    emission_date_from = models.DateTimeField(null=True, blank=True)
-    emission_date_to = models.DateTimeField(null=True, blank=True)
-    application_date_from = models.DateTimeField(null=True, blank=True)
-    application_date_to = models.DateTimeField(null=True, blank=True)
+    pg = models.IntegerField(blank=True, null=True)
+    file_url = models.URLField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

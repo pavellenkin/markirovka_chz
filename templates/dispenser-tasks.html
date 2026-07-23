@@ -447,6 +447,13 @@
             color: white;
         }
 
+        .cz-action-btn.download:hover {
+            background: var(--cz-success);
+            border-color: var(--cz-success);
+            color: white;
+        }
+
+
         /* Code styling */
         .cz-code {
             font-family: 'SF Mono', 'Menlo', monospace;
@@ -738,7 +745,7 @@
                             {% for doc in documents %}
                             <tr>
                                 <td>
-                                    <span class="cz-code">{{ doc.doc_id|truncatechars:12 }}</span>
+                                    <span class="cz-code">{{ doc.doc_id }}</span>
                                 </td>
                                 <td>
                                     <strong>{{ doc.name }}</strong>
@@ -757,16 +764,24 @@
                                     <span style="font-weight: 500;">{{ doc.org_inn }}</span>
                                 </td>
                                 <td style="text-align: right;">
-                                    <button class="cz-action-btn view me-1"
-                                            onclick="viewDocument('{{ doc.doc_id }}')"
-                                            title="Просмотреть">
-                                        <i class="fas fa-eye"></i>
+                                    {% if doc.get_current_status_display == 'Выполнено' %}
+                                    <button class="cz-action-btn download"
+                                            onclick="DownloadDoc('{{ doc.doc_id }}')"
+                                            title="Скачать">
+                                        <i class="fa fa-download"></i>
                                     </button>
-                                    <button class="cz-action-btn update"
+                                    {% endif %}
+                                    <button class="cz-action-btn "
                                             onclick="updateStatus('{{ doc.doc_id }}')"
                                             title="Обновить статус">
                                         <i class="fas fa-sync"></i>
                                     </button>
+                                    <button class="cz-action-btn delete"
+                                            onclick="DeleteDoc('{{ doc.doc_id }}')"
+                                            title="Удалить">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+
                                 </td>
                             </tr>
                             {% empty %}
@@ -852,11 +867,11 @@
                                 <label class="form-label">
                                     <i class="fas fa-tag me-1"></i>Статус кодов <span class="text-danger">*</span>
                                 </label>
-                                <select name="current_status" class="form-select" required>
+                                <select name="status" class="form-select" required>
                                     <option value="">Выберите статус</option>
                                     <option value="EMITTED">Эмитирован</option>
                                     <option value="APPLIED">Нанесён</option>
-                                    <option value="CIRCULATION">В обороте</option>
+                                    <option value="INTRODUCED">В обороте</option>
                                     <option value="WRITTEN_OFF">Списан</option>
                                     <option value="RETIRED">Выбыл</option>
                                 </select>
@@ -866,7 +881,7 @@
                                 <label class="form-label">
                                     <i class="fas fa-building me-1"></i>ИНН организации <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" name="org_inn" class="form-control"
+                                <input type="text" name="participant_inn" class="form-control"
                                        {% if inn %} value="{{ inn }}" {% endif %}"
                                        placeholder="Введите ИНН" required>
                             </div>
@@ -875,7 +890,7 @@
                                 <label class="form-label">
                                     <i class="fas fa-tag me-1"></i>Тип упаковки <span class="text-danger">*</span>
                                 </label>
-                                <select name="current_status" class="form-select" required>
+                                <select name="package_type" class="form-select" required>
                                     <option value="">Выберите тип</option>
                                     <option value="UNIT">Единица товара</option>
                                     <option value="GROUP">Групповая упаковка</option>
@@ -885,13 +900,33 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">
+                                    <i class="fas fa-tag me-1"></i>Типы эмиссии КИ
+                                </label>
+                                <select name="emission_types" class="form-select">
+                                    <option value="">Выберите тип</option>
+                                    <option value="LOCAL">Производство РФ</option>
+                                    <option value="FOREIGN">Ввезён в РФ</option>
+                                    <option value="REMAINS">Маркировка остатков</option>
+                                    <option value="CROSSBORDER">Ввезён из стран ЕАЭС</option>
+                                    <option value="REMARK">Перемаркировка</option>
+                                    <option value="COMMISSION">Принят на комиссию от физического лица</option>
+                                    <option value="REAPPLY">Маркировка вне производства или импорта</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
                                     <i class="fas fa-tag me-1"></i>Товарная группа <span class="text-danger">*</span>
                                 </label>
-                                <select name="current_status" class="form-select" required>
+                                <select name="product_group_code" class="form-select" required>
                                     <option value="">Выберите группу</option>
-                                    <option value="UNIT">Единица товара</option>
-                                    <option value="GROUP">Групповая упаковка</option>
-                                    <option value="BOX">Транспортная упаковка</option>
+                                    {% if product_groups_list %}
+                                        {% for group in product_groups_list %}
+                                            <option value="{{ group.id }}">{{ group.description }}</option>
+                                        {% endfor %}
+                                    {% endif %}"
+
+
                                 </select>
                             </div>
 
@@ -899,45 +934,39 @@
                                 <label class="form-label">
                                     <i class="fas fa-calendar-plus me-1"></i>Эмиссия (от)
                                 </label>
-                                <input type="datetime-local" name="emission_date_from" class="form-control">
+                                <input type="datetime-local" name="emission_period_start" class="form-control">
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">
                                     <i class="fas fa-calendar-minus me-1"></i>Эмиссия (до)
                                 </label>
-                                <input type="datetime-local" name="emission_date_to" class="form-control">
+                                <input type="datetime-local" name="emission_period_end" class="form-control">
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">
                                     <i class="fas fa-pen me-1"></i>Нанесение (от)
                                 </label>
-                                <input type="datetime-local" name="application_date_from" class="form-control">
+                                <input type="datetime-local" name="applied_period_start" class="form-control">
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">
                                     <i class="fas fa-pen me-1"></i>Нанесение (до)
                                 </label>
-                                <input type="datetime-local" name="application_date_to" class="form-control">
+                                <input type="datetime-local" name="applied_period_end" class="form-control">
                             </div>
 
                             <div class="col-12">
                                 <label class="form-label">
                                     <i class="fas fa-file-signature me-1"></i>Название документа <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" name="name" class="form-control"
+                                <input type="text" name="name_doc" class="form-control" value="{{ name_doc }}"
                                        placeholder="Введите название документа" required>
                             </div>
 
-                            <div class="col-12">
-                                <label class="form-label">
-                                    <i class="fas fa-fingerprint me-1"></i>ID документа <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" name="doc_id" class="form-control"
-                                       placeholder="Введите ID документа" required>
-                            </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -958,8 +987,53 @@
 
     <script>
         function viewDocument(docId) {
-            // Здесь можно открыть модальное окно с деталями документа
-            alert(`Просмотр документа: ${docId}`);
+            fetch(`/documents/failed/${docId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        alert('Ошибка при обновлении статуса');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Произошла ошибка при обновлении статуса');
+                });
+        }
+
+        function DeleteDoc(docId) {
+            fetch(`/documents/delete/${docId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        alert('Ошибка при удалении');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Произошла ошибка при удалении');
+                });
+
+        }
+
+
+
+        function DownloadDoc(docId) {
+            alert('Скачиваем файл');
+
         }
 
         function updateStatus(docId) {

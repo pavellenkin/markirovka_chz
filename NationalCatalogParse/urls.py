@@ -57,7 +57,9 @@ path('accounts/', include('django.contrib.auth.urls')),
     path('download-template/', views.download_articles_template, name='download_template'),
     path('dispenser-tasks/', document_list, name='document_list'),
     path('create/', create_document_task, name='create_document_task'),
-    path('status/<str:doc_id>/', get_document_status, name='get_document_status'),
+    path('documents/status/<str:doc_id>/', get_document_status, name='get_document_status'),
+    path('documents/failed/<str:doc_id>/', get_document_failed, name='get_document_failed'),
+    path('documents/delete/<str:doc_id>/', delete_document, name='delete_document'),
 
 ]
 

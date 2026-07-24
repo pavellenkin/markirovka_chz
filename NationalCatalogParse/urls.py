@@ -60,6 +60,7 @@ path('accounts/', include('django.contrib.auth.urls')),
     path('documents/status/<str:doc_id>/', get_document_status, name='get_document_status'),
     path('documents/failed/<str:doc_id>/', get_document_failed, name='get_document_failed'),
     path('documents/delete/<str:doc_id>/', delete_document, name='delete_document'),
+    path('documents/download/<str:doc_id>/', download_document, name='download_document'),
 
 ]
 

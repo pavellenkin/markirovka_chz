@@ -5,7 +5,7 @@ from main.api.mods_info import mods_info
 from main.api.guide_api import product_groups
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 import requests
@@ -106,14 +106,14 @@ def create_document_task(request):
 
         if request.POST.get('applied_period_start') and request.POST.get('applied_period_end'):
             json_params['appliedPeriod'] = {
-                    "start": str(request.POST.get('applied_period_start')),
-                    "end": str(request.POST.get('applied_period_end')),
+                    "start": str(request.POST.get('applied_period_start'))+":00.000Z",
+                    "end": str(request.POST.get('applied_period_end'))+":00.000Z",
                 }
 
         if request.POST.get('emission_period_start') and request.POST.get('emission_period_end'):
             json_params['emissionPeriod'] = {
-                    "start": str(request.POST.get('emission_period_start')),
-                    "end": str(request.POST.get('emission_period_end')),
+                    "start": str(request.POST.get('emission_period_start'))+":00.000Z",
+                    "end": str(request.POST.get('emission_period_end'))+":00.000Z",
                 }
 
         data_to_api = {
@@ -130,8 +130,9 @@ def create_document_task(request):
 
 
         dispenser_stat, dispenser_data = dispenser_task_init(data_to_api)
-        json_data = json.loads(dispenser_data)
+
         if dispenser_stat:
+            json_data = json.loads(dispenser_data)
             print(dispenser_data)
             new_record = Document.objects.create(
                 doc_id=json_data['id'],
@@ -146,7 +147,7 @@ def create_document_task(request):
         else:
             messages.error(
                 request,
-                f'Ошибка при создании документа!')
+                dispenser_data)
         # form = DocumentCreateForm(request.POST)
         # if form.is_valid():
         # form = DocumentCreateForm(request.POST)
@@ -172,39 +173,6 @@ def create_document_task(request):
     return redirect('document_list')
 
 
-def call_crpt_api(data):
-    """
-    Функция для вызова API Честного знака
-    """
-    # Настройки API (замените на свои)
-    API_URL = settings.CRPT_API_URL
-    API_KEY = settings.CRPT_API_KEY
-
-    headers = {
-        'Authorization': f'Bearer {API_KEY}',
-        'Content-Type': 'application/json'
-    }
-
-    payload = {
-        'name': data.get('name'),
-        'status': data.get('current_status'),
-        'org_inn': data.get('org_inn'),
-        'date_from': data.get('emission_date_from'),
-        'date_to': data.get('emission_date_to'),
-        # Добавьте другие параметры согласно документации API
-    }
-
-    try:
-        response = requests.post(
-            f'{API_URL}/documents/create',
-            json=payload,
-            headers=headers,
-            timeout=30
-        )
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        return {'success': False, 'error': str(e)}
 
 
 def get_document_status(request, doc_id):
@@ -213,29 +181,21 @@ def get_document_status(request, doc_id):
     """
     try:
         task_status, task_data = dispenser_task_status(doc_id)
-        json_data = json.loads(task_data)
+
         if task_status:
+            json_data = json.loads(task_data)
             update = Document.objects.get(doc_id=doc_id)
             update.current_status = json_data['currentStatus']
             update.save()
-            print(json_data['currentStatus'])
-            if json_data['currentStatus'] == 'COMPLETED':
-                result_status_ids, result_data_ids = dispenser_result_ids(
-                    taskid=doc_id,
-                    pg=update.pg
-                )
-                print("IDS: ", result_data_ids)
-                if result_status_ids:
-                    result_status, result_data = dispenser_result(
-                        taskid=result_data_ids,
-                        pg=update.pg
-                    )
-                    print(result_data)
+            messages.success(request, f"Статус документа '{doc_id}' обновлен ")
+            return redirect('document_list')
+        else:
+            messages.error(request, task_data)
+            return redirect('document_list')
 
-        # ...
-        return JsonResponse({'status': 'success', 'data': {}})
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        messages.error(request,str(e))
+        return redirect('document_list')
 
 def get_document_failed(request, doc_id):
     """
@@ -249,9 +209,68 @@ def get_document_failed(request, doc_id):
             update.current_status = json_data['currentStatus']
             update.save()
         # ...
-        return JsonResponse({'status': 'success', 'data': {}})
+        messages.success(request, task_data)
+        return redirect('document_list')
+
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+def download_document(request, doc_id):
+    """
+    Скачивание документа из API Честного знака
+    """
+
+    try:
+        task_status, task_data = dispenser_task_status(doc_id)
+
+        if task_status:
+            json_data = json.loads(task_data)
+            download = Document.objects.get(doc_id=doc_id)
+
+            print(json_data['currentStatus'])
+            if json_data['currentStatus'] == 'COMPLETED':
+                result_status_ids, result_data_ids = dispenser_result_ids(
+                    taskid=doc_id,
+                    pg=download.pg
+                )
+                print("IDS: ", result_data_ids)
+                if result_status_ids:
+
+
+                    result_status, result_data, filename, headers = dispenser_result(
+                        taskid=result_data_ids,
+                        pg=download.pg,
+                        max_retries=3,
+                        timeout=60
+                    )
+
+                    if result_status:
+                        # Успешно скачан
+                        http_response = HttpResponse(
+                            result_data,
+                            content_type=headers.get('Content-Type', 'application/octet-stream')
+                        )
+                        http_response['Content-Disposition'] = f'attachment; filename="{filename}"'
+                        return http_response
+                    else:
+                        # Ошибка
+                        messages.error(request, f"Ошибка скачивания: {result_data}")
+                        return redirect('document_list')
+
+                return redirect('document_list')
+            return redirect('document_list')
+        else:
+            messages.error(request, task_data)
+        return redirect('document_list')
+
+    except requests.exceptions.Timeout:
+        messages.error(request, 'Превышено время ожидания ответа от API')
+    except requests.exceptions.RequestException as e:
+        messages.error(request, f'Ошибка при загрузке файла: {str(e)}')
+    except Exception as e:
+        messages.error(request, f'Произошла ошибка: {str(e)}')
+
 
 
 def delete_document(request, doc_id):
@@ -262,6 +281,8 @@ def delete_document(request, doc_id):
     try:
         delete_doc = Document.objects.get(doc_id=doc_id)
         delete_doc.delete()
-        return JsonResponse({'status': 'success', 'data': {}})
+        messages.success(request, f"Документ '{doc_id}' удален ")
+        return redirect('document_list')
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        messages.error(request, str(e))
+        return redirect('document_list')

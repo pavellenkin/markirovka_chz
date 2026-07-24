@@ -766,7 +766,7 @@
                                 <td style="text-align: right;">
                                     {% if doc.get_current_status_display == 'Выполнено' %}
                                     <button class="cz-action-btn download"
-                                            onclick="DownloadDoc('{{ doc.doc_id }}')"
+                                            onclick="downloadDocument('{{ doc.doc_id }}')"
                                             title="Скачать">
                                         <i class="fa fa-download"></i>
                                     </button>
@@ -1008,24 +1008,12 @@
         }
 
         function DeleteDoc(docId) {
-            fetch(`/documents/delete/${docId}/`, {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        location.reload();
-                    } else {
-                        alert('Ошибка при удалении');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Произошла ошибка при удалении');
-                });
+            // Просто перенаправляем на удаление
+                window.location.href = `/documents/delete/${docId}/`;
+                // Перезагружаем страницу через 3 секунды
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
 
         }
 
@@ -1037,26 +1025,24 @@
         }
 
         function updateStatus(docId) {
-            if (confirm(`Обновить статус документа ${docId}?`)) {
-                fetch(`/documents/status/${docId}/`, {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        location.reload();
-                    } else {
-                        alert('Ошибка при обновлении статуса');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Произошла ошибка при обновлении статуса');
-                });
-            }
+            // Просто перенаправляем на обновление
+                window.location.href = `/documents/status/${docId}/`;
+                // Перезагружаем страницу через 3 секунды
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+        }
+
+        function downloadDocument(docId) {
+
+                // Просто перенаправляем на скачивание
+                window.location.href = `/documents/download/${docId}/`;
+
+                // Перезагружаем страницу через 3 секунды
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+
         }
 
         // Auto-dismiss alerts

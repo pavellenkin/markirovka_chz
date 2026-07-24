@@ -104,6 +104,9 @@ def create_document_task(request):
         if request.POST.get('emission_types'):
             json_params['emissionTypes'] = [str(request.POST.get('emission_types'))]
 
+        if request.POST.get('include_gtin'):
+            json_params['includeGtin'] = [str(request.POST.get('include_gtin'))]
+
         if request.POST.get('applied_period_start') and request.POST.get('applied_period_end'):
             json_params['appliedPeriod'] = {
                     "start": str(request.POST.get('applied_period_start'))+":00.000Z",

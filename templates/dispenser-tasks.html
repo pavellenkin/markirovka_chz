@@ -423,6 +423,11 @@
             font-size: 14px;
         }
 
+        .exit:hover {
+            background: var(--cz-primary);
+            border-color: var(--cz-primary);
+        }
+
         .cz-action-btn:hover {
             background: var(--cz-primary);
             color: var(--cz-secondary);
@@ -677,7 +682,7 @@
             </a>
             <div class="cz-header-actions">
 
-                <button class="btn btn-link text-secondary" onclick=" window.location = '/';" style="text-decoration: none;">
+                <button class="btn btn-link exit text-secondary" onclick=" window.location = '/';" style="text-decoration: none;">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
             </div>
@@ -776,11 +781,17 @@
                                             title="Обновить статус">
                                         <i class="fas fa-sync"></i>
                                     </button>
+                                    <button class="cz-action-btn view"
+                                            onclick="viewDocument('{{ doc.doc_id }}')"
+                                            title="Просмотр">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
                                     <button class="cz-action-btn delete"
                                             onclick="DeleteDoc('{{ doc.doc_id }}')"
                                             title="Удалить">
                                         <i class="fas fa-trash"></i>
                                     </button>
+
 
                                 </td>
                             </tr>
@@ -888,7 +899,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">
-                                    <i class="fas fa-building me-1"></i>GTIN товара
+                                    <i class="fas fa-barcode me-1"></i>GTIN товара
                                 </label>
                                 <input type="text" name="include_gtin" class="form-control" placeholder="GTIN">
                             </div>
@@ -989,30 +1000,300 @@
         </div>
     </div>
 
+    <!-- Modal для просмотра документа -->
+<div class="modal fade cz-modal" id="viewDocumentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-invoice me-2" style="color: var(--cz-secondary);"></i>
+                    Информация о документе
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Основная информация -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                            <i class="fas fa-qrcode fa-2x" style="color: var(--cz-secondary);"></i>
+                            <div>
+                                <div class="text-muted small">ID документа</div>
+                                <div class="fw-bold cz-code" id="view-doc-id">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                            <i class="fas fa-calendar-alt fa-2x" style="color: var(--cz-secondary);"></i>
+                            <div>
+                                <div class="text-muted small">Дата создания</div>
+                                <div class="fw-bold" id="view-create-date">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                            <i class="fas fa-tag fa-2x" style="color: var(--cz-secondary);"></i>
+                            <div>
+                                <div class="text-muted small">Статус</div>
+                                <div class="fw-bold" id="view-status">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                            <i class="fas fa-building fa-2x" style="color: var(--cz-secondary);"></i>
+                            <div>
+                                <div class="text-muted small">ИНН организации</div>
+                                <div class="fw-bold" id="view-org-inn">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                            <i class="fas fa-file-signature fa-2x" style="color: var(--cz-secondary);"></i>
+                            <div>
+                                <div class="text-muted small">Название документа</div>
+                                <div class="fw-bold" id="view-doc-name">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Фильтры -->
+                <hr class="my-4">
+                <h6 class="fw-bold mb-3">
+                    <i class="fas fa-sliders-h me-2" style="color: var(--cz-secondary);"></i>
+                    Параметры фильтрации
+                </h6>
+                <div id="view-filters-container">
+                    <!-- Фильтры будут загружены сюда через JavaScript -->
+                    <div class="text-muted text-center py-4">
+                        <i class="fas fa-spinner fa-spin me-2"></i>
+                        Загрузка фильтров...
+                    </div>
+                </div>
+
+                <!-- Файл -->
+                <div id="view-file-container" class="mt-4" style="display: none;">
+                    <hr class="my-4">
+                    <h6 class="fw-bold mb-3">
+                        <i class="fas fa-file-download me-2" style="color: var(--cz-secondary);"></i>
+                        Скачать файл
+                    </h6>
+                    <a href="#" id="view-download-link" class="cz-btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-download"></i>
+                        Скачать документ
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cz-btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Закрыть
+                </button>
+                <button type="button" class="cz-btn-primary" onclick="updateStatusFromView()">
+                    <i class="fas fa-sync me-2"></i>Обновить статус
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        function viewDocument(docId) {
-            fetch(`/documents/failed/${docId}/`, {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        location.reload();
-                    } else {
-                        alert('Ошибка при обновлении статуса');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Произошла ошибка при обновлении статуса');
-                });
+        let currentViewDocId = null;
+
+    function viewDocument(docId) {
+        currentViewDocId = docId;
+
+        // Показываем модальное окно
+        const modal = new bootstrap.Modal(document.getElementById('viewDocumentModal'));
+        modal.show();
+
+        // Показываем индикатор загрузки
+        document.getElementById('view-filters-container').innerHTML = `
+            <div class="text-muted text-center py-4">
+                <i class="fas fa-spinner fa-spin me-2"></i>
+                Загрузка информации о документе...
+            </div>
+        `;
+
+        // Загружаем данные документа через API
+        fetch(`/documents/api/${docId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Заполняем основную информацию
+                document.getElementById('view-doc-id').textContent = data.doc_id || '-';
+                document.getElementById('view-create-date').textContent = data.create_date || '-';
+                document.getElementById('view-status').innerHTML = getStatusBadge(data.status);
+                document.getElementById('view-org-inn').textContent = data.org_inn || '-';
+                document.getElementById('view-doc-name').textContent = data.name || '-';
+
+                // Отображаем фильтры
+                renderFilters(data.filters);
+
+                // Отображаем ссылку на скачивание, если есть файл
+                if (data.file_url) {
+                    const downloadContainer = document.getElementById('view-file-container');
+                    downloadContainer.style.display = 'block';
+                    document.getElementById('view-download-link').href = data.file_url;
+                } else {
+                    document.getElementById('view-file-container').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('view-filters-container').innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Ошибка при загрузке информации о документе: ${error.message}
+                    </div>
+                `;
+            });
+    }
+
+    function getStatusBadge(status) {
+        const statusMap = {
+            'EMITTED': 'Эмитирован',
+            'APPLIED': 'Нанесён',
+            'INTRODUCED': 'В обороте',
+            'WRITTEN_OFF': 'Списан',
+            'RETIRED': 'Выбыл',
+            'PREPARATION': 'Подготовка',
+            'COMPLETED': 'Выполнено',
+            'CANCELED': 'Отменено',
+            'ARCHIVE': 'Архив',
+            'FAILED': 'Ошибка'
+        };
+
+        const statusClass = status ? status.toLowerCase() : '';
+        return `<span class="cz-status-badge status-${statusClass}">
+                    <span class="dot"></span>
+                    ${statusMap[status] || status || '-'}
+                </span>`;
+    }
+
+    function renderFilters(filters) {
+        const container = document.getElementById('view-filters-container');
+
+        if (!filters || Object.keys(filters).length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="fas fa-info-circle me-2" style="color: var(--cz-secondary-light);"></i>
+                    <span class="text-muted">Фильтры не заданы</span>
+                </div>
+            `;
+            return;
         }
+
+        // Маппинг названий полей
+        const fieldLabels = {
+            'status': 'Статус кодов',
+            'participant_inn': 'ИНН организации',
+            'include_gtin': 'GTIN товара',
+            'package_type': 'Тип упаковки',
+            'emission_types': 'Типы эмиссии',
+            'product_group_code': 'Товарная группа',
+            'emission_period_start': 'Эмиссия (от)',
+            'emission_period_end': 'Эмиссия (до)',
+            'applied_period_start': 'Нанесение (от)',
+            'applied_period_end': 'Нанесение (до)'
+        };
+
+        // Маппинг значений для статусов и типов
+        const valueMaps = {
+            'status': {
+                'EMITTED': 'Эмитирован',
+                'APPLIED': 'Нанесён',
+                'INTRODUCED': 'В обороте',
+                'WRITTEN_OFF': 'Списан',
+                'RETIRED': 'Выбыл'
+            },
+            'package_type': {
+                'UNIT': 'Единица товара',
+                'GROUP': 'Групповая упаковка',
+                'BOX': 'Транспортная упаковка'
+            },
+            'emission_types': {
+                'LOCAL': 'Производство РФ',
+                'FOREIGN': 'Ввезён в РФ',
+                'REMAINS': 'Маркировка остатков',
+                'CROSSBORDER': 'Ввезён из стран ЕАЭС',
+                'REMARK': 'Перемаркировка',
+                'COMMISSION': 'Принят на комиссию от физического лица',
+                'REAPPLY': 'Маркировка вне производства или импорта'
+            }
+        };
+
+        let html = '<div class="row g-3">';
+
+        for (const [key, value] of Object.entries(filters)) {
+            if (!value) continue;
+
+            const label = fieldLabels[key] || key;
+            let displayValue = value;
+
+            // Преобразуем значение для читаемого отображения
+            if (valueMaps[key] && valueMaps[key][value]) {
+                displayValue = valueMaps[key][value];
+            }
+
+            // Для дат форматируем
+            if (key.includes('_period_') && value) {
+                try {
+                    const date = new Date(value);
+                    if (!isNaN(date)) {
+                        displayValue = date.toLocaleString('ru-RU', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                    }
+                } catch (e) {
+                    // Оставляем как есть
+                }
+            }
+
+            html += `
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3 h-100">
+                        <div class="text-muted small">${label}</div>
+                        <div class="fw-bold">${displayValue}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function updateStatusFromView() {
+        if (currentViewDocId) {
+            // Закрываем модальное окно
+            const modal = bootstrap.Modal.getInstance(document.getElementById('viewDocumentModal'));
+            modal.hide();
+
+            // Вызываем обновление статуса
+            updateStatus(currentViewDocId);
+        }
+    }
 
         function DeleteDoc(docId) {
             // Просто перенаправляем на удаление

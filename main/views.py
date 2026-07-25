@@ -5,9 +5,18 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
 from main.api.guide_api import status_codes, types_of_packaging
-from main.search import *
+from main.search import (
+    get_nac_cat,
+    send_link,
+    search_inn,
+    search_inn_to_file,
+    search_inn_to_file_priority,
+    search_inn_to_file_priority_gtin,
+get_nac_cat_all,
+get_nac_cat_all_tm,
 
-
+# check_tnved, auth_nk
+)
 from main.api.cises_info import info_ki
 from main.api.information_change import information_change
 
@@ -348,6 +357,14 @@ def check_code(request):
                     except KeyError:
                         product_gtin = "Отсутствует"
                     try:
+                        product_group = en_dict[0]['cisInfo']['productGroup']
+                    except KeyError:
+                        product_group = ""
+                    try:
+                        product_group_id = en_dict[0]['cisInfo']['productGroupId']
+                    except KeyError:
+                        product_group_id = ""
+                    try:
                         producer_name_comp = en_dict[0]['cisInfo']['producerName']
                     except KeyError:
                         producer_name_comp = ""
@@ -489,6 +506,8 @@ def check_code(request):
                                 "product_tnved": "",
                                 "product_gtin": product_gtin,
                                 "producer_name_comp": producer_name_comp,
+                                "product_group": product_group,
+                                "product_group_id": product_group_id,
                                 "owner": owner,
                                 "validity_info": validity_info,
                                 "leading_symbol_info": leading_symbol_info,
@@ -540,6 +559,8 @@ def check_code(request):
                                 "product_tnved": "",
                                 "product_gtin": product_gtin,
                                 "producer_name_comp": producer_name_comp,
+                                "product_group": product_group,
+                                "product_group_id": product_group_id,
                                 "owner": owner,
                                 "validity_info": validity_info,
                                 "leading_symbol_info": leading_symbol_info,
@@ -570,7 +591,7 @@ def check_code(request):
                                 "collapse":
 
                                     f''
-                                   
+
                                     f'<div class="collapse" id="collapseExample">'
                                     f'<div class="card card-body overflow-auto" style="height: 8rem; overflow-y: auto;">'
                                     f'<pre><div id="collapse_content" class="text-primary fw-bold"></div></pre>'
@@ -591,6 +612,8 @@ def check_code(request):
                                 "product_tnved": "",
                                 "product_gtin": product_gtin,
                                 "producer_name_comp": producer_name_comp,
+                                "product_group": product_group,
+                                "product_group_id": product_group_id,
                                 "owner": owner,
                                 "validity_info": validity_info,
                                 "leading_symbol_info": leading_symbol_info,
@@ -685,4 +708,3 @@ def error_server(request):
 @cache_control(no_cache=True)
 def error_not_found(request):
     return render(request, "404.html", context={})
-

@@ -3,6 +3,55 @@ html, body {
     height: 100%;
 }
 
+.logo__img_sm.logo__img_sm1.shadow {
+    width: 115px !important;
+    height: 115px !important;
+    border-radius: 12px !important;
+    padding: 8px !important;
+    background: white !important;
+    box-shadow:
+        0 0 20px rgba(246, 243, 46, 0.3),
+        0 0 40px rgba(246, 243, 46, 0.2),
+        0 0 60px rgba(246, 243, 46, 0.1),
+        0 4px 20px rgba(85, 93, 103, 0.15) !important;
+    transition: all 0.3s ease !important;
+    animation: glowPulse 2s infinite !important;
+    object-fit: cover !important;
+}
+
+@keyframes glowPulse {
+    0% {
+        box-shadow:
+            0 0 20px rgba(246, 243, 46, 0.3),
+            0 0 40px rgba(246, 243, 46, 0.2),
+            0 0 60px rgba(246, 243, 46, 0.1),
+            0 4px 20px rgba(85, 93, 103, 0.15);
+    }
+    50% {
+        box-shadow:
+            0 0 30px rgba(246, 243, 46, 0.5),
+            0 0 60px rgba(246, 243, 46, 0.3),
+            0 0 80px rgba(246, 243, 46, 0.15),
+            0 8px 30px rgba(85, 93, 103, 0.2);
+    }
+    100% {
+        box-shadow:
+            0 0 20px rgba(246, 243, 46, 0.3),
+            0 0 40px rgba(246, 243, 46, 0.2),
+            0 0 60px rgba(246, 243, 46, 0.1),
+            0 4px 20px rgba(85, 93, 103, 0.15);
+    }
+}
+
+.logo__img_sm.logo__img_sm1.shadow:hover {
+    transform: scale(1.05) !important;
+    box-shadow:
+        0 0 40px rgba(246, 243, 46, 0.5),
+        0 0 80px rgba(246, 243, 46, 0.3),
+        0 0 120px rgba(246, 243, 46, 0.2),
+        0 8px 40px rgba(85, 93, 103, 0.25) !important;
+}
+
 .form-control:focus {
   border-color: #18f218;
   box-shadow: inset 0 1px 1px rgba(24,242,24, 0.07), 0 0 10px rgba(24,242,24, 2);

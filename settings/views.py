@@ -1,14 +1,13 @@
 from datetime import datetime
 import os
 from pathlib import Path
-
-
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
 from django.http import JsonResponse, FileResponse, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_http_methods
-
 from main.api.cert import about_cert
 from django.core.files.storage import FileSystemStorage
 from settings.console.run_process import process
@@ -18,6 +17,90 @@ from settings.console.run_process import process
 def settings(request):
 
     return render(request, "settings.html", context={})
+
+
+
+
+
+@cache_control(no_cache=True)
+@login_required
+def set_active_cert(request):
+    if request.method == 'POST':
+        cert_number = request.POST.get('active_cert')
+        if cert_number:
+            # Сохраняем номер активного сертификата в сессию
+            request.session['active_cert'] = cert_number
+
+            # Сохраняем в файл
+            with open('active_cert.txt', 'w') as f:
+                f.write(cert_number)
+
+            # Удаляем файл temp.cfg если он существует
+            temp_cfg_path = 'temp.cfg'
+            if os.path.exists(temp_cfg_path):
+                try:
+                    os.remove(temp_cfg_path)
+                    print(f"Файл {temp_cfg_path} удален")
+                except OSError as e:
+                    print(f"Ошибка при удалении {temp_cfg_path}: {e}")
+
+
+    return redirect('certs')  # или ваш URL для страницы сертификатов
+
+
+
+from invent.models import InventoryCodes
+
+
+@cache_control(no_cache=True)
+@login_required
+@csrf_exempt
+def clear_tsd_file(request):
+    """Очищает файл TSD_smart.xlsx"""
+    file_path = 'TSD_smart.xlsx'
+    try:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            InventoryCodes.objects.all().delete()
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Файл TSD_smart.xlsx успешно удален'
+            })
+        else:
+            return JsonResponse({
+                'status': 'not_found',
+                'message': 'Файл TSD_smart.xlsx не найден'
+            })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Ошибка при удалении файла: {str(e)}'
+        }, status=500)
+
+
+@cache_control(no_cache=True)
+@login_required
+def check_tsd_file(request):
+    """Проверяет существование файла TSD_smart.xlsx"""
+    file_path = 'TSD_smart.xlsx'
+    exists = os.path.exists(file_path)
+    size = None
+    if exists:
+        try:
+            size_bytes = os.path.getsize(file_path)
+            if size_bytes < 1024:
+                size = f'{size_bytes} B'
+            elif size_bytes < 1024 * 1024:
+                size = f'{size_bytes / 1024:.2f} KB'
+            else:
+                size = f'{size_bytes / (1024 * 1024):.2f} MB'
+        except:
+            size = 'Неизвестно'
+
+    return JsonResponse({
+        'exists': exists,
+        'size': size
+    })
 
 
 @cache_control(no_cache=True)
@@ -60,10 +143,28 @@ def certs(request):
         store = ": отсутствует"
         count = "0"
         items = ""
+
+    print(items)
+
+    active_cert = None
+    try:
+        with open('active_cert.txt', 'r') as f:
+            cert_number = f.read().strip()
+            if cert_number:  # Проверяем что файл не пустой
+                # Ищем сертификат с таким номером
+                for item in items:
+                    if str(item['item_number']) == cert_number:
+                        active_cert = item
+                        break
+    except (FileNotFoundError, ValueError):
+        # Файл не найден или пустой
+        active_cert = None
+
     return render(request, "certs.html", context={
         "store": store,
         "count": count,
-        "items": items
+        "items": items,
+        'active_cert': active_cert,
     })
 
 

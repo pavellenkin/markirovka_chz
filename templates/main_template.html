@@ -723,13 +723,13 @@ function SendCode() {
 
                                     document.getElementById('card_header').innerHTML = data.body.collapse_button;
                                     document.getElementById("card_header").style.display = "block";
-                                    document.getElementById("message-bar-text").innerHTML = "<b>" + data.body.product_name+"</b><br>GTIN: <b>"+data.body.product_gtin+"</b><br>"+data.body.type_producer+":  <b>"+data.body.producer_name_comp+"</b><br>Собственник: <b>"+data.body.owner+"</b><br>"+data.body.status_check+"Дата производства: <b>"+data.body.produced_date+"</b><br>Годен до: <b>"+data.body.expire_date+"</b><br>"+data.body.check_code_input+data.body.collapse;;
+                                    document.getElementById("message-bar-text").innerHTML = "<b>" + data.body.product_name+"</b><br>Товарная группа ("+ data.body.product_group_id +"): <b>"+ data.body.product_group+"</b><br>GTIN: <b>"+data.body.product_gtin+"</b><br>"+data.body.type_producer+":  <b>"+data.body.producer_name_comp+"</b><br>Собственник: <b>"+data.body.owner+"</b><br>"+data.body.status_check+"Дата производства: <b>"+data.body.produced_date+"</b><br>Годен до: <b>"+data.body.expire_date+"</b><br>"+data.body.check_code_input+data.body.collapse;;
                                     document.getElementById("message-valid-text").innerHTML = data.body.validity_info;
                                     const code = data.body.code_content;
 
-									document.getElementById('code_content').textContent = code;
-									const collapse_content = data.body.collapse_content;
-									document.getElementById('collapse_content').textContent = collapse_content;
+                                                                        document.getElementById('code_content').textContent = code;
+                                                                        const collapse_content = data.body.collapse_content;
+                                                                        document.getElementById('collapse_content').textContent = collapse_content;
                                     document.getElementById("message-leading-symbol-text").innerHTML = data.body.leading_symbol_info;
                                     if (data.body.button_close === 'visible'){
                                             VisibleAbout();
@@ -746,7 +746,7 @@ function SendCode() {
                                             VisibleAbout();
                                                 }
                                     const collapse_content = data.body.collapse_content;
-									document.getElementById('collapse_content').textContent = collapse_content;
+                                                                        document.getElementById('collapse_content').textContent = collapse_content;
 
                                 }
                                 if (data.status === 'success'){
@@ -759,13 +759,13 @@ function SendCode() {
 ////                                            audio.play();
 //                                        }
 
-                                    document.getElementById("message-bar-text").innerHTML = "<b>" + data.body.product_name+"</b><br>GTIN: <b>"+data.body.product_gtin+"</b><br>"+data.body.type_producer+":<br><b>"+data.body.producer_name_comp+"</b><br>Собственник:<br><b>"+data.body.owner+"</b><br>"+data.body.status_check+"Дата производства: <b>"+data.body.produced_date+"</b><br>Годен до: <b>"+data.body.expire_date+"</b><br>"+data.body.check_code_input;
+                                    document.getElementById("message-bar-text").innerHTML = "<b>" + data.body.product_name+"</b><br>Товарная группа ("+ data.body.product_group_id +"): <b>"+ data.body.product_group+"</b><br>GTIN: <b>"+data.body.product_gtin+"</b><br>"+data.body.type_producer+":<br><b>"+data.body.producer_name_comp+"</b><br>Собственник:<br><b>"+data.body.owner+"</b><br>"+data.body.status_check+"Дата производства: <b>"+data.body.produced_date+"</b><br>Годен до: <b>"+data.body.expire_date+"</b><br>"+data.body.check_code_input;
                                     document.getElementById("message-valid-text").innerHTML = data.body.validity_info;
                                     const code = data.body.code_content;
 
 
 
-									document.getElementById('code_content').textContent = code;
+                                                                        document.getElementById('code_content').textContent = code;
                                     document.getElementById("message-leading-symbol-text").innerHTML = data.body.leading_symbol_info;
                                         if (data.body.button_close === 'invisible'){
                                                InVisibleAbout();
@@ -1299,4 +1299,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 </body>
-</html>

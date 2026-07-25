@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.views.decorators.http import require_GET
+
 from main.api.dispenser_task import dispenser_task_init, dispenser_task_status, dispenser_result, dispenser_result_ids
 from main.api.participants import get_participants
 from main.api.mods_info import mods_info
@@ -92,9 +94,58 @@ def document_list(request):
     return render(request, 'dispenser-tasks.html', context)
 
 
+def prepare_filters_from_form(form_data):
+    """
+    Преобразует данные формы в JSON для сохранения
+    """
+    filters = {}
+
+    # Поля, которые нужно сохранить
+    filter_fields = [
+        'status',
+        'participant_inn',
+        'include_gtin',
+        'package_type',
+        'emission_types',
+        'product_group_code',
+        'emission_period_start',
+        'emission_period_end',
+        'applied_period_start',
+        'applied_period_end'
+    ]
+
+    for field in filter_fields:
+        value = form_data.get(field)
+        # Сохраняем только непустые значения
+        if value and value != '':
+            filters[field] = value
+
+    return filters
+
+
+@require_GET
+def document_api(request, doc_id):
+    try:
+        doc = Document.objects.get(doc_id=doc_id)
+        data = {
+            'doc_id': doc.doc_id,
+            'name': doc.name,
+            'create_date': doc.create_date.strftime('%d.%m.%Y %H:%M'),
+            'status': doc.current_status,
+            'org_inn': doc.org_inn,
+            'file_url': doc.file_url,
+            'filters': doc.filters,  # JSON поле с фильтрами
+        }
+        return JsonResponse(data)
+    except Document.DoesNotExist:
+        return JsonResponse({'error': 'Document not found'}, status=404)
+
 def create_document_task(request):
     if request.method == 'POST':
-        print(request.POST)
+
+
+        filters = prepare_filters_from_form(request.POST)
+
         json_params = {}
 
         json_params["participantInn"] = str(request.POST.get('participant_inn'))
@@ -127,7 +178,7 @@ def create_document_task(request):
             "params": json.dumps(json_params)
         }
 
-        print(data_to_api)
+
 
 
 
@@ -136,14 +187,14 @@ def create_document_task(request):
 
         if dispenser_stat:
             json_data = json.loads(dispenser_data)
-            print(dispenser_data)
             new_record = Document.objects.create(
                 doc_id=json_data['id'],
                 name=str(request.POST.get('name_doc')),
                 current_status=json_data['currentStatus'],
                 create_date=json_data['createDate'],
                 org_inn=json_data['orgInn'],
-                pg=json_data['productGroupCode']
+                pg=json_data['productGroupCode'],
+                filters=filters
             )
             if new_record:
                 messages.success(request, 'Документ успешно создан!')

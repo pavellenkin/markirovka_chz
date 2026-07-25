@@ -1,5 +1,6 @@
 import base64
 import sys
+import os
 sys.path.append('pycades')
 import pycades
 from error_log.views import create_item_error_log
@@ -13,6 +14,23 @@ from error_log.views import create_item_error_log
 
 
 """
+ACTIVE_CERT_FILE = 'active_cert.txt'
+
+
+def get_active_cert_number():
+    """
+    Читает номер активного сертификата из файла
+    Возвращает номер сертификата или None если файл не найден или пустой
+    """
+    try:
+        if os.path.exists(ACTIVE_CERT_FILE):
+            with open(ACTIVE_CERT_FILE, 'r') as f:
+                cert_number = f.read().strip()
+                if cert_number and cert_number.isdigit():
+                    return int(cert_number)
+    except (IOError, ValueError):
+        pass
+    return None
 
 def about_cert():
     try:
@@ -31,6 +49,10 @@ def about_cert():
         print("COUNT: ", certs.Count)
         about_dict['count'] = str(certs.Count)
 
+        # Получаем номер активного сертификата
+        active_cert_number = get_active_cert_number()
+        about_dict['active_cert_number'] = active_cert_number
+
         item_list = []
         temp_dict = {}
         for i in range(1,certs.Count+1):
@@ -43,6 +65,7 @@ def about_cert():
             temp_dict['valid_from'] = str(cert.ValidFromDate)
             temp_dict['valid_to'] = str(cert.ValidToDate)
             temp_dict['private_key'] = str(cert.HasPrivateKey())
+            temp_dict['is_active'] = (active_cert_number == i)
             item_list.append(temp_dict)
             temp_dict = {}
         about_dict['data'] = item_list
@@ -71,13 +94,22 @@ def load_cert(zapis):
         error_message = "Нет установленных сертификатов."
         return status_signature, None, error_message
 
+    # Получаем номер активного сертификата из файла
+    cert_number = get_active_cert_number()
+
+    if cert_number is None or cert_number > certs.Count or cert_number < 1:
+        print(f"Активный сертификат не найден или недействителен, используем сертификат #1")
+        cert_number = 1
+
+    print(f"Используем сертификат #{cert_number}")
+
 
 
 
 
     try:
         signer = pycades.Signer()
-        signer.Certificate = certs.Item(5)
+        signer.Certificate = certs.Item(cert_number)
         signer.CheckCertificate = True
         signedData = pycades.SignedData()
         signedData.Content = zapis
@@ -118,8 +150,18 @@ def true_cert(zapis):
     certs = store.Certificates
     print("COUNT: ", certs.Count)
     print(pycades.ModuleVersion())
+
+    # Получаем номер активного сертификата из файла
+    cert_number = get_active_cert_number()
+
+    # Если номер не найден или не существует, используем первый сертификат (1)
+    if cert_number is None or cert_number > certs.Count or cert_number < 1:
+        print(f"Активный сертификат не найден или недействителен, используем сертификат #1")
+        cert_number = 1
+
+    print(f"Используем сертификат #{cert_number}")
     signer = pycades.Signer()
-    signer.Certificate = certs.Item(5)
+    signer.Certificate = certs.Item(cert_number)
     # signer.CheckCertificate = True
     signer.Options = pycades.CAPICOM_CERTIFICATE_INCLUDE_END_ENTITY_ONLY
     signed_data = pycades.SignedData()

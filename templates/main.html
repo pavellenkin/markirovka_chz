@@ -32,11 +32,22 @@
     }
 </script>
 
+
 <div class="ae-menu-container">
     <!-- Декоративные фоновые элементы -->
-    <div class="ae-bg-decoration ae-top-left">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
-    <div class="ae-bg-decoration ae-bottom-right">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
-    <div class="ae-bg-decoration ae-center">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="ae-bg-decoration ae-top-left">
+        <i class="bi bi-qr-code"></i>
+        <i class="bi bi-upc-scan"></i>
+        <i class="bi bi-qr-code-scan"></i>
+    </div>
+    <div class="ae-bg-decoration ae-bottom-right">
+        <i class="bi bi-qr-code-scan"></i>
+        <i class="bi bi-upc-scan"></i>
+        <i class="bi bi-qr-code"></i>
+    </div>
+    <div class="ae-bg-decoration ae-center">
+        <i class="bi bi-qr-code-scan"></i>
+    </div>
 
     <!-- Кнопка ADMIN -->
     <div class="ae-admin-wrapper">
@@ -79,42 +90,42 @@
     <div class="ae-menu-grid">
         <!-- Проверка кода маркировки -->
         <div class="ae-menu-card ae-check" onclick="window.location = '/check_code/';">
-            <span class="ae-card-number">01</span>
+            <span class="ae-card-number">cises info | 01</span>
             <div class="ae-icon"><i class="bi bi-qr-code-scan"></i></div>
             <div class="ae-card-title">Проверка кода</div>
         </div>
 
         <!-- Корректировка сведений -->
         <div class="ae-menu-card ae-edit" onclick="window.location = '/change_date/';">
-            <span class="ae-card-number">02</span>
+            <span class="ae-card-number">cis information change | 02</span>
             <div class="ae-icon"><i class="bi bi-pencil-square"></i></div>
             <div class="ae-card-title">Корректировка сведений</div>
         </div>
 
         <!-- Инвентаризация -->
         <div class="ae-menu-card ae-invent" onclick="window.location = '/invent/';">
-            <span class="ae-card-number">03</span>
+            <span class="ae-card-number">inventory | 03</span>
             <div class="ae-icon"><i class="bi bi-clipboard-check"></i></div>
             <div class="ae-card-title">Инвентаризация</div>
         </div>
 
         <!-- Утилизация -->
         <div class="ae-menu-card ae-utilization" onclick="window.location = '/write-off/';">
-            <span class="ae-card-number">04</span>
+            <span class="ae-card-number">write off | 04</span>
             <div class="ae-icon"><i class="bi bi-clipboard-minus"></i></div>
             <div class="ae-card-title">Списание</div>
         </div>
 
         <!-- Национальный каталог -->
         <div class="ae-menu-card ae-catalog" onclick="window.location = '/natcat/';">
-            <span class="ae-card-number">05</span>
+            <span class="ae-card-number">national catalog | 05</span>
             <div class="ae-icon"><i class="bi bi-journal-check"></i></div>
             <div class="ae-card-title">Национальный каталог</div>
         </div>
 
         <!-- Задания на выгрузку -->
         <div class="ae-menu-card ae-dispenser" onclick="window.location = '/dispenser-tasks/';">
-            <span class="ae-card-number">06</span>
+            <span class="ae-card-number">dispenser tasks | 06</span>
             <div class="ae-icon"><i class="bi bi-cloud-upload"></i></div>
             <div class="ae-card-title">Выгрузка</div>
         </div>

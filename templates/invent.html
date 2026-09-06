@@ -86,87 +86,134 @@
         localStorage.clear();
     }
 </script>
-<!--    const element = document.getElementById('searchInput');-->
-<!--    hideKeyboard(element);-->
-        <div class="card position-absolute top-50 start-50 translate-middle shadow " style="" id="main_check">
-            <div class="card-header bg-warning text-black text-center">
-                <div class="container">
-                    <div class="row justify-content-md-start">
-                        <div class="col-1 position-absolute top-5 start-0">
-                           <button type="button" class="btn btn-sm btn-dark" onclick=" window.location = '/';" title="меню">&#9776</button>
-                        </div>
-                        <div class="col">
-                            <div class="mt-1">Инвентаризация</div>
-                        </div>
+<link rel="stylesheet" href="{% static 'css/ae_check_code.css' %}">
+<link rel="stylesheet" href="{% static 'css/ae_invent_search.css' %}">
+<link rel="stylesheet" href="{% static 'css/ae_change_date.css' %}">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<div class="ae-check-container">
+    <!-- Декоративные фоновые элементы -->
+    <div class="ae-check-bg ae-top-left">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="ae-check-bg ae-bottom-right">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="ae-check-bg ae-center">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <!-- Основная карточка -->
+    <div class="card position-absolute top-50 start-50 translate-middle shadow" style="background-color: #F7F7F7" id="main_check">
+        <div class="card-header bg-secondary text-light text-center">
+            <div class="container">
+                <div class="row justify-content-md-start">
+                    <div class="col-1 position-absolute top-5 start-0">
+                        <button type="button" class="btn btn-sm btn-dark" onclick="window.location = '/';" title="меню">
+                            <i class="bi bi-house-fill"></i>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <div class="mt-1">Инвентаризация</div>
                     </div>
                 </div>
             </div>
-          <div class="card-body ">
+        </div>
+
+        <div class="card-body">
             <h5 class="card-title text-center p-3"></h5>
 
-                <div class="input-group py-1 px-3" >
-                        <input  inputmode="none" id="searchInput" onfocus="SendCode();" autocomplete="off"  autocapitalize="off" spellcheck="false" autofocus="autofocus" name="check_code" class="form-control " placeholder="" >
-                </div>
-              <div class="logo logo_sm text-center py-3">
-<!--                    <b>CHECK CODE	&emsp;</b>-->
-                    <img src="{% static '/img/barcode_scanner_2.png' %}" alt="" class="logo__img_sm logo__img_sm1" style="width: 80px !important; height: 80px !important;">
-              </div>
+            <div class="input-group py-1 px-3">
+                <input inputmode="none"
+                       id="searchInput"
+                       onfocus="SendCode();"
+                       autocomplete="off"
+                       autocapitalize="off"
+                       spellcheck="false"
+                       autofocus="autofocus"
+                       name="check_code"
+                       class="form-control"
+                       placeholder="Наведите сканер на код">
+            </div>
 
-          </div>
-            <div class="card-footer text-center" style="zoom:80%">
-            Отсканируй код маркировки на товаре
-          </div>
+            <div class="logo logo_sm text-center py-3">
+                <img src="{% static '/img/barcode_scanner_2.png' %}" alt="" class="logo__img_sm logo__img_sm1" style="width: 80px !important; height: 80px !important;">
+            </div>
         </div>
+
+        <div class="card-footer text-center" style="zoom:80%">
+            Отсканируй код маркировки на товаре
+        </div>
+    </div>
+
+<!--        <div class="card position-absolute top-50 start-50 translate-middle shadow " style="" id="main_check">-->
+<!--            <div class="card-header bg-warning text-black text-center">-->
+<!--                <div class="container">-->
+<!--                    <div class="row justify-content-md-start">-->
+<!--                        <div class="col-1 position-absolute top-5 start-0">-->
+<!--                           <button type="button" class="btn btn-sm btn-dark" onclick=" window.location = '/';" title="меню">&#9776</button>-->
+<!--                        </div>-->
+<!--                        <div class="col">-->
+<!--                            <div class="mt-1">Инвентаризация</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--          <div class="card-body ">-->
+<!--            <h5 class="card-title text-center p-3"></h5>-->
+
+<!--                <div class="input-group py-1 px-3" >-->
+<!--                        <input  inputmode="none" id="searchInput" onfocus="SendCode();" autocomplete="off"  autocapitalize="off" spellcheck="false" autofocus="autofocus" name="check_code" class="form-control " placeholder="" >-->
+<!--                </div>-->
+<!--              <div class="logo logo_sm text-center py-3">-->
+<!--&lt;!&ndash;                    <b>CHECK CODE	&emsp;</b>&ndash;&gt;-->
+<!--                    <img src="{% static '/img/barcode_scanner_2.png' %}" alt="" class="logo__img_sm logo__img_sm1" style="width: 80px !important; height: 80px !important;">-->
+<!--              </div>-->
+
+<!--          </div>-->
+<!--            <div class="card-footer text-center" style="zoom:80%">-->
+<!--            Отсканируй код маркировки на товаре-->
+<!--          </div>-->
+<!--        </div>-->
 
 
         <div class="card position-absolute top-50 start-50 translate-middle bg-white" style="display: none" id="apply_change">
           <div class="card-body text-center p-5">
-
-                <p id="apply-bar-text" class="card-text text-center p-1"></p>
-                    <hr class="hr hr-blurry" />
+              <p id="apply-bar-text" class="card-text text-center p-1"></p>
+              <hr class="hr hr-blurry" />
               <div class="button-group" style="display: flex; justify-content: center; gap: 50px;">
-    <button type="button" class="btn btn-sm btn-dark" onclick="ButtonClose();">Закрыть</button>
-    <button type="button" class="btn btn-sm btn-primary" id="overwrite" style="display: none">Перезаписать</button>
-</div>
-
+                  <button type="button" class="btn btn-sm btn-dark" onclick="ButtonClose();">Закрыть</button>
+                  <button type="button" class="btn btn-sm btn-primary" id="overwrite" style="display: none">Перезаписать</button>
+              </div>
           </div>
         </div>
-        <div class="card position-absolute top-50 start-50 translate-middle bg-white" style=" display: none" id="response_check">
-            <div class="card-header text-primary fw-bold" id="card_header" style="display: none; zoom:80%">
+        <div class="card bg-white" style="display: none; width: 100%; max-width: 480px; margin-top: 20px;" id="response_check">
+            <div class="card-header text-primary fw-bold" id="card_header" style="display: none;">
 
             </div>
-            <div class="card-body" style="zoom:85%;">
+            <div class="card-body" style="">
                 <div class="text-center" id="message-valid-text" style="">
 
                 </div>
-            <div class="text-center" id="message-leading-symbol-text" style="zoom: 95%">
-
-            </div>
-
-
-
-                    <p id="message-bar-text" class="card-text text-center"></p>
-
-                    <div class="container justify-content-center" id="button_close" style="display: none;">
-                        <hr class="hr hr-blurry" />
-                        <div class="row justify-content-center">
-                            <div class="col text-start">
-                                <button type="button" class="btn btn-warning" onclick="addArttoInvent();">Записать</button>
-                            </div>
-                            <div class="col text-end">
-                                <button type="button" class="btn btn-secondary" onclick="ButtonClose();">Закрыть</button>
-                            </div>
+                <div class="text-center" id="message-leading-symbol-text" style="">
+                </div>
+                <p id="message-bar-text" class="card-text text-center"></p>
+                <div class="container justify-content-center" id="button_close" style="display: none;">
+                    <div class="row justify-content-center">
+                        <div class="col text-start">
+                            <button type="button" class="btn btn-warning" onclick="addArttoInvent();">
+                                <i class="bi bi-save2"></i> Записать</button>
+                        </div>
+                        <div class="col text-end">
+                            <button type="button" class="btn btn-secondary" onclick="ButtonClose();">
+                                <i class="bi bi-x-lg"></i> Закрыть
+                            </button>
                         </div>
                     </div>
-
-          </div>
+                </div>
+            </div>
             <div class="card-footer text-center text-danger fw-bold" id="card_footer" style="display: none; zoom:80%">
 
           </div>
         </div>
+</div>
 
 <!-- Модальное окно для наполнения кодами -->
-<div class="modal fade" id="fillCodesModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade p-3" id="fillCodesModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-warning">
@@ -215,40 +262,34 @@
 </div>
 
 
-<div class="card position-absolute top-50 start-50 translate-middle bg-white" style=" display: none" id="search_art">
-            <div class="card-header text-primary fw-bold" id="" style="">
-                Инвентаризация
+<!-- Блок поиска артикулов -->
+<div class="card bg-white" style="display: none; width: 100%; max-width: 480px; margin-top: 20px;" id="search_art">
+    <div class="card-header text-primary fw-bold">Инвентаризация</div>
+    <div class="card-body">
+        <div class="search-container">
+            <input type="text" id="articleSearchInput" placeholder="Введите артикул для поиска...">
+            <div class="info">
+                Загружено артикулов: <strong id="totalCount">0</strong>
             </div>
-            <div class="card-body" style="zoom:85%;">
-<!--                <div class="text-center" id="message-valid-text" style="">-->
-
-<!--                </div>-->
-<!--            <div class="text-center" id="message-leading-symbol-text" style="zoom: 95%">-->
-
-<!--            </div>-->
-
-    <div class="search-container">
-        <input type="text" id="articleSearchInput" placeholder="Введите артикул для поиска...">
-        <div class="info">
-            Загружено артикулов: <strong id="totalCount">0</strong>
+            <div id="searchResults"></div>
         </div>
-        <div id="searchResults"></div>
     </div>
-                 </div>
-                <div class="card-footer text-end text-danger fw-bold footer_add-content" id="footer_add-content" style="">
-                    <div class="row justify-content-center">
-                            <div class="col text-start">
-                                <button type="button" class="btn btn-sm btn-warning" id="content" onclick="openFillCodesModal();">Наполнить кодами</button>
-                            </div>
-                            <div class="col text-end">
-                                <button type="button" class="btn btn-sm btn-dark" onclick="ButtonClose();">Закрыть</button>
-                            </div>
-                        </div>
+    <div class="card-footer text-end" id="footer_add-content">
+        <div class="row justify-content-center">
+            <div class="col text-start">
+                <button type="button" class="btn btn-warning" id="content" onclick="openFillCodesModal();">
+                  <i class="bi bi-journal-plus"></i> Наполнить</button>
+            </div>
+            <div class="col text-end">
 
-          </div>
-
-
-      <script>
+                <button type="button" class="btn btn-secondary" onclick="ButtonClose();">
+                    <i class="bi bi-x-lg"></i> Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
     // Список артикулов из Django
     const articles = {{ articles|safe }};
 
@@ -370,8 +411,7 @@
         searchArticles(e.target.value);
     });
 </script>
-
-    <script>
+<script>
 
         // ========== ФУНКЦИИ ДЛЯ РАБОТЫ С ОКНОМ КОДОВ ==========
 
@@ -529,7 +569,7 @@ function saveCodeToLocalStorage(code) {
 
     // Проверка на дубликат
     if (codes.includes(code)) {
-        showTempMessage('⚠️ Код уже существует: ' + code.substring(0, 20) + '...', 'warning');
+        showTempMessage('Код уже существует: ' + code.substring(0, 20) + '...', 'warning');
         return;
     }
 
@@ -539,7 +579,7 @@ function saveCodeToLocalStorage(code) {
     console.log('Код сохранен:', code);
     console.log('Всего кодов:', codes.length);
 
-    showTempMessage('✅ Код добавлен! Всего: ' + codes.length, 'success');
+    showTempMessage('Код добавлен! Всего: ' + codes.length, 'success');
 }
 
 // Временное сообщение
@@ -563,16 +603,135 @@ function showTempMessage(message, type) {
     }, 2000);
 }
     </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ===== ПОЛНЫЙ СКРИПТ ДЛЯ ПЛАВНОГО COLLAPSE (БЕЗ CSS) =====
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+function fixCollapseButton() {
+    var btn = document.querySelector('#card_header .btn-success');
+    if (btn && !btn._collapseFixed) {
+        // Удаляем атрибуты Bootstrap
+        btn.removeAttribute('data-bs-toggle');
+        btn.removeAttribute('data-bs-target');
+        btn._collapseFixed = true;
+
+        var el = document.getElementById('collapseExample');
+        if (el) {
+            // ===== УСТАНАВЛИВАЕМ СТИЛИ ДЛЯ ПЛАВНОЙ АНИМАЦИИ (ЧЕРЕЗ JS) =====
+            el.style.transition = 'max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease';
+            el.style.overflow = 'hidden';
+            el.style.display = 'block';
+            el.style.maxHeight = '0';
+            el.style.opacity = '0';
+            el.style.paddingTop = '0';
+            el.style.paddingBottom = '0';
+
+            // Сохраняем ссылку
+            btn._collapseElement = el;
+
+            btn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var target = this._collapseElement;
+
+                if (target.style.maxHeight === '0px' || target.style.maxHeight === '0' || target.style.maxHeight === '') {
+                    // ===== ОТКРЫВАЕМ ПЛАВНО =====
+                    // Скрываем, чтобы получить реальную высоту
+                    target.style.maxHeight = 'none';
+                    target.style.opacity = '1';
+                    target.style.paddingTop = '';
+                    target.style.paddingBottom = '';
+                    target.style.display = 'block';
+
+                    // Получаем реальную высоту
+                    var height = target.scrollHeight;
+
+                    // Сбрасываем для анимации
+                    target.style.maxHeight = '0';
+                    target.style.opacity = '0';
+                    target.style.paddingTop = '0';
+                    target.style.paddingBottom = '0';
+
+                    // Запускаем анимацию открытия
+                    requestAnimationFrame(function() {
+                        target.style.maxHeight = height + 'px';
+                        target.style.opacity = '1';
+                        target.style.paddingTop = '';
+                        target.style.paddingBottom = '';
+                    });
+
+                    this.setAttribute('aria-expanded', 'true');
+
+                } else {
+                    // ===== ЗАКРЫВАЕМ ПЛАВНО =====
+                    // Получаем текущую высоту
+                    var currentHeight = target.scrollHeight;
+
+                    // Устанавливаем текущую высоту
+                    target.style.maxHeight = currentHeight + 'px';
+                    target.style.opacity = '1';
+
+                    // Запускаем закрытие
+                    requestAnimationFrame(function() {
+                        requestAnimationFrame(function() {
+                            target.style.maxHeight = '0';
+                            target.style.opacity = '0';
+                            target.style.paddingTop = '0';
+                            target.style.paddingBottom = '0';
+                        });
+                    });
+
+                    this.setAttribute('aria-expanded', 'false');
+
+                }
+            };
+
+            // Обработчик завершения анимации
+            el.addEventListener('transitionend', function() {
+                if (this.style.maxHeight === '0px' || this.style.maxHeight === '0') {
+                    // Не скрываем полностью, чтобы сохранить высоту для следующего открытия
+                    this.style.display = 'block';
+                }
+            });
+
+        }
+    }
+}
+
+// ===== СЛЕДИМ ЗА ПОЯВЛЕНИЕМ КНОПКИ =====
+
+// Способ 1: MutationObserver
+const observer = new MutationObserver(function(mutations) {
+    fixCollapseButton();
+});
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+// Способ 2: Проверка через интервал
+var checkInterval = setInterval(function() {
+    var btn = document.querySelector('#card_header .btn-success');
+    if (btn) {
+        fixCollapseButton();
+        if (btn._collapseFixed) {
+            clearInterval(checkInterval);
+
+        }
+    }
+}, 500);
+
+// Способ 3: Переопределяем SendCode
+if (typeof SendCode === 'function') {
+    var originalSendCode = SendCode;
+    window.SendCode = function() {
+        originalSendCode();
+        setTimeout(fixCollapseButton, 400);
+    };
+
+}
 
 
-
-<!--            <div class="card-footer text-center text-danger fw-bold" id="card_footer" style="display: none; zoom:80%">-->
-
-<!--          </div>-->
-        </div>
-
-
+</script>
 
 {% endblock %}

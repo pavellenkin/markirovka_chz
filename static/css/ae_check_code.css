@@ -1,0 +1,735 @@
+/* ============================================
+   AE CHECK CODE - Стили для проверки кода
+   Префикс: ae- (Auto-Euro)
+   Версия: 2.6 - Исправлено позиционирование карточек
+   ============================================ */
+
+/* ---------- Подключение шрифтов ---------- */
+@import url('https://fonts.cdnfonts.com/css/gilroy-bold');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css');
+
+
+/* ============================================ */
+/*           ОБЩИЕ СТИЛИ ДЛЯ ВСЕХ ЭКРАНОВ        */
+/* ============================================ */
+
+/* Контейнер должен быть position: relative для абсолютного позиционирования карточек */
+.ae-check-container {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    background-color: #f7f7f9;
+}
+
+/* Декоративные фоновые элементы */
+.ae-check-bg {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.04;
+    font-size: 120px;
+    color: #1f1f1f;
+}
+.ae-check-bg.ae-top-left {
+    top: 20px;
+    left: 20px;
+    transform: rotate(-15deg);
+}
+.ae-check-bg.ae-bottom-right {
+    bottom: 20px;
+    right: 20px;
+    transform: rotate(15deg);
+}
+.ae-check-bg.ae-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    font-size: 200px;
+    opacity: 0.03;
+}
+
+/* Кнопка ADMIN - на десктопе видна, на мобильных скрыта */
+.ae-check-admin {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+.ae-check-admin-btn {
+    background: #ffffff;
+    border: 2px solid #696969;
+    color: #1f1f1f;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.ae-check-admin-btn:hover {
+    background: #1f1f1f;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ae-check-admin-btn i {
+    font-size: 16px;
+}
+
+
+/* ============================================ */
+/*           СТИЛИ ДЛЯ КАРТОЧЕК                 */
+/* ============================================ */
+
+/* Основная карточка - позиционирование через классы Bootstrap */
+#main_check {
+    background: #ffffff !important;
+    border: 2px solid #696969 !important;
+    border-radius: 16px !important;
+
+    width: 100% !important;
+    max-width: 480px !important;
+    overflow: hidden !important;
+    z-index: 1 !important;
+}
+
+/* Шапка карточки */
+#main_check .card-header.bg-secondary.text-light.text-center {
+    background: #1f1f1f !important;
+    color: #ffffff !important;
+    border-radius: 14px 14px 0 0 !important;
+    padding: 14px 20px !important;
+    border-bottom: none !important;
+    min-height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+#main_check .card-header .container {
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+#main_check .card-header .row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+#main_check .card-header .col-1 {
+    position: absolute !important;
+    left: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: auto !important;
+    flex: none !important;
+    padding: 0 !important;
+}
+
+#main_check .card-header .col {
+    flex: 1 !important;
+    text-align: center !important;
+    padding: 0 !important;
+    width: auto !important;
+}
+
+#main_check .card-header .mt-1 {
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    letter-spacing: 0.3px !important;
+    color: #ffffff !important;
+    margin-top: 0 !important;
+}
+
+#main_check .card-header .btn-dark {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 4px 12px !important;
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+    transition: background 0.3s ease !important;
+}
+
+#main_check .card-header .btn-dark:hover {
+    background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Тело карточки */
+#main_check .card-body {
+    padding: 24px 28px 20px !important;
+}
+
+#main_check .input-group {
+    padding: 0 !important;
+    margin-bottom: 20px !important;
+}
+
+/* Поле ввода */
+#searchInput {
+    width: 100% !important;
+    padding: 12px 16px !important;
+    border: 2px solid #696969 !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif !important;
+    background: #ffffff !important;
+    color: #1f1f1f !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+    outline: none !important;
+    text-align: center !important;
+    letter-spacing: 1px !important;
+    min-height: 48px !important;
+    box-shadow: none !important;
+}
+
+#searchInput:focus {
+    border-color: #3eff00 !important;
+    box-shadow: 0 0 0 3px rgba(31, 31, 31, 0.1) !important;
+}
+
+#searchInput::placeholder {
+    color: #b0b0b0 !important;
+    font-size: 14px !important;
+    letter-spacing: 0.5px !important;
+    text-align: center !important;
+}
+
+#searchInput::-moz-placeholder {
+    color: #b0b0b0 !important;
+    font-size: 14px !important;
+    letter-spacing: 0.5px !important;
+    text-align: center !important;
+}
+
+#searchInput:-ms-input-placeholder {
+    color: #b0b0b0 !important;
+    font-size: 14px !important;
+    letter-spacing: 0.5px !important;
+    text-align: center !important;
+}
+
+/* Иконка сканера */
+#main_check .logo {
+    text-align: center !important;
+    padding: 8px 0 4px !important;
+}
+
+#main_check .logo img {
+    width: 80px !important;
+    height: 80px !important;
+    transition: opacity 0.3s ease !important;
+}
+
+#main_check .logo img:hover {
+    opacity: 1 !important;
+}
+
+/* Футер карточки */
+#main_check .card-footer {
+    text-align: center !important;
+    padding: 12px 20px !important;
+    font-size: 13px !important;
+    color: #696969 !important;
+    border-top: 1px solid #e8e8ec !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.2px !important;
+    background: transparent !important;
+    zoom: 1 !important;
+}
+
+
+/* ============================================ */
+/*           КАРТОЧКА ОТВЕТА                    */
+/* ============================================ */
+
+#response_check {
+    background: #ffffff !important;
+    border: 2px solid #696969 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+    width: 100% !important;
+    max-width: 650px !important;
+    overflow: hidden !important;
+    z-index: 2 !important;
+    display: none !important;
+}
+
+#card_header {
+    padding: 14px 20px !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    border-bottom: 1px solid #e8e8ec !important;
+    display: none !important;
+}
+
+#card_header.text-primary {
+    color: #1f1f1f !important;
+}
+
+#message-valid-text {
+    text-align: center !important;
+    font-size: 13px !important;
+    color: #1f1f1f !important;
+    line-height: 1.6 !important;
+
+}
+
+#message-leading-symbol-text {
+    text-align: center !important;
+    font-size: 13px !important;
+    color: #696969 !important;
+    margin-top: 4px !important;
+}
+
+#message-bar-text {
+    text-align: center !important;
+    font-size: 18px !important;
+    color: #1f1f1f !important;
+    padding: 8px 0 !important;
+    line-height: 1.6 !important;
+}
+
+#button_close {
+    text-align: right !important;
+    margin-top: 16px !important;
+    padding-top: 12px !important;
+    border-top: 1px solid #e8e8ec !important;
+
+}
+
+#button_close .btn-secondary {
+    background: #696969 !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 8px 24px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+    box-shadow: none !important;
+}
+
+#button_close .btn-secondary:hover {
+    background: #1f1f1f !important;
+}
+
+#button_close .btn-warning {
+    background: #fea200 !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 8px 24px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+    box-shadow: none !important;
+}
+
+#button_close .btn-warning:hover {
+    background: #bf7a00 !important;
+}
+
+#card_footer {
+    text-align: center !important;
+    padding: 12px 20px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    border-top: 1px solid #e8e8ec !important;
+    display: none !important;
+    zoom: 1 !important;
+}
+
+#card_footer.text-danger {
+    color: #b33c3c !important;
+}
+
+#card_footer.text-success {
+    color: #3a8c6b !important;
+}
+
+
+/* ============================================ */
+/*        АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ И ТСД         */
+/* ============================================ */
+
+@media (max-width: 768px) {
+    .ae-check-container {
+        padding: 12px 30px !important;
+        min-height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: #f7f7f9 !important;
+        position: relative !important;
+        padding-top: 0 !important;
+    }
+
+    .ae-check-bg {
+        display: none !important;
+    }
+
+    .ae-check-admin {
+        display: none !important;
+    }
+
+    /* На мобильных убираем position-absolute у карточек,
+       чтобы они шли друг за другом в flex-контейнере */
+    #main_check {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        margin: 0 auto !important;
+        border-radius: 14px !important;
+        max-width: 460px !important;
+    }
+
+    #response_check {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        margin: 0px auto 0 !important;
+        max-width: 460px !important;
+        border-radius: 14px !important;
+    }
+
+    #main_check .card-header.bg-secondary.text-light.text-center {
+        padding: 10px 16px !important;
+        min-height: 44px !important;
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    #main_check .card-header .mt-1 {
+        font-size: 14px !important;
+        letter-spacing: 0.2px !important;
+    }
+
+    #main_check .card-header .btn-dark {
+        font-size: 16px !important;
+        padding: 2px 10px !important;
+        border-radius: 6px !important;
+    }
+
+    #main_check .card-header .btn-dark:active {
+        background: rgba(255, 255, 255, 0.30) !important;
+    }
+
+    #main_check .card-body {
+        padding: 16px 16px 14px !important;
+    }
+
+    #main_check .input-group {
+        margin-bottom: 12px !important;
+    }
+
+    #searchInput {
+        padding: 10px 14px !important;
+        font-size: 15px !important;
+        letter-spacing: 0.5px !important;
+        min-height: 44px !important;
+        touch-action: manipulation !important;
+        text-align: center !important;
+    }
+
+    #searchInput:focus {
+        box-shadow: 0 0 0 3px rgba(31, 31, 31, 0.08) !important;
+    }
+
+    #searchInput::placeholder {
+        font-size: 12px !important;
+        letter-spacing: 0.3px !important;
+        text-align: center !important;
+    }
+
+    #main_check .logo {
+        padding: 4px 0 0 !important;
+    }
+
+    #main_check .logo img {
+        width: 64px !important;
+        height: 64px !important;
+    }
+
+    #main_check .card-footer {
+        padding: 10px 16px !important;
+        font-size: 11px !important;
+        letter-spacing: 0.1px !important;
+        zoom: 1 !important;
+        background: transparent !important;
+        border-top: 1px solid #e8e8ec !important;
+        color: #696969 !important;
+    }
+
+    #card_header {
+        padding: 10px 16px !important;
+        font-size: 11px !important;
+
+    }
+
+    #message-valid-text {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+    }
+
+    #message-leading-symbol-text {
+        font-size: 14px !important;
+        margin-top: 4px !important;
+    }
+
+    #message-bar-text {
+        font-size: 14px !important;
+        padding: 4px 0 !important;
+        line-height: 1.5 !important;
+    }
+
+    #button_close {
+        margin-top: 12px !important;
+        padding-top: 10px !important;
+    }
+
+    #button_close .btn-secondary {
+        padding: 6px 20px !important;
+        font-size: 12px !important;
+        border-radius: 8px !important;
+    }
+
+    #button_close .btn-warning {
+        padding: 6px 20px !important;
+        font-size: 12px !important;
+        border-radius: 8px !important;
+    }
+
+    #button_close .btn-warning:active {
+        background: #1f1f1f !important;
+    }
+
+    #button_close .btn-secondary:active {
+        background: #1f1f1f !important;
+    }
+
+    #card_footer {
+        padding: 10px 16px !important;
+        font-size: 12px !important;
+        zoom: 1 !important;
+    }
+}
+
+/* Специально для ТСД Honeywell CK65 (480x800) */
+@media (width: 480px) and (height: 800px) {
+    .ae-check-container {
+        padding: 10px 30px !important;
+        min-height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding-top: 0 !important;
+    }
+
+    #main_check {
+        max-width: 100% !important;
+        border-radius: 12px !important;
+    }
+
+    #response_check {
+        max-width: 100% !important;
+        border-radius: 12px !important;
+        margin-top: 10px !important;
+    }
+
+    #main_check .card-header.bg-secondary.text-light.text-center {
+        min-height: 38px !important;
+        padding: 8px 12px !important;
+        border-radius: 10px 10px 0 0 !important;
+    }
+
+    #main_check .card-header .mt-1 {
+        font-size: 13px !important;
+    }
+
+    #main_check .card-header .btn-dark {
+        font-size: 14px !important;
+        padding: 2px 8px !important;
+    }
+
+    #main_check .card-body {
+        padding: 12px 12px 10px !important;
+    }
+
+    #searchInput {
+        font-size: 14px !important;
+        padding: 8px 12px !important;
+        min-height: 38px !important;
+        text-align: center !important;
+    }
+
+    #searchInput::placeholder {
+        font-size: 11px !important;
+        text-align: center !important;
+    }
+
+    #main_check .logo img {
+        width: 56px !important;
+        height: 56px !important;
+    }
+
+    #main_check .card-footer {
+        font-size: 10px !important;
+        padding: 8px 12px !important;
+    }
+
+    #message-valid-text {
+        font-size: 13px !important;
+    }
+
+    #card_header {
+        font-size: 11px !important;
+        padding: 8px 12px !important;
+    }
+
+    #card_footer {
+        font-size: 11px !important;
+        padding: 8px 12px !important;
+    }
+
+    #button_close .btn-secondary {
+        font-size: 11px !important;
+        padding: 5px 16px !important;
+    }
+    #button_close .btn-warning {
+        font-size: 11px !important;
+        padding: 5px 16px !important;
+    }
+
+    .ae-check-admin {
+        display: none !important;
+    }
+}
+
+/* Для очень маленьких экранов (до 400px) */
+@media (max-width: 400px) {
+    .ae-check-container {
+        padding: 8px 30px !important;
+        justify-content: center !important;
+        padding-top: 0 !important;
+    }
+
+    #main_check .card-header.bg-secondary.text-light.text-center {
+        min-height: 34px !important;
+        padding: 6px 10px !important;
+    }
+
+    #main_check .card-header .mt-1 {
+        font-size: 11px !important;
+    }
+
+    #main_check .card-body {
+        padding: 10px 10px 8px !important;
+    }
+
+    #searchInput {
+        font-size: 13px !important;
+        padding: 6px 10px !important;
+        min-height: 34px !important;
+    }
+
+    #main_check .logo img {
+        width: 48px !important;
+        height: 48px !important;
+    }
+
+    #main_check .card-footer {
+        font-size: 9px !important;
+        padding: 6px 10px !important;
+    }
+}
+
+/* ============================================ */
+/*        ПРИНУДИТЕЛЬНЫЕ СТИЛИ ДЛЯ КАРТОЧКИ      */
+/* ============================================ */
+
+/* Убираем конфликтующие стили */
+#response_check.position-absolute {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+}
+
+/* Когда карточка видима */
+#response_check[style*="display: block"] {
+    display: block !important;
+}
+
+/* На десктопе позиционируем через JS */
+@media (min-width: 769px) {
+    #response_check.ae-visible {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 99999 !important;
+    }
+}
+
+/* Стиль для кнопки в card-header */
+#card_header .btn-success {
+    background: #3a8c6b !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 6px 16px !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease, transform 0.2s ease !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+#card_header .btn-success:hover {
+    background: #2d7056 !important;
+    transform: translateY(-1px) !important;
+}
+
+#card_header .btn-success:active {
+    transform: scale(0.96) !important;
+    background: #1f4f3d !important;
+}
+
+/* Для мобильных */
+@media (max-width: 768px) {
+    #card_header .btn-success {
+        padding: 4px 12px !important;
+        font-size: 11px !important;
+        border-radius: 6px !important;
+    }
+}
+
+/* Для ТСД */
+@media (width: 480px) and (height: 800px) {
+    #card_header .btn-success {
+        padding: 3px 10px !important;
+        font-size: 10px !important;
+    }
+}

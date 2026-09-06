@@ -1,0 +1,806 @@
+{% extends 'main_template.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/ae_write_off.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<div class="wo-container">
+    <!-- Декоративные фоновые элементы -->
+    <div class="wo-bg wo-top-left">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="wo-bg wo-bottom-right">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="wo-bg wo-center">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+
+
+
+    <!-- Кнопка "Список актов" (только десктоп) -->
+    <div class="wo-acts-btn">
+        <a href="{% url 'write_off_acts_list' %}" class="wo-btn">
+            <i class="bi bi-list-ul"></i> Список актов
+        </a>
+    </div>
+
+    <!-- Основная карточка -->
+    <div class="wo-card" id="wo_main_card">
+        <div class="wo-card-header">
+            <div class="wo-card-header-inner">
+                <div class="wo-card-header-back">
+                    <button type="button" class="wo-btn-back" onclick="window.location = '/';" title="меню">
+                        <i class="bi bi-house-fill"></i>
+                    </button>
+                </div>
+                <div class="wo-card-header-title">
+                    <div class="wo-card-header-text">Акт списания</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wo-card-body">
+            <h5 class="card-title text-center p-3"></h5>
+            <div class="wo-input-group">
+                <div style="position: relative; width: 100%;">
+                    <input inputmode="none"
+                           id="wo_act_input"
+                           autocomplete="off"
+                           autocapitalize="off"
+                           spellcheck="false"
+                           autofocus="autofocus"
+                           name="act_number"
+                           class="wo-input"
+                           placeholder="Наведите сканер на код"
+                           onfocus="this.select();"
+                           style="padding-right: 45px;">
+                    <button type="button"
+                            id="wo_toggle_manual_btn"
+                            title="Включить ручной ввод"
+                            style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+                                   background: none; border: none; font-size: 20px; cursor: pointer;
+                                   color: #696969; padding: 4px; transition: all 0.3s ease; z-index: 10;">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="wo-logo">
+                <img src="{% static '/img/barcode_scanner_2.png' %}" alt="" class="wo-logo-img" style="width: 80px !important; height: 80px !important;">
+            </div>
+        </div>
+
+        <div class="wo-card-footer">
+            Введите номер акта списания
+        </div>
+    </div>
+
+    <!-- Карточка информации об акте -->
+    <div class="wo-card" id="wo_act_info" style="display: none;">
+        <div class="wo-card-body" style="text-align: center; padding: 20px;">
+            <div class="wo-act-number" id="wo_act_number_display">Акт №</div>
+            <div class="wo-act-count" id="wo_act_count_display">0</div>
+            <div class="wo-act-label">отсканированных кодов</div>
+            <div class="wo-btn-group">
+                <button type="button" class="wo-btn wo-btn-warning" onclick="woOpenFillModal();">
+                    <i class="bi bi-plus-circle"></i> Наполнить
+                </button>
+                <button type="button" class="wo-btn wo-btn-secondary" onclick="woCloseActInfo();">
+                    <i class="bi bi-x-lg"></i> Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения -->
+<div class="wo-modal" id="wo_confirm_modal">
+    <div class="wo-modal-dialog">
+        <div class="wo-modal-content">
+            <div class="wo-modal-header">
+                <h5 class="wo-modal-title"><i class="bi bi-question-circle"></i> Подтверждение</h5>
+                <button type="button" class="wo-modal-close" onclick="woCloseConfirmAndReset();">×</button>
+            </div>
+            <div class="wo-modal-body">
+                <div class="wo-modal-icon"><i class="bi bi-file-earmark-text"></i></div>
+                <div class="wo-modal-message" id="wo_confirm_message">Акт <span class="wo-act-number" id="wo_confirm_act_number"></span> уже существует.</div>
+            </div>
+            <div class="wo-modal-footer">
+                <button type="button" class="wo-btn wo-btn-secondary" onclick="woCloseConfirmAndReset();">
+                    <i class="bi bi-x-lg"></i> Указать другой
+                </button>
+                <button type="button" class="wo-btn wo-btn-success" onclick="woUseExistingAct();">
+                    <i class="bi bi-check-lg"></i> Продолжить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно наполнения кодами -->
+<div class="wo-modal" id="wo_fill_modal">
+    <div class="wo-modal-dialog wo-modal-lg">
+        <div class="wo-modal-content">
+            <div class="wo-modal-header">
+                <h5 class="wo-modal-title"><i class="bi bi-qr-code"></i> Наполнение кодами</h5>
+                <button type="button" class="wo-modal-close" onclick="woCloseFillAndReload();">×</button>
+            </div>
+            <div class="wo-modal-body">
+                <!-- Информация о номере акта -->
+                <div class="wo-act-info" id="wo_fill_act_info">
+                    <i class="bi bi-file-earmark-text"></i>
+                    Акт: <strong id="wo_fill_act_number">---</strong>
+                    <span class="wo-act-status" id="wo_fill_act_status">
+                        <span class="badge bg-warning text-dark">Новый</span>
+                    </span>
+                </div>
+                <div class="wo-fill-label">Отсканируй код маркировки</div>
+                <input inputmode="none"
+                       autocomplete="off"
+                       autocapitalize="off"
+                       spellcheck="false"
+                       autofocus="autofocus"
+                       class="wo-input wo-input-lg"
+                       id="wo_code_input"
+                       placeholder="Наведите сканер на код"
+                       onfocus="this.select();">
+                <div class="wo-codes-list" id="wo_codes_container">
+                    <div class="wo-codes-empty">Нет добавленных кодов</div>
+                </div>
+            </div>
+            <div class="wo-modal-footer">
+                <div class="wo-modal-footer-inner">
+                    <div class="wo-footer-left">
+                        <span class="wo-badge" id="wo_codes_count">0</span>
+                        <button type="button" class="wo-btn wo-btn-outline-danger" onclick="woClearAllCodes();" title="Очистить">
+                            <i class="bi bi-trash3"></i><span class="wo-btn-text"> Очистить</span>
+                        </button>
+                    </div>
+                    <div class="wo-footer-right">
+                        <button type="button" class="wo-btn wo-btn-success" onclick="woSaveCodes();" title="Записать">
+                            <i class="bi bi-check-lg"></i><span class="wo-btn-text"> Записать</span>
+                        </button>
+                        <button type="button" class="wo-btn wo-btn-dark" onclick="woCloseFillAndReload();" title="Закрыть">
+                            <i class="bi bi-x-lg"></i><span class="wo-btn-text"> Закрыть</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно результата -->
+<div class="wo-modal" id="wo_result_modal">
+    <div class="wo-modal-dialog">
+        <div class="wo-modal-content">
+            <div class="wo-modal-header">
+                <h5 class="wo-modal-title"><i class="bi bi-check-circle"></i> Результат</h5>
+                <button type="button" class="wo-modal-close" onclick="woCloseResultAndReset();">×</button>
+            </div>
+            <div class="wo-modal-body">
+                <div class="wo-result-icon wo-result-success" id="wo_result_icon"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="wo-result-text" id="wo_result_text"></div>
+                <div class="wo-result-stats">
+                    <div class="wo-stat-item">
+                        <div class="wo-stat-number wo-stat-new" id="wo_result_new">0</div>
+                        <div class="wo-stat-label">Новых</div>
+                    </div>
+                    <div class="wo-stat-item">
+                        <div class="wo-stat-number wo-stat-overwritten" id="wo_result_overwritten">0</div>
+                        <div class="wo-stat-label">Перезаписано</div>
+                    </div>
+                </div>
+            </div>
+            <div class="wo-modal-footer">
+                <button type="button" class="wo-btn wo-btn-success" onclick="woCloseResultAndReset();">
+                    <i class="bi bi-check-lg"></i> OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+// ===== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ =====
+let woCurrentAct = '';
+let woActExists = false;
+let woCodesList = [];
+
+// ===== ОБНОВИТЬ ИНФОРМАЦИЮ ОБ АКТЕ В ОКНЕ НАПОЛНЕНИЯ =====
+function woUpdateActInfo(actNumber, isExists) {
+    var actNumberEl = document.getElementById('wo_fill_act_number');
+    var actStatusEl = document.getElementById('wo_fill_act_status');
+
+    if (actNumberEl) {
+        actNumberEl.textContent = actNumber || '---';
+    }
+
+    if (actStatusEl) {
+        if (isExists) {
+            actStatusEl.innerHTML = '<span class="badge bg-success">Существующий</span>';
+        } else {
+            actStatusEl.innerHTML = '<span class="badge bg-warning text-dark">Новый</span>';
+        }
+    }
+}
+
+// ===== ОЧИСТКА НОМЕРА АКТА ОТ ЛИДИРУЮЩИХ СИМВОЛОВ =====
+function woCleanActNumber(actNumber) {
+    if (!actNumber) return '';
+    // Если начинается с ] - отбрасываем первые 3 символа
+    if (actNumber.startsWith(']')) {
+        actNumber = actNumber.substring(3);
+    }
+    return actNumber.trim();
+}
+
+// ===== ВВОД НОМЕРА АКТА =====
+document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('wo_act_input');
+    if (input) {
+        input.focus();
+
+        var lastValue = '';
+        input.addEventListener('input', function(e) {
+            var val = this.value.trim();
+            if (val && val.length > 1 && val !== lastValue) {
+                lastValue = val;
+                clearTimeout(this._scanTimer);
+                this._scanTimer = setTimeout(function() {
+                    var actNumber = woCleanActNumber(input.value);
+                    if (actNumber) {
+                        input.value = actNumber;
+                        var enter = new KeyboardEvent('keydown', {
+                            key: 'Enter',
+                            code: 'Enter',
+                            which: 13,
+                            keyCode: 13,
+                            bubbles: true
+                        });
+                        input.dispatchEvent(enter);
+                    }
+                }, 300);
+            }
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                var actNumber = woCleanActNumber(this.value);
+                if (actNumber) {
+                    this.value = actNumber;
+                    woCheckAct(actNumber);
+                    this.value = '';
+                    lastValue = '';
+                    clearTimeout(this._scanTimer);
+                }
+            }
+        });
+
+        input.addEventListener('blur', function() {
+            var actNumber = woCleanActNumber(this.value);
+            if (actNumber) {
+                this.value = actNumber;
+                woCheckAct(actNumber);
+                this.value = '';
+                lastValue = '';
+            }
+        });
+    }
+});
+
+// ===== ПРОВЕРКА АКТА (только проверка, без создания) =====
+function woCheckAct(actNumber) {
+    if (!actNumber) {
+        woShowTemp('Введите номер акта', 'warning');
+        return;
+    }
+    $('#preloader').show();
+    $.ajax({
+        url: '/write-off/check-act/',
+        method: 'post',
+        dataType: 'json',
+        headers: {
+            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        data: { act_number: actNumber },
+        success: function(data) {
+            $('#preloader').fadeOut(500);
+            if (data.status === 'exists') {
+                // Акт существует
+                woCurrentAct = actNumber;
+                woActExists = true;
+                document.getElementById('wo_confirm_act_number').textContent = actNumber;
+                document.getElementById('wo_confirm_message').innerHTML =
+                    'Акт <span class="wo-act-number">' + actNumber + '</span> уже существует.<br>' +
+                    'Записей: <strong>' + data.codes_count + '</strong>';
+                woOpenModal('wo_confirm_modal');
+            } else if (data.status === 'not_exists') {
+                // Акт не существует - показываем карточку, но НЕ создаём
+                woCurrentAct = actNumber;
+                woActExists = false;
+                woShowActInfo(actNumber, 0);
+            }
+        },
+        error: function() { $('#preloader').fadeOut(500); }
+    });
+}
+
+// ===== ИСПОЛЬЗОВАТЬ СУЩЕСТВУЮЩИЙ АКТ =====
+function woUseExistingAct() {
+    woCloseModal('wo_confirm_modal');
+    woActExists = true;
+    $.ajax({
+        url: '/write-off/check-act/',
+        method: 'post',
+        dataType: 'json',
+        headers: {
+            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        data: { act_number: woCurrentAct },
+        success: function(data) {
+            woUpdateActInfo(woCurrentAct, true);
+            woShowActInfo(woCurrentAct, data.status === 'exists' ? data.codes_count || 0 : 0);
+        },
+        error: function() {
+            woUpdateActInfo(woCurrentAct, true);
+            woShowActInfo(woCurrentAct, 0);
+        }
+    });
+}
+
+// ===== ЗАКРЫТЬ ПОДТВЕРЖДЕНИЕ =====
+function woCloseConfirmAndReset() {
+    woCloseModal('wo_confirm_modal');
+    location.reload(true);
+}
+
+// ===== ПОКАЗАТЬ ИНФОРМАЦИЮ ОБ АКТЕ =====
+function woShowActInfo(actNumber, count) {
+    document.getElementById('wo_main_card').style.display = 'none';
+    document.getElementById('wo_act_info').style.display = 'block';
+    document.getElementById('wo_act_number_display').textContent = 'Акт №' + actNumber;
+    document.getElementById('wo_act_count_display').textContent = count;
+    woCurrentAct = actNumber;
+
+    // Обновляем информацию в окне наполнения
+    woUpdateActInfo(actNumber, woActExists);
+
+    setTimeout(function() { woOpenFillModal(); }, 500);
+}
+
+// ===== ЗАКРЫТЬ ИНФОРМАЦИЮ =====
+function woCloseActInfo() {
+    document.getElementById('wo_act_info').style.display = 'none';
+    document.getElementById('wo_main_card').style.display = 'block';
+    document.getElementById('wo_act_input').value = '';
+    woCurrentAct = '';
+    woActExists = false;
+    localStorage.removeItem('wo_codes');
+    woUpdateCodesList();
+    location.reload(true);
+}
+
+// ===== ОТКРЫТЬ МОДАЛЬНОЕ ОКНО =====
+function woOpenModal(modalId) {
+    var modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+}
+
+function woCloseModal(modalId) {
+    var modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// ===== ОТКРЫТЬ МОДАЛЬНОЕ ОКНО НАПОЛНЕНИЯ =====
+function woOpenFillModal() {
+    woUpdateActInfo(woCurrentAct, woActExists);
+    woUpdateCodesList();
+    woOpenModal('wo_fill_modal');
+    setTimeout(function() {
+        document.getElementById('wo_code_input').focus();
+        document.getElementById('wo_code_input').select();
+    }, 500);
+}
+
+// ===== ОБНОВИТЬ СПИСОК КОДОВ =====
+function woUpdateCodesList() {
+    let codes = localStorage.getItem('wo_codes');
+    codes = codes ? JSON.parse(codes) : [];
+    woCodesList = codes;
+    document.getElementById('wo_codes_count').textContent = codes.length;
+
+    const container = document.getElementById('wo_codes_container');
+    if (codes.length === 0) {
+        container.innerHTML = '<div class="wo-codes-empty">Нет добавленных кодов</div>';
+        return;
+    }
+    let html = '<div class="wo-list">';
+    codes.forEach(function(code, index) {
+        const display = code.length > 80 ? code.substring(0, 37) + '...' : code;
+        html += `
+            <div class="wo-list-item">
+                <code class="wo-code-text">${woEscapeHtml(display)}</code>
+                <button class="wo-btn wo-btn-danger-sm" onclick="woRemoveCode(${index})">
+                    <i class="bi bi-trash3"></i>
+                </button>
+            </div>
+        `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    container.scrollTop = container.scrollHeight;
+}
+
+// ===== УДАЛИТЬ КОД =====
+function woRemoveCode(index) {
+    let codes = localStorage.getItem('wo_codes');
+    if (codes) {
+        codes = JSON.parse(codes);
+        codes.splice(index, 1);
+        localStorage.setItem('wo_codes', JSON.stringify(codes));
+        woUpdateCodesList();
+        setTimeout(function() {
+            document.getElementById('wo_code_input').focus();
+            document.getElementById('wo_code_input').select();
+        }, 50);
+    }
+}
+
+// ===== ОЧИСТИТЬ ВСЕ =====
+function woClearAllCodes() {
+    if (confirm('Вы уверены, что хотите удалить ВСЕ коды?')) {
+        localStorage.removeItem('wo_codes');
+        woUpdateCodesList();
+        setTimeout(function() {
+            document.getElementById('wo_code_input').focus();
+            document.getElementById('wo_code_input').select();
+        }, 50);
+    }
+}
+
+// ===== ВВОД КОДОВ =====
+document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('wo_code_input');
+    if (!input) return;
+
+    var lastValue = '';
+    input.addEventListener('input', function(e) {
+        var val = this.value.trim();
+        if (val && val.length > 10 && val !== lastValue) {
+            lastValue = val;
+            clearTimeout(this._scanTimer);
+            this._scanTimer = setTimeout(function() {
+                var code = input.value.trim();
+                if (code) {
+                    var enter = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', which: 13, keyCode: 13, bubbles: true });
+                    input.dispatchEvent(enter);
+                }
+            }, 300);
+        }
+    });
+
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            var code = this.value.trim();
+            if (code) {
+                woSaveCode(code);
+                this.value = '';
+                lastValue = '';
+                clearTimeout(this._scanTimer);
+                setTimeout(function() {
+                    input.focus();
+                    input.select();
+                }, 50);
+            }
+        }
+    });
+
+    input.addEventListener('blur', function() {
+        var code = this.value.trim();
+        if (code) {
+            woSaveCode(code);
+            this.value = '';
+            lastValue = '';
+        }
+    });
+});
+
+// ===== СОХРАНИТЬ КОД В ЛОКАЛЬНОЕ ХРАНИЛИЩЕ =====
+function woSaveCode(code) {
+    if (!code) return;
+    let codes = localStorage.getItem('wo_codes');
+    codes = codes ? JSON.parse(codes) : [];
+    if (codes.includes(code)) {
+        woShowTemp('Код уже существует', 'warning');
+        return;
+    }
+    codes.push(code);
+    localStorage.setItem('wo_codes', JSON.stringify(codes));
+    woUpdateCodesList();
+    woShowTemp('Код добавлен! Всего: ' + codes.length, 'success');
+    setTimeout(function() {
+        document.getElementById('wo_code_input').focus();
+        document.getElementById('wo_code_input').select();
+    }, 50);
+}
+
+// ===== ВРЕМЕННОЕ СООБЩЕНИЕ =====
+function woShowTemp(message, type) {
+    const container = document.getElementById('wo_codes_container');
+    const old = document.querySelector('.wo-temp-alert');
+    if (old) old.remove();
+    const div = document.createElement('div');
+    div.className = 'wo-temp-alert wo-alert-' + (type === 'success' ? 'success' : 'warning');
+    div.innerHTML = message + '<button class="wo-temp-close" onclick="this.parentElement.remove()">×</button>';
+    container.parentNode.insertBefore(div, container);
+    setTimeout(function() {
+        if (div) div.remove();
+        document.getElementById('wo_code_input').focus();
+        document.getElementById('wo_code_input').select();
+    }, 1500);
+}
+
+// ===== СОХРАНИТЬ КОДЫ В БД (создание акта при необходимости) =====
+function woSaveCodes() {
+    let codes = localStorage.getItem('wo_codes');
+    if (!codes || JSON.parse(codes).length === 0) {
+        woShowTemp('Нет кодов для сохранения', 'warning');
+        return;
+    }
+    if (!woCurrentAct) {
+        woShowTemp('Акт не выбран', 'warning');
+        return;
+    }
+
+    $('#preloader').show();
+    woCloseModal('wo_fill_modal');
+
+    // Если акт не существует - создаём его
+    var createAct = !woActExists;
+
+    // Сначала создаём акт, если нужно
+    function doSave() {
+        $.ajax({
+            url: '/write-off/save-codes/',
+            method: 'post',
+            dataType: 'json',
+            headers: {
+                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            data: {
+                act_number: woCurrentAct,
+                codes: codes,
+                create_act: createAct ? 'true' : 'false'
+            },
+            success: function(data) {
+                $('#preloader').fadeOut(500);
+                if (data.status === 'success') {
+                    document.getElementById('wo_result_new').textContent = data.new_count || 0;
+                    document.getElementById('wo_result_overwritten').textContent = data.overwritten_count || 0;
+                    document.getElementById('wo_result_text').textContent = data.message;
+                    woOpenModal('wo_result_modal');
+                    localStorage.removeItem('wo_codes');
+                    woUpdateCodesList();
+                    woActExists = true;
+                    var current = parseInt(document.getElementById('wo_act_count_display').textContent) || 0;
+                    document.getElementById('wo_act_count_display').textContent = current + (data.new_count || 0) + (data.overwritten_count || 0);
+                } else {
+                    woShowTemp(data.message || 'Ошибка сохранения', 'warning');
+                }
+            },
+            error: function() {
+                $('#preloader').fadeOut(500);
+                woShowTemp('Ошибка сохранения', 'warning');
+            }
+        });
+    }
+
+    if (createAct) {
+        // Создаём акт
+        $.ajax({
+            url: '/write-off/create-act/',
+            method: 'post',
+            dataType: 'json',
+            headers: {
+                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            data: { act_number: woCurrentAct },
+            success: function(data) {
+                if (data.status === 'created' || data.status === 'exists') {
+                    woActExists = true;
+                    woUpdateActInfo(woCurrentAct, true);
+                    doSave();
+                } else {
+                    $('#preloader').fadeOut(500);
+                    woShowTemp('Ошибка создания акта', 'warning');
+                }
+            },
+            error: function() {
+                $('#preloader').fadeOut(500);
+                woShowTemp('Ошибка создания акта', 'warning');
+            }
+        });
+    } else {
+        doSave();
+    }
+}
+
+// ===== ЗАКРЫТЬ РЕЗУЛЬТАТ =====
+function woCloseResultAndReset() {
+    woCloseModal('wo_result_modal');
+    location.reload(true);
+}
+
+// ===== ЗАКРЫТЬ НАПОЛНЕНИЕ =====
+function woCloseFillAndReload() {
+    woCloseModal('wo_fill_modal');
+    localStorage.removeItem('wo_codes');
+    woUpdateCodesList();
+    location.reload(true);
+}
+
+// ===== ЭКРАНИРОВАНИЕ =====
+function woEscapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ===== РУЧНОЙ ВВОД (ПЕРЕКЛЮЧЕНИЕ МЕЖДУ СКАНИРОВАНИЕМ И РУЧНЫМ ВВОДОМ) =====
+document.addEventListener('DOMContentLoaded', function() {
+    var toggleBtn = document.getElementById('wo_toggle_manual_btn');
+    var actInput = document.getElementById('wo_act_input');
+    var isManualMode = false;
+
+    // Сохраняем обработчики в глобальные переменные
+    window.wo_scanHandlers = {
+        inputHandler: null,
+        blurHandler: null,
+        keydownHandler: null
+    };
+
+    // Функция для включения режима сканирования
+    function enableScanMode(input) {
+        console.log('📷 Режим сканирования включён');
+
+        // Удаляем старые обработчики
+        var newInput = input.cloneNode(true);
+        input.parentNode.replaceChild(newInput, input);
+        input = document.getElementById('wo_act_input');
+        actInput = input;
+
+        var lastValue = '';
+
+        // Обработчик input для автоматического сканирования
+        input.addEventListener('input', function(e) {
+            var val = this.value.trim();
+            if (val && val.length > 1 && val !== lastValue) {
+                lastValue = val;
+                clearTimeout(this._scanTimer);
+                this._scanTimer = setTimeout(function() {
+                    var actNumber = woCleanActNumber(input.value);
+                    if (actNumber) {
+                        input.value = actNumber;
+                        // Эмулируем Enter
+                        var enter = new KeyboardEvent('keydown', {
+                            key: 'Enter',
+                            code: 'Enter',
+                            which: 13,
+                            keyCode: 13,
+                            bubbles: true
+                        });
+                        input.dispatchEvent(enter);
+                    }
+                }, 300);
+            }
+        });
+
+        // Обработчик blur (потеря фокуса)
+        input.addEventListener('blur', function() {
+            var actNumber = woCleanActNumber(this.value);
+            if (actNumber) {
+                this.value = actNumber;
+                woCheckAct(actNumber);
+                this.value = '';
+            }
+        });
+
+        // Обработчик Enter (на случай ручного ввода)
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                var actNumber = woCleanActNumber(this.value);
+                if (actNumber) {
+                    this.value = actNumber;
+                    woCheckAct(actNumber);
+                    this.value = '';
+                }
+            }
+        });
+
+        input.placeholder = 'Наведите сканер на код';
+        input.focus();
+        input.select();
+
+        return input;
+    }
+
+    // Функция для включения режима ручного ввода
+    function enableManualMode(input) {
+        console.log('🖊️ Ручной режим включён');
+
+        var newInput = input.cloneNode(true);
+        input.parentNode.replaceChild(newInput, input);
+        input = document.getElementById('wo_act_input');
+        actInput = input;
+
+        // Удаляем все старые обработчики через клонирование
+        // Добавляем только обработчик Enter
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                var actNumber = woCleanActNumber(this.value);
+                if (actNumber) {
+                    this.value = actNumber;
+                    woCheckAct(actNumber);
+                    this.value = '';
+                }
+            }
+        });
+
+        // Обработчик blur для ручного режима (тоже отправляет)
+        input.addEventListener('blur', function() {
+            var actNumber = woCleanActNumber(this.value);
+            if (actNumber) {
+                this.value = actNumber;
+                woCheckAct(actNumber);
+                this.value = '';
+            }
+        });
+
+        input.placeholder = 'Введите номер и нажмите Enter';
+        input.focus();
+        input.select();
+
+        return input;
+    }
+
+    if (toggleBtn && actInput) {
+        // Переключатель режимов
+        toggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isManualMode = !isManualMode;
+
+            if (isManualMode) {
+                // === ВКЛЮЧАЕМ РУЧНОЙ РЕЖИМ ===
+                this.innerHTML = '<i class="bi bi-qr-code"></i>';
+                this.classList.add('active');
+                this.title = 'Включить сканирование';
+                actInput = enableManualMode(actInput);
+                woShowToast('🖊️ Ручной режим: введите номер и нажмите Enter', 'info', 2000);
+            } else {
+                // === ВКЛЮЧАЕМ РЕЖИМ СКАНИРОВАНИЯ ===
+                this.innerHTML = '<i class="bi bi-pencil"></i>';
+                this.classList.remove('active');
+                this.title = 'Включить ручной ввод';
+                actInput = enableScanMode(actInput);
+                woShowToast('📷 Режим сканирования', 'info', 2000);
+            }
+        });
+
+        // Устанавливаем начальный режим сканирования
+        actInput = enableScanMode(actInput);
+        console.log('✅ Инициализирован режим сканирования');
+    }
+});
+
+
+</script>
+
+{% endblock %}

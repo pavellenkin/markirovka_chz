@@ -210,12 +210,13 @@ def change_date(request):
         ki = request.POST.get("ki")
         pr_date = request.POST.get("pr_date")
         exp_date = request.POST.get("exp_date")
+        product_group = request.POST.get("product_group")
         if apply_request == 'true':
             print(ki)
             print(pr_date)
             print(exp_date)
 
-            status, result = information_change(ki, pr_date, exp_date)
+            status, result = information_change(ki, pr_date, exp_date, product_group)
             if status is True:
                 print("information_change_status: ",status , " | ", result)
                 result_info, info_mess = info_ki(ki)
@@ -296,34 +297,42 @@ def check_code(request):
             # print("INPUT CODE ENCODE length: ", len(check_code_input.encode()))
             print(check_code_input[31:37])
 
+            # Иконки для статусов (определяем в начале файла или используем везде одинаково)
+            STATUS_ICONS = {
+                'success': '<i class="bi bi-check-circle-fill text-success"></i>',
+                'warning': '<i class="bi bi-exclamation-triangle-fill text-warning"></i>',
+                'error': '<i class="bi bi-x-circle-fill text-danger"></i>',
+                'unknown': '<i class="bi bi-question-circle-fill text-secondary"></i>',
+                'bug': '<i class="bi bi-bug-fill text-danger"></i>',
+            }
 
+            # ============ СТРУКТУРА DATAMATRIX ============
             if check_code_input[:3] == "]d2":
                 print("Лидирующий символ НАЙДЕН")
                 check_code_input = check_code_input.replace("]d2", "")
                 check_code_input = replace_separator(check_code_input)
-                leading_symbol_info = f'<span class="">Структура Datamatrix ✅ КОРРЕКТНАЯ</span><hr class="hr hr-blurry" />'
+                leading_symbol_info = f'<span class="text-success">{STATUS_ICONS["success"]} Структура Datamatrix КОРРЕКТНАЯ</span><hr class="hr hr-blurry" />'
+
             elif check_code_input[:5] == "]C100":
                 check_code_input = check_code_input.replace("]C100", "")
-                leading_symbol_info = f'<span class="">Структура Datamatrix  🔴 # НЕИЗВЕСТНА #</span><hr class="hr hr-blurry" />'
-
+                leading_symbol_info = f'<span class="text-secondary">{STATUS_ICONS["unknown"]} Структура Datamatrix НЕИЗВЕСТНА</span><hr class="hr hr-blurry" />'
 
             elif check_code_input[:3] == "]d1":
                 check_code_input = check_code_input.replace("]d1", "")
                 check_code_input = replace_separator(check_code_input)
-                leading_symbol_info = f'<span class="">Структура Datamatrix ⚠️ НЕКОРРЕКТНАЯ</span><hr class="hr hr-blurry" />'
-
-
+                leading_symbol_info = f'<span class="text-warning">{STATUS_ICONS["warning"]} Структура Datamatrix НЕКОРРЕКТНАЯ</span><hr class="hr hr-blurry" />'
 
             else:
                 check_code_input = check_code_input.replace("]d1", "")
                 check_code_input = replace_separator(check_code_input)
-                leading_symbol_info = f'<span class="">Структура Datamatrix  🔴 # НЕИЗВЕСТНА #</span><hr class="hr hr-blurry" />'
+                leading_symbol_info = f'<span class="text-danger">{STATUS_ICONS["error"]} Структура Datamatrix НЕИЗВЕСТНА</span><hr class="hr hr-blurry" />'
 
+            # ============ ПРОВЕРКА СЕРВИСОМ ============
             response_validity, valid_text = code_validity(check_code_input)
             if response_validity is True:
-                validity_info = f'<span class="">Проверка сервисом {valid_text}</span>'
+                validity_info = f'<span class="text-success">{STATUS_ICONS["success"]} Проверка сервисом - {valid_text}</span>'
             else:
-                validity_info = f'<span class="">Проверка сервисом {valid_text}</span>'
+                validity_info = f'<span class="text-danger">{STATUS_ICONS["error"]} Проверка сервисом - {valid_text}</span>'
             #print('\x1d'.join(check_code_input.split('\x1d')[:1]))
 
             try:
@@ -446,7 +455,7 @@ def check_code(request):
                                     f'<div class="row justify-content-center align-items-center"><div class="col text-start">'
                                     f'{text_package_type}</div><div class="col text-end">'
                                     f'<a class="btn btn-sm btn-success" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">'
-                                    f'Единиц внутри {len(child)} ⇓'
+                                    f'Единиц внутри {len(child)} <i class="bi bi-arrow-down-up"></i>'
                                     f'</a>'
                                     f'</div></div>',
                                 "collapse_content": f'{"\r\n".join(child)}',
@@ -479,7 +488,7 @@ def check_code(request):
                                     f'<div class="row justify-content-center align-items-center"><div class="col text-start">'
                                     f'{text_package_type}</div><div class="col text-end">'
                                     f'<a class="btn btn-sm btn-success" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">'
-                                    f'Единиц внутри {len(child)} ⇓'
+                                    f'Единиц внутри {len(child)} <i class="bi bi-arrow-down-up"></i>'
                                     f'</a>'
                                     f'</div></div>',
                                 "collapse_content": f'{"\r\n".join(child)}',
@@ -532,7 +541,7 @@ def check_code(request):
                                     f'<div class="row justify-content-center align-items-center"><div class="col text-start">'
                                     f'{text_package_type}</div><div class="col text-end">'
                                     f'<a class="btn btn-sm btn-success" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">'
-                                    f'Единиц внутри {len(child)} ⇓'
+                                    f'Единиц внутри {len(child)} <i class="bi bi-arrow-down-up"></i>'
                                     f'</a>'
                                     f'</div></div>',
                                 "collapse":
@@ -585,7 +594,7 @@ def check_code(request):
                                     f'<div class="row justify-content-center align-items-center"><div class="col text-start">'
                                     f'{text_package_type}</div><div class="col text-end">'
                                     f'<a class="btn btn-sm btn-success" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">'
-                                    f'Единиц внутри {len(child)} ⇓'
+                                    f'Единиц внутри {len(child)} <i class="bi bi-arrow-down-up"></i>'
                                     f'</a>'
                                     f'</div></div>',
                                 "collapse":

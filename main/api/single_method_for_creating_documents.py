@@ -3,6 +3,7 @@ import requests
 import json
 import base64
 from main.api.cert import true_cert
+from django.conf import settings
 """
     CIS_NOTICE - Уведомление о состоянии кодов (JSON)
     MANUAL — формат * .json
@@ -26,7 +27,7 @@ format_doc - формат документа (MANUAL - json)
 
 """
 
-def check_status_document(number_doc):
+def check_status_document(number_doc, product_group = "autofluids"):
     numb_attempts = 0
     while True:
         if numb_attempts >= 12:
@@ -41,7 +42,7 @@ def check_status_document(number_doc):
             "accept": "application/json",
             "Authorization": f"Bearer {token}",
         }
-        url_check_doc = f"https://markirovka.crpt.ru/api/v4/true-api/doc/{number_doc}/info?pg=autofluids"
+        url_check_doc = f"https://markirovka.crpt.ru/api/v4/true-api/doc/{number_doc}/info?pg={product_group}"
         try:
             send_check_doc = requests.get(url_check_doc, headers=header, verify=False, timeout=7)
             if send_check_doc.status_code == 200 or send_check_doc.status_code == 201:
@@ -62,14 +63,14 @@ def check_status_document(number_doc):
             return False, f"Error: Имя или услуга неизвестны"
 
 
-def method_create_doc(type_doc, body_doc, format_doc):
+def method_create_doc(type_doc, body_doc, format_doc, product_group = "autofluids"):
     while True:
         status_load, token = load_token()
         if not status_load:
             status, token = auth()
             if status is False:
                 return False, token
-        url = "https://markirovka.crpt.ru/api/v3/true-api/lk/documents/create?pg=autofluids"
+        url = f"https://markirovka.crpt.ru/api/v3/true-api/lk/documents/create?pg={product_group}"
         header = {
             "accept": "application/json",
             "Authorization": f"Bearer {token}",

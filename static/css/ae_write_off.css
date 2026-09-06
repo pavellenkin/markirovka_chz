@@ -1,0 +1,1787 @@
+/* ============================================
+   AE WRITE OFF - Стили для списания
+   Версия: 2.2 - Исправлено для ТСД
+   ============================================ */
+
+@import url('https://fonts.cdnfonts.com/css/gilroy-bold');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css');
+
+/* ===== КОНТЕЙНЕР ===== */
+.wo-container {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    background-color: #f7f7f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ===== ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ ===== */
+.wo-bg {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.04;
+    font-size: 120px;
+    color: #1f1f1f;
+}
+.wo-top-left { top: 20px; left: 20px; transform: rotate(-15deg); }
+.wo-bottom-right { bottom: 20px; right: 20px; transform: rotate(15deg); }
+.wo-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    font-size: 200px;
+    opacity: 0.03;
+}
+
+/* ===== КНОПКА ADMIN ===== */
+.wo-admin {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+.wo-admin-btn {
+    background: #ffffff;
+    border: 2px solid #696969;
+    color: #1f1f1f;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+.wo-admin-btn:hover {
+    background: #1f1f1f;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.wo-admin-btn i { font-size: 16px; }
+
+/* ===== КНОПКА "СПИСОК АКТОВ" ===== */
+.wo-acts-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+.wo-acts-btn .wo-btn {
+    background: #ffffff;
+    border: 2px solid #696969;
+    color: #1f1f1f;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+.wo-acts-btn .wo-btn:hover {
+    background: #1f1f1f;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+@media (max-width: 768px) { .wo-acts-btn { display: none !important; } }
+
+/* ===== КАРТОЧКИ ===== */
+.wo-card {
+    background: #ffffff !important;
+    border: 2px solid #696969 !important;
+    border-radius: 16px !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    overflow: hidden !important;
+    z-index: 1 !important;
+    position: relative !important;
+}
+
+/* ===== ШАПКА КАРТОЧКИ ===== */
+.wo-card-header {
+    background: #1f1f1f !important;
+    color: #ffffff !important;
+    border-radius: 14px 14px 0 0 !important;
+    padding: 14px 20px !important;
+    border-bottom: none !important;
+    min-height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+.wo-card-header-inner {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    width: 100% !important;
+}
+.wo-card-header-back {
+    position: absolute !important;
+    left: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+.wo-btn-back {
+    background: rgba(255,255,255,0.15) !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 4px 12px !important;
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+    cursor: pointer;
+    transition: background 0.3s ease !important;
+}
+.wo-btn-back:hover { background: rgba(255,255,255,0.25) !important; }
+.wo-card-header-title { flex: 1; text-align: center; }
+.wo-card-header-text {
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    letter-spacing: 0.3px !important;
+    color: #ffffff !important;
+}
+
+/* ===== ТЕЛО КАРТОЧКИ ===== */
+.wo-card-body { padding: 24px 28px 20px !important; }
+.wo-input-group { padding: 0 !important; margin-bottom: 16px !important; }
+
+.wo-input {
+    width: 100% !important;
+    padding: 12px 16px !important;
+    border: 2px solid #696969 !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif !important;
+    background: #ffffff !important;
+    color: #1f1f1f !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+    outline: none !important;
+    text-align: center !important;
+    letter-spacing: 1px !important;
+    min-height: 48px !important;
+    box-shadow: none !important;
+}
+.wo-input:focus {
+    border-color: #3eff00 !important;
+    box-shadow: 0 0 0 3px rgba(184,134,11,0.1) !important;
+}
+.wo-input::placeholder {
+    color: #b0b0b0 !important;
+    font-size: 14px !important;
+    letter-spacing: 0.5px !important;
+    text-align: center !important;
+}
+
+.wo-logo { text-align: center !important; padding: 8px 0 4px !important; }
+.wo-logo-img { width: 80px !important; height: 80px !important; transition: opacity 0.3s ease !important; }
+.wo-logo-img:hover { opacity: 1 !important; }
+
+.wo-card-footer {
+    text-align: center !important;
+    padding: 12px 20px !important;
+    font-size: 13px !important;
+    color: #696969 !important;
+    border-top: 1px solid #e8e8ec !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.2px !important;
+    background: transparent !important;
+}
+
+/* ===== ИНФОРМАЦИЯ ОБ АКТЕ ===== */
+#wo_act_info {
+    background: #ffffff !important;
+    border: 2px solid #696969 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08) !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    overflow: hidden !important;
+    z-index: 2 !important;
+    display: none !important;
+    margin-top: 20px !important;
+}
+.wo-act-number { font-weight: 700 !important; font-size: 18px !important; color: #1f1f1f !important; }
+.wo-act-count { font-size: 48px !important; font-weight: 700 !important; color: #2d6a9f !important; margin: 10px 0 !important; }
+.wo-act-label { color: #696969 !important; font-size: 14px !important; }
+.wo-btn-group {
+    display: flex !important;
+    gap: 16px !important;
+    justify-content: center !important;
+    margin-top: 16px !important;
+    flex-wrap: wrap !important;
+}
+.wo-btn-group .wo-btn {
+    padding: 8px 24px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    min-width: 100px !important;
+    justify-content: center !important;
+}
+
+/* ===== КНОПКИ ===== */
+.wo-btn { cursor: pointer; transition: all 0.3s ease; }
+.wo-btn-warning { background: #b8860b !important; color: #ffffff !important; }
+.wo-btn-warning:hover { background: #9a7209 !important; }
+.wo-btn-secondary { background: #696969 !important; color: #ffffff !important; }
+.wo-btn-secondary:hover { background: #1f1f1f !important; }
+.wo-btn-success { background: #3a8c6b !important; color: #ffffff !important; }
+.wo-btn-success:hover { background: #2d7056 !important; }
+.wo-btn-dark { background: #1f1f1f !important; color: #ffffff !important; }
+.wo-btn-dark:hover { background: #333333 !important; }
+.wo-btn-danger-sm {
+    background: #b33c3c !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+    cursor: pointer;
+}
+.wo-btn-danger-sm:hover { background: #8f2f2f !important; }
+.wo-btn-outline-danger {
+    border: 2px solid #b33c3c !important;
+    color: #b33c3c !important;
+    background: transparent !important;
+    padding: 6px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer;
+}
+.wo-btn-outline-danger:hover { background: #b33c3c !important; color: #ffffff !important; }
+
+/* ===== МОДАЛЬНЫЕ ОКНА ===== */
+.wo-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999999;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.wo-modal-dialog {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    animation: woFadeIn 0.2s ease;
+}
+.wo-modal-lg { max-width: 500px; }
+@keyframes woFadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.wo-modal-content {
+    background: #ffffff;
+    border: 2px solid #696969;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    width: 100%;
+}
+.wo-modal-header {
+    background: #1f1f1f;
+    color: #ffffff;
+    padding: 14px 20px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.wo-modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+.wo-modal-close {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0.8;
+    padding: 0 8px;
+}
+.wo-modal-close:hover { opacity: 1; }
+.wo-modal-body { padding: 20px; }
+.wo-modal-footer {
+    border-top: 1px solid #e8e8ec;
+    padding: 14px 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.wo-modal-footer .wo-btn {
+    padding: 8px 24px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+    min-width: 120px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+}
+
+/* ===== МОДАЛЬНОЕ ОКНО НАПОЛНЕНИЯ ===== */
+#wo_fill_modal .wo-modal-dialog { max-width: 500px; }
+#wo_fill_modal .wo-modal-body {
+    padding: 20px !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+}
+.wo-fill-label {
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: #1f1f1f !important;
+    text-align: center;
+    margin-bottom: 8px;
+}
+.wo-input-lg {
+    border: 2px solid #696969 !important;
+    border-radius: 10px !important;
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif !important;
+    text-align: center !important;
+    min-height: 48px !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+.wo-input-lg:focus {
+    border-color: #3eff00 !important;
+    box-shadow: 0 0 0 3px rgba(184,134,11,0.1) !important;
+    outline: none;
+}
+.wo-codes-list {
+    border: 1px solid #e8e8ec;
+    border-radius: 10px;
+    padding: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 12px;
+    background: #fafafa;
+}
+.wo-codes-empty {
+    color: #999;
+    text-align: center;
+    padding: 20px;
+    font-size: 13px;
+}
+.wo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.wo-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e8e8ec;
+}
+.wo-code-text {
+    font-size: 12px !important;
+    color: #1f1f1f !important;
+    word-break: break-all !important;
+    flex: 1;
+    margin-right: 8px;
+}
+
+.wo-modal-footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.wo-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.wo-footer-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.wo-badge {
+    font-size: 14px !important;
+    padding: 4px 14px !important;
+    border-radius: 20px !important;
+    background: #1f1f1f !important;
+    color: #ffffff !important;
+    display: inline-block;
+}
+
+/* ===== ВРЕМЕННЫЕ СООБЩЕНИЯ ===== */
+.wo-temp-alert {
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 500;
+}
+.wo-alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.wo-alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+.wo-temp-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: 0.6;
+    padding: 0 4px;
+}
+.wo-temp-close:hover { opacity: 1; }
+
+/* ===== МОДАЛЬНОЕ ОКНО РЕЗУЛЬТАТА ===== */
+.wo-result-icon { font-size: 48px; text-align: center; margin-bottom: 12px; }
+.wo-result-success { color: #3a8c6b; }
+.wo-result-text { text-align: center; font-size: 16px; color: #1f1f1f; }
+.wo-result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 16px;
+}
+.wo-stat-item { text-align: center; }
+.wo-stat-number { font-size: 28px; font-weight: 700; }
+.wo-stat-new { color: #3a8c6b; }
+.wo-stat-overwritten { color: #b8860b; }
+.wo-stat-label { font-size: 12px; color: #696969; }
+
+/* ===== МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ===== */
+.wo-modal-icon { font-size: 48px; text-align: center; color: #b8860b; margin-bottom: 12px; }
+.wo-modal-message { text-align: center; font-size: 16px; color: #1f1f1f; }
+
+/* ============================================ */
+/*        АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ               */
+/* ============================================ */
+@media (max-width: 768px) {
+    .wo-container { padding: 8px 30px !important; justify-content: center !important; padding-top: 0 !important; }
+    .wo-bg { display: none !important; }
+    .wo-admin { display: none !important; }
+    .wo-card {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        margin: 0 auto !important;
+        border-radius: 14px !important;
+        max-width: 100% !important;
+    }
+    .wo-card-header { padding: 6px 10px !important; min-height: 34px !important; border-radius: 12px 12px 0 0 !important; }
+    .wo-card-header-text { font-size: 11px !important; }
+    .wo-card-header .wo-btn-back { font-size: 16px !important; padding: 2px 10px !important; border-radius: 6px !important; }
+    .wo-card-body { padding: 10px 10px 8px !important; }
+    .wo-input { padding: 10px 14px !important; font-size: 15px !important; min-height: 44px !important; }
+    .wo-input::placeholder { font-size: 12px !important; }
+    .wo-logo-img { width: 64px !important; height: 64px !important; }
+    .wo-card-footer { padding: 10px 16px !important; font-size: 11px !important; }
+    #wo_act_info {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        margin: 12px auto 0 !important;
+        max-width: 100% !important;
+        border-radius: 14px !important;
+    }
+    #wo_act_info .wo-card-body { padding: 16px !important; }
+    .wo-act-number { font-size: 16px !important; }
+    .wo-act-count { font-size: 36px !important; }
+    .wo-btn-group .wo-btn { padding: 6px 16px !important; font-size: 12px !important; min-width: 80px !important; }
+
+    .wo-modal { padding: 10px; }
+    .wo-modal-dialog { max-width: 100% !important; margin: 0 auto !important; }
+    .wo-modal-body { padding: 16px !important; }
+    .wo-modal-footer { padding: 12px 16px !important; }
+    .wo-modal-footer .wo-btn { padding: 6px 16px !important; font-size: 12px !important; min-width: 80px !important; }
+    #wo_fill_modal .wo-modal-dialog { max-width: 100% !important; margin: 0 auto !important; }
+    #wo_fill_modal .wo-modal-body { padding: 16px !important; max-height: 75vh !important; }
+    .wo-input-lg { padding: 10px 14px !important; font-size: 15px !important; min-height: 44px !important; }
+    .wo-codes-list { max-height: 200px !important; }
+    .wo-list-item { padding: 6px 10px !important; }
+    .wo-code-text { font-size: 11px !important; }
+    .wo-btn-danger-sm { padding: 2px 8px !important; font-size: 10px !important; }
+    .wo-modal-footer-inner { flex-direction: column; align-items: stretch; }
+    .wo-footer-left, .wo-footer-right { justify-content: center; }
+    .wo-badge { font-size: 12px !important; padding: 3px 12px !important; }
+    .wo-result-stats { gap: 20px; }
+    .wo-stat-number { font-size: 24px; }
+}
+
+/* ============================================ */
+/*        СПЕЦИАЛЬНО ДЛЯ ТСД HONEYWELL CK65      */
+/* ============================================ */
+@media (width: 480px) and (height: 800px) {
+    .wo-container { padding: 8px 30px !important; justify-content: center !important; padding-top: 0 !important; }
+    .wo-card { max-width: 100% !important; border-radius: 12px !important; }
+    .wo-card-header { min-height: 34px !important; padding: 6px 10px !important; border-radius: 10px 10px 0 0 !important; }
+    .wo-card-header-text { font-size: 11px !important; }
+    .wo-card-header .wo-btn-back { font-size: 14px !important; padding: 2px 8px !important; }
+    .wo-card-body { padding: 10px 10px 8px !important; }
+    .wo-input { font-size: 14px !important; padding: 8px 12px !important; min-height: 38px !important; }
+    .wo-input::placeholder { font-size: 11px !important; }
+    .wo-logo-img { width: 56px !important; height: 56px !important; }
+    .wo-card-footer { font-size: 10px !important; padding: 8px 12px !important; }
+    #wo_act_info { max-width: 100% !important; border-radius: 12px !important; margin-top: 10px !important; }
+    .wo-act-number { font-size: 15px !important; }
+    .wo-act-count { font-size: 30px !important; }
+    .wo-btn-group .wo-btn { font-size: 11px !important; padding: 5px 14px !important; min-width: 70px !important; }
+    .wo-admin { display: none !important; }
+    .wo-acts-btn { display: none !important; }
+
+    .wo-modal { padding: 6px; }
+    .wo-modal-dialog { max-width: 100% !important; margin: 0 auto !important; }
+    .wo-modal-content { border-radius: 12px !important; }
+    .wo-modal-header { padding: 8px 12px !important; min-height: 36px !important; }
+    .wo-modal-title { font-size: 13px !important; }
+    .wo-modal-close { font-size: 18px !important; }
+    .wo-modal-body { padding: 8px 10px !important; }
+    .wo-modal-footer { padding: 6px 8px !important; }
+    .wo-modal-footer .wo-btn { font-size: 10px !important; padding: 4px 10px !important; min-width: 50px !important; }
+
+    /* ===== ФУТЕР В ОДНУ СТРОКУ ===== */
+    .wo-modal-footer-inner {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        gap: 0 !important;
+    }
+    .wo-footer-left {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        gap: 0 !important;
+        flex: 1 !important;
+    }
+    .wo-footer-right {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        gap: 0 !important;
+        flex: 1 !important;
+        justify-content: flex-end !important;
+    }
+
+    /* Скрываем текст кнопок, оставляем только иконки */
+    .wo-footer-left .wo-btn .wo-btn-text,
+    .wo-footer-right .wo-btn .wo-btn-text {
+        display: none !important;
+    }
+    .wo-footer-left .wo-btn,
+    .wo-footer-right .wo-btn {
+        margin: 0 2px !important;
+        padding: 4px 6px !important;
+        font-size: 0 !important;
+        min-width: 28px !important;
+        height: 28px !important;
+        border-radius: 6px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: none !important;
+    }
+    .wo-footer-left .wo-btn i,
+    .wo-footer-right .wo-btn i {
+        font-size: 14px !important;
+        margin: 0 !important;
+    }
+
+    .wo-badge {
+        font-size: 10px !important;
+        padding: 2px 8px !important;
+        margin: 0 2px !important;
+        min-width: 18px !important;
+        height: 24px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 12px !important;
+    }
+
+    /* ===== СПИСОК КОДОВ - НЕ БОЛЕЕ 3 СТРОК ===== */
+    .wo-codes-list {
+        max-height: 72px !important;
+        min-height: 54px !important;
+        overflow-y: auto !important;
+        padding: 4px 6px !important;
+        margin-top: 6px !important;
+        border-radius: 8px !important;
+    }
+    .wo-codes-list::-webkit-scrollbar {
+        width: 3px !important;
+    }
+    .wo-codes-list::-webkit-scrollbar-track {
+        background: #f0f0f0 !important;
+        border-radius: 3px !important;
+    }
+    .wo-codes-list::-webkit-scrollbar-thumb {
+        background: #b0b0b0 !important;
+        border-radius: 3px !important;
+    }
+    .wo-list-item {
+        padding: 3px 6px !important;
+        margin: 2px 0 !important;
+        border-radius: 4px !important;
+    }
+    .wo-code-text {
+        font-size: 9px !important;
+        line-height: 1.2 !important;
+    }
+    .wo-btn-danger-sm {
+        padding: 2px 4px !important;
+        font-size: 8px !important;
+        min-width: 18px !important;
+        height: 18px !important;
+        border-radius: 4px !important;
+    }
+    .wo-btn-danger-sm i {
+        font-size: 9px !important;
+    }
+    .wo-codes-empty {
+        font-size: 10px !important;
+        padding: 8px !important;
+    }
+
+    .wo-input-lg {
+        font-size: 13px !important;
+        padding: 6px 10px !important;
+        min-height: 32px !important;
+        height: 32px !important;
+    }
+    .wo-fill-label {
+        font-size: 11px !important;
+        margin-bottom: 4px !important;
+    }
+    #wo_fill_modal .wo-modal-body {
+        padding: 6px 8px 4px 8px !important;
+        max-height: 85vh !important;
+    }
+}
+
+/* ===== ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (до 400px) ===== */
+@media (max-width: 400px) {
+    .wo-container { padding: 8px 30px !important; }
+    .wo-input { font-size: 13px !important; padding: 6px 10px !important; min-height: 34px !important; }
+    .wo-input::placeholder { font-size: 10px !important; }
+    .wo-logo-img { width: 48px !important; height: 48px !important; }
+    .wo-act-count { font-size: 28px !important; }
+    .wo-modal-footer .wo-btn { font-size: 10px !important; padding: 4px 12px !important; min-width: 60px !important; }
+    .wo-input-lg { font-size: 13px !important; padding: 6px 10px !important; min-height: 34px !important; }
+    .wo-list-item { padding: 4px 6px !important; }
+    .wo-code-text { font-size: 9px !important; }
+    .wo-btn-danger-sm { padding: 2px 4px !important; font-size: 8px !important; }
+}
+
+/* ============================================ */
+/*        ДЛЯ ЭКРАНОВ ДО 500px (включая ТСД)     */
+/* ============================================ */
+
+@media screen and (max-width: 500px) {
+    /* Футер в одну строку */
+    .wo-modal-footer-inner {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        gap: 0 !important;
+    }
+
+    .wo-footer-left,
+    .wo-footer-right {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        gap: 4px !important;
+    }
+
+    .wo-footer-right {
+        justify-content: flex-end !important;
+    }
+
+    /* Скрываем текст кнопок, оставляем только иконки */
+    .wo-footer-left .wo-btn .wo-btn-text,
+    .wo-footer-right .wo-btn .wo-btn-text {
+        display: none !important;
+    }
+
+    .wo-footer-left .wo-btn,
+    .wo-footer-right .wo-btn {
+        margin: 0 2px !important;
+        padding: 4px 6px !important;
+        font-size: 0 !important;
+        min-width: 30px !important;
+        height: 30px !important;
+        border-radius: 6px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: none !important;
+    }
+
+    .wo-footer-left .wo-btn i,
+    .wo-footer-right .wo-btn i {
+        font-size: 16px !important;
+        margin: 0 !important;
+    }
+
+    /* Badge счётчика */
+    .wo-badge {
+        font-size: 11px !important;
+        padding: 2px 8px !important;
+        margin: 0 2px !important;
+        min-width: 20px !important;
+        height: 26px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 12px !important;
+        background: #1f1f1f !important;
+        color: #ffffff !important;
+    }
+
+    /* Список кодов - 3 строки */
+    .wo-codes-list {
+        max-height: 80px !important;
+        min-height: 60px !important;
+        overflow-y: auto !important;
+        padding: 4px 6px !important;
+        margin-top: 6px !important;
+        border-radius: 8px !important;
+    }
+
+    /* Скрываем скроллбар */
+    .wo-codes-list::-webkit-scrollbar {
+        width: 3px !important;
+    }
+    .wo-codes-list::-webkit-scrollbar-track {
+        background: #f0f0f0 !important;
+        border-radius: 3px !important;
+    }
+    .wo-codes-list::-webkit-scrollbar-thumb {
+        background: #b0b0b0 !important;
+        border-radius: 3px !important;
+    }
+
+    .wo-list-item {
+        padding: 3px 6px !important;
+        margin: 2px 0 !important;
+        border-radius: 4px !important;
+        border: 1px solid #e8e8ec !important;
+        background: #ffffff !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    .wo-code-text {
+        font-size: 9px !important;
+        line-height: 1.2 !important;
+        word-break: break-all !important;
+        flex: 1 !important;
+        margin-right: 4px !important;
+    }
+
+    .wo-btn-danger-sm {
+        padding: 2px 4px !important;
+        font-size: 8px !important;
+        min-width: 18px !important;
+        height: 18px !important;
+        border-radius: 4px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: none !important;
+        background: #b33c3c !important;
+        color: #ffffff !important;
+    }
+
+    .wo-btn-danger-sm i {
+        font-size: 9px !important;
+    }
+
+    .wo-codes-empty {
+        font-size: 10px !important;
+        padding: 8px !important;
+        color: #999 !important;
+    }
+
+    /* Поле ввода */
+    .wo-input-lg {
+        font-size: 13px !important;
+        padding: 6px 10px !important;
+        min-height: 34px !important;
+        height: 34px !important;
+    }
+
+    .wo-fill-label {
+        font-size: 11px !important;
+        margin-bottom: 4px !important;
+    }
+
+    /* Тело модального окна */
+    #wo_fill_modal .wo-modal-body {
+        padding: 8px 10px 6px 10px !important;
+        max-height: 85vh !important;
+    }
+
+    #wo_fill_modal .wo-modal-footer {
+        padding: 6px 8px !important;
+    }
+
+    #wo_fill_modal .wo-modal-dialog {
+        max-width: 100% !important;
+        margin: 0.2rem !important;
+    }
+
+    #wo_fill_modal .wo-modal-content {
+        border-radius: 12px !important;
+    }
+
+    #wo_fill_modal .wo-modal-header {
+        padding: 8px 12px !important;
+        min-height: 36px !important;
+    }
+
+    #wo_fill_modal .wo-modal-title {
+        font-size: 13px !important;
+    }
+
+    #wo_fill_modal .wo-modal-close {
+        font-size: 18px !important;
+        padding: 0 4px !important;
+    }
+}
+
+/* ============================================ */
+/*        ЗАМЕНА GAP НА MARGIN ДЛЯ ВСЕХ ЭКРАНОВ  */
+/* ============================================ */
+
+/* Убираем gap везде */
+.wo-modal-footer,
+.wo-btn-group,
+.wo-footer-left,
+.wo-footer-right,
+.wo-modal-footer-inner {
+    gap: 0 !important;
+}
+
+/* Отступы между кнопками в модальных окнах */
+.wo-modal-footer .wo-btn {
+    margin: 4px 6px !important;
+}
+
+/* Отступы в группах кнопок */
+.wo-btn-group .wo-btn {
+    margin: 4px 6px !important;
+}
+
+/* Отступы в футере наполнения */
+.wo-footer-left .wo-btn,
+.wo-footer-right .wo-btn {
+    margin: 4px 6px !important;
+}
+
+.wo-footer-left .wo-badge {
+    margin-right: 4px !important;
+}
+
+/* Для мобильных */
+@media (max-width: 768px) {
+    .wo-modal-footer .wo-btn {
+        margin: 4px 4px !important;
+        padding: 6px 14px !important;
+        font-size: 12px !important;
+        min-width: 70px !important;
+    }
+
+    .wo-btn-group .wo-btn {
+        margin: 4px 4px !important;
+        padding: 6px 14px !important;
+        font-size: 12px !important;
+        min-width: 70px !important;
+    }
+
+    .wo-footer-left .wo-btn,
+    .wo-footer-right .wo-btn {
+        margin: 4px 4px !important;
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+    }
+}
+
+/* Для маленьких экранов (до 500px) */
+@media screen and (max-width: 500px) {
+    .wo-modal-footer .wo-btn {
+        margin: 3px 4px !important;
+        padding: 4px 10px !important;
+        font-size: 11px !important;
+        min-width: 60px !important;
+        height: 32px !important;
+    }
+
+    .wo-btn-group .wo-btn {
+        margin: 3px 4px !important;
+        padding: 4px 10px !important;
+        font-size: 11px !important;
+        min-width: 60px !important;
+        height: 32px !important;
+    }
+
+    .wo-footer-left .wo-btn,
+    .wo-footer-right .wo-btn {
+        margin: 3px 4px !important;
+        padding: 4px 8px !important;
+        font-size: 10px !important;
+        height: 28px !important;
+    }
+}
+
+/* Для ТСД (480x800) */
+@media (width: 480px) and (height: 800px) {
+    .wo-modal-footer .wo-btn {
+        margin: 2px 3px !important;
+        padding: 3px 8px !important;
+        font-size: 10px !important;
+        min-width: 50px !important;
+        height: 26px !important;
+    }
+
+    .wo-btn-group .wo-btn {
+        margin: 2px 3px !important;
+        padding: 3px 8px !important;
+        font-size: 10px !important;
+        min-width: 50px !important;
+        height: 26px !important;
+    }
+
+    .wo-footer-left .wo-btn,
+    .wo-footer-right .wo-btn {
+        margin: 2px 2px !important;
+        padding: 3px 6px !important;
+        font-size: 0 !important;
+        min-width: 28px !important;
+        height: 28px !important;
+    }
+
+    .wo-footer-left .wo-btn i,
+    .wo-footer-right .wo-btn i {
+        font-size: 14px !important;
+    }
+
+    .wo-footer-left .wo-btn .wo-btn-text,
+    .wo-footer-right .wo-btn .wo-btn-text {
+        display: none !important;
+    }
+}
+
+/* ============================================ */
+/*        ЗАМЕНА GAP НА MARGIN ДЛЯ ВСЕХ ЭКРАНОВ  */
+/* ============================================ */
+
+/* Убираем gap везде */
+.wo-modal-footer,
+.wo-btn-group,
+.wo-footer-left,
+.wo-footer-right,
+.wo-modal-footer-inner {
+    gap: 0 !important;
+}
+
+/* ===== ОКНО РЕЗУЛЬТАТА ===== */
+#wo_result_modal .wo-modal-footer {
+    gap: 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 12px 20px !important;
+}
+
+#wo_result_modal .wo-modal-footer .wo-btn {
+    margin: 4px 8px !important;
+    padding: 8px 24px !important;
+    font-size: 13px !important;
+    min-width: 100px !important;
+    height: 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    border: none !important;
+    gap: 0 !important;
+}
+
+#wo_result_modal .wo-modal-footer .wo-btn i {
+    margin-right: 6px !important;
+    font-size: 16px !important;
+}
+
+/* ===== ОКНО ПОДТВЕРЖДЕНИЯ ===== */
+#wo_confirm_modal .wo-modal-footer {
+    gap: 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 12px 20px !important;
+}
+
+#wo_confirm_modal .wo-modal-footer .wo-btn {
+    margin: 4px 8px !important;
+    padding: 8px 20px !important;
+    font-size: 13px !important;
+    min-width: 120px !important;
+    height: 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    border: none !important;
+    gap: 0 !important;
+}
+
+#wo_confirm_modal .wo-modal-footer .wo-btn i {
+    margin-right: 6px !important;
+    font-size: 16px !important;
+}
+
+/* ===== ОКНО НАПОЛНЕНИЯ ===== */
+#wo_fill_modal .wo-modal-footer {
+    gap: 0 !important;
+    padding: 10px 16px !important;
+}
+
+#wo_fill_modal .wo-modal-footer .wo-btn {
+    margin: 4px 6px !important;
+}
+
+/* ===== ВСЕ МОДАЛЬНЫЕ ОКНА ===== */
+.wo-modal-footer .wo-btn {
+    margin: 4px 6px !important;
+}
+
+.wo-modal-footer .wo-btn i {
+    margin-right: 4px !important;
+}
+
+/* ===== КНОПКИ В ГРУППАХ ===== */
+.wo-btn-group {
+    gap: 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.wo-btn-group .wo-btn {
+    margin: 4px 8px !important;
+}
+
+/* ===== ФУТЕР НАПОЛНЕНИЯ ===== */
+.wo-footer-left .wo-btn,
+.wo-footer-right .wo-btn {
+    margin: 4px 6px !important;
+}
+
+.wo-footer-left .wo-badge {
+    margin-right: 4px !important;
+}
+
+/* ============================================ */
+/*        ДЛЯ МОБИЛЬНЫХ (до 768px)              */
+/* ============================================ */
+@media (max-width: 768px) {
+    #wo_result_modal .wo-modal-footer .wo-btn {
+        margin: 4px 6px !important;
+        padding: 6px 16px !important;
+        font-size: 12px !important;
+        min-width: 80px !important;
+        height: 36px !important;
+    }
+
+    #wo_confirm_modal .wo-modal-footer .wo-btn {
+        margin: 4px 6px !important;
+        padding: 6px 16px !important;
+        font-size: 12px !important;
+        min-width: 90px !important;
+        height: 36px !important;
+    }
+
+    .wo-modal-footer .wo-btn {
+        margin: 4px 4px !important;
+        padding: 6px 14px !important;
+        font-size: 12px !important;
+        min-width: 70px !important;
+        height: 34px !important;
+    }
+
+    .wo-btn-group .wo-btn {
+        margin: 4px 4px !important;
+        padding: 6px 14px !important;
+        font-size: 12px !important;
+        min-width: 70px !important;
+        height: 34px !important;
+    }
+}
+
+/* ============================================ */
+/*        ДЛЯ ЭКРАНОВ ДО 500px (ТСД и др.)      */
+/* ============================================ */
+@media screen and (max-width: 500px) {
+    #wo_result_modal .wo-modal-footer .wo-btn {
+        margin: 3px 4px !important;
+        padding: 4px 12px !important;
+        font-size: 11px !important;
+        min-width: 60px !important;
+        height: 32px !important;
+    }
+
+    #wo_result_modal .wo-modal-footer .wo-btn i {
+        font-size: 13px !important;
+        margin-right: 4px !important;
+    }
+
+    #wo_confirm_modal .wo-modal-footer .wo-btn {
+        margin: 3px 4px !important;
+        padding: 4px 12px !important;
+        font-size: 11px !important;
+        min-width: 70px !important;
+        height: 32px !important;
+    }
+
+    #wo_confirm_modal .wo-modal-footer .wo-btn i {
+        font-size: 13px !important;
+        margin-right: 4px !important;
+    }
+
+    .wo-modal-footer .wo-btn {
+        margin: 3px 4px !important;
+        padding: 4px 10px !important;
+        font-size: 11px !important;
+        min-width: 60px !important;
+        height: 32px !important;
+    }
+
+    .wo-btn-group .wo-btn {
+        margin: 3px 4px !important;
+        padding: 4px 10px !important;
+        font-size: 11px !important;
+        min-width: 60px !important;
+        height: 32px !important;
+    }
+}
+
+/* ============================================ */
+/*        СПЕЦИАЛЬНО ДЛЯ ТСД (480x800)           */
+/* ============================================ */
+@media (width: 480px) and (height: 800px) {
+    #wo_result_modal .wo-modal-footer .wo-btn {
+        margin: 2px 3px !important;
+        padding: 3px 10px !important;
+        font-size: 10px !important;
+        min-width: 50px !important;
+        height: 28px !important;
+    }
+
+    #wo_result_modal .wo-modal-footer .wo-btn i {
+        font-size: 12px !important;
+        margin-right: 3px !important;
+    }
+
+    #wo_confirm_modal .wo-modal-footer .wo-btn {
+        margin: 2px 3px !important;
+        padding: 3px 10px !important;
+        font-size: 10px !important;
+        min-width: 60px !important;
+        height: 28px !important;
+    }
+
+    #wo_confirm_modal .wo-modal-footer .wo-btn i {
+        font-size: 12px !important;
+        margin-right: 3px !important;
+    }
+
+    .wo-modal-footer .wo-btn {
+        margin: 2px 3px !important;
+        padding: 3px 8px !important;
+        font-size: 10px !important;
+        min-width: 50px !important;
+        height: 26px !important;
+    }
+
+    .wo-btn-group .wo-btn {
+        margin: 2px 3px !important;
+        padding: 3px 8px !important;
+        font-size: 10px !important;
+        min-width: 50px !important;
+        height: 26px !important;
+    }
+}
+
+/* ===== ИНФОРМАЦИЯ ОБ АКТЕ В ОКНЕ НАПОЛНЕНИЯ ===== */
+.wo-act-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: #f0f0f2;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #1f1f1f;
+    flex-wrap: wrap;
+}
+
+.wo-act-info i {
+    color: #2d6a9f;
+    font-size: 16px;
+}
+
+.wo-act-info strong {
+    color: #1f1f1f;
+}
+
+.wo-act-status .badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.wo-act-status .badge.bg-success {
+    background: #3a8c6b !important;
+    color: #ffffff !important;
+}
+
+.wo-act-status .badge.bg-warning {
+    background: #b8860b !important;
+    color: #ffffff !important;
+}
+
+/* Для мобильных */
+@media (max-width: 500px) {
+    .wo-act-info {
+        font-size: 12px;
+        padding: 4px 10px;
+        gap: 4px;
+    }
+    .wo-act-info i {
+        font-size: 14px;
+    }
+    .wo-act-status .badge {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+}
+
+/* Для ТСД */
+@media (width: 480px) and (height: 800px) {
+    .wo-act-info {
+        font-size: 11px;
+        padding: 3px 8px;
+        margin-bottom: 6px;
+    }
+    .wo-act-info i {
+        font-size: 12px;
+    }
+    .wo-act-status .badge {
+        font-size: 9px;
+        padding: 2px 6px;
+    }
+}
+
+/* ============================================ */
+/*        УМЕНЬШЕНИЕ ШРИФТА ДЛЯ ТСД              */
+/* ============================================ */
+
+@media (width: 480px) and (height: 800px) {
+    /* Основной контейнер */
+    .wo-container {
+        font-size: 12px !important;
+    }
+
+    /* Карточка */
+    .wo-card {
+        font-size: 12px !important;
+    }
+    .wo-card-header-text {
+        font-size: 12px !important;
+    }
+    .wo-card-footer {
+        font-size: 10px !important;
+    }
+
+    /* Поле ввода */
+    .wo-input {
+        font-size: 12px !important;
+        padding: 6px 10px !important;
+        min-height: 32px !important;
+    }
+    .wo-input::placeholder {
+        font-size: 10px !important;
+    }
+
+    /* Информация об акте */
+    .wo-act-number {
+        font-size: 14px !important;
+    }
+    .wo-act-count {
+        font-size: 26px !important;
+    }
+    .wo-act-label {
+        font-size: 12px !important;
+    }
+
+    /* Кнопки */
+    .wo-btn {
+        font-size: 11px !important;
+        padding: 4px 12px !important;
+        min-width: 60px !important;
+        height: 30px !important;
+    }
+    .wo-btn i {
+        font-size: 13px !important;
+    }
+
+    .wo-btn-group .wo-btn {
+        font-size: 11px !important;
+        padding: 4px 12px !important;
+        min-width: 60px !important;
+        height: 30px !important;
+    }
+
+    /* Модальные окна */
+    .wo-modal-title {
+        font-size: 13px !important;
+    }
+    .wo-modal-body {
+        font-size: 12px !important;
+    }
+    .wo-modal-footer .wo-btn {
+        font-size: 10px !important;
+        padding: 3px 10px !important;
+        min-width: 50px !important;
+        height: 28px !important;
+    }
+    .wo-modal-footer .wo-btn i {
+        font-size: 12px !important;
+    }
+
+    /* Окно наполнения */
+    .wo-fill-label {
+        font-size: 11px !important;
+    }
+    .wo-input-lg {
+        font-size: 12px !important;
+        padding: 5px 8px !important;
+        min-height: 30px !important;
+        height: 30px !important;
+    }
+    .wo-input-lg::placeholder {
+        font-size: 10px !important;
+    }
+
+    .wo-badge {
+        font-size: 10px !important;
+        padding: 2px 8px !important;
+        min-width: 16px !important;
+        height: 22px !important;
+    }
+
+    /* Информация об акте в окне наполнения */
+    .wo-act-info {
+        font-size: 11px !important;
+        padding: 3px 8px !important;
+        margin-bottom: 6px !important;
+    }
+    .wo-act-info i {
+        font-size: 12px !important;
+    }
+    .wo-act-status .badge {
+        font-size: 9px !important;
+        padding: 2px 6px !important;
+    }
+
+    /* Список кодов */
+    .wo-code-text {
+        font-size: 9px !important;
+    }
+    .wo-codes-empty {
+        font-size: 9px !important;
+    }
+    .wo-btn-danger-sm {
+        font-size: 8px !important;
+        padding: 2px 4px !important;
+        min-width: 16px !important;
+        height: 16px !important;
+    }
+    .wo-btn-danger-sm i {
+        font-size: 8px !important;
+    }
+
+    /* Результат */
+    .wo-result-text {
+        font-size: 14px !important;
+    }
+    .wo-stat-number {
+        font-size: 20px !important;
+    }
+    .wo-stat-label {
+        font-size: 10px !important;
+    }
+
+    /* Подтверждение */
+    .wo-modal-message {
+        font-size: 14px !important;
+    }
+    .wo-modal-icon {
+        font-size: 36px !important;
+    }
+
+    /* Кнопка закрытия */
+    .wo-modal-close {
+        font-size: 16px !important;
+        padding: 0 4px !important;
+    }
+}
+
+/* ============================================ */
+/*        ЗАМЕНА GAP НА MARGIN ДЛЯ ВСЕХ МАЛЕНЬКИХ ЭКРАНОВ */
+/* ============================================ */
+
+@media screen and (max-width: 500px) {
+    /* Убираем gap везде */
+    .wo-modal-footer,
+    .wo-btn-group,
+    .wo-footer-left,
+    .wo-footer-right,
+    .wo-modal-footer-inner {
+        gap: 0 !important;
+    }
+
+    .wo-modal-footer .wo-btn {
+        margin: 3px 4px !important;
+    }
+
+    .wo-btn-group .wo-btn {
+        margin: 3px 4px !important;
+    }
+
+    .wo-footer-left .wo-btn,
+    .wo-footer-right .wo-btn {
+        margin: 3px 4px !important;
+    }
+
+    .wo-footer-left .wo-badge {
+        margin-right: 4px !important;
+    }
+
+    .wo-modal-footer-inner {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+
+    .wo-footer-left,
+    .wo-footer-right {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+    }
+}
+
+/* ============================================ */
+/*        ИНФОРМАЦИЯ ОБ АКТЕ - ЗАМЕНА GAP       */
+/* ============================================ */
+
+/* Для всех экранов */
+.wo-act-info {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 0 !important;
+    padding: 6px 12px !important;
+    background: #f0f0f2 !important;
+    border-radius: 8px !important;
+    margin-bottom: 10px !important;
+    font-size: 14px !important;
+    color: #1f1f1f !important;
+}
+
+.wo-act-info i {
+    margin-right: 6px !important;
+    color: #2d6a9f !important;
+    font-size: 16px !important;
+}
+
+.wo-act-info strong {
+    margin: 0 4px !important;
+    color: #1f1f1f !important;
+}
+
+.wo-act-info .wo-act-status {
+    margin-left: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.wo-act-info .wo-act-status .badge {
+    font-size: 11px !important;
+    padding: 3px 10px !important;
+    border-radius: 12px !important;
+}
+
+/* Для мобильных */
+@media (max-width: 500px) {
+    .wo-act-info {
+        font-size: 12px !important;
+        padding: 4px 10px !important;
+    }
+    .wo-act-info i {
+        font-size: 14px !important;
+        margin-right: 4px !important;
+    }
+    .wo-act-info strong {
+        margin: 0 2px !important;
+    }
+    .wo-act-info .wo-act-status {
+        margin-left: 4px !important;
+    }
+    .wo-act-info .wo-act-status .badge {
+        font-size: 10px !important;
+        padding: 2px 8px !important;
+    }
+}
+
+/* Для ТСД */
+@media (width: 480px) and (height: 800px) {
+    .wo-act-info {
+        font-size: 10px !important;
+        padding: 3px 6px !important;
+        margin-bottom: 6px !important;
+        border-radius: 6px !important;
+    }
+    .wo-act-info i {
+        font-size: 11px !important;
+        margin-right: 3px !important;
+    }
+    .wo-act-info strong {
+        margin: 0 2px !important;
+        font-size: 10px !important;
+    }
+    .wo-act-info .wo-act-status {
+        margin-left: 3px !important;
+    }
+    .wo-act-info .wo-act-status .badge {
+        font-size: 8px !important;
+        padding: 1px 6px !important;
+        border-radius: 10px !important;
+    }
+}
+
+/* Принудительно для ТСД (на случай если не сработало) */
+@media (width: 480px) and (height: 800px) {
+    .wo-act-info {
+        gap: 0 !important;
+    }
+    .wo-act-info i {
+        margin-right: 4px !important;
+    }
+    .wo-act-info strong {
+        margin: 0 2px !important;
+    }
+    .wo-act-info .wo-act-status {
+        margin-left: 4px !important;
+    }
+}
+
+@media (min-width: 768px) {
+    #wo_main_card {
+        zoom: 120%;
+        width: 35rem;
+    }
+    #wo_fill_modal .wo-modal-dialog {
+        zoom: 120%;
+        max-width: 640px;
+    }
+    #wo_confirm_modal .wo-modal-dialog {
+        zoom: 120%;
+        max-width: 640px;
+    }
+    #wo_result_modal .wo-modal-dialog {
+        zoom: 120%;
+        max-width: 640px;
+    }
+}
+
+/* ============================================ */
+/*        ОКНО РЕЗУЛЬТАТА - ЗАМЕНА GAP          */
+/* ============================================ */
+
+#wo_result_modal .wo-modal-footer {
+    gap: 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 12px 20px !important;
+}
+
+#wo_result_modal .wo-modal-footer .wo-btn {
+    margin: 4px 8px !important;
+    padding: 8px 24px !important;
+    font-size: 13px !important;
+    min-width: 100px !important;
+    height: 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    border: none !important;
+}
+
+#wo_result_modal .wo-modal-footer .wo-btn i {
+    margin-right: 6px !important;
+    font-size: 16px !important;
+}
+
+/* Для мобильных */
+@media (max-width: 768px) {
+    #wo_result_modal .wo-modal-footer .wo-btn {
+        margin: 4px 6px !important;
+        padding: 6px 16px !important;
+        font-size: 12px !important;
+        min-width: 80px !important;
+        height: 36px !important;
+    }
+}
+
+/* Для маленьких экранов (до 500px) */
+@media screen and (max-width: 500px) {
+    #wo_result_modal .wo-modal-footer {
+        padding: 8px 12px !important;
+    }
+    #wo_result_modal .wo-modal-footer .wo-btn {
+        margin: 3px 4px !important;
+        padding: 4px 12px !important;
+        font-size: 11px !important;
+        min-width: 60px !important;
+        height: 32px !important;
+    }
+    #wo_result_modal .wo-modal-footer .wo-btn i {
+        font-size: 13px !important;
+        margin-right: 4px !important;
+    }
+}
+
+/* Для ТСД */
+@media (width: 480px) and (height: 800px) {
+    #wo_result_modal .wo-modal-footer {
+        padding: 6px 10px !important;
+    }
+    #wo_result_modal .wo-modal-footer .wo-btn {
+        margin: 2px 3px !important;
+        padding: 3px 10px !important;
+        font-size: 10px !important;
+        min-width: 50px !important;
+        height: 28px !important;
+    }
+    #wo_result_modal .wo-modal-footer .wo-btn i {
+        font-size: 12px !important;
+        margin-right: 3px !important;
+    }
+}
+
+/* Кнопка-иконка переключения режима */
+#wo_toggle_manual_btn {
+    transition: all 0.3s ease;
+}
+#wo_toggle_manual_btn:hover {
+    color: #1f1f1f !important;
+    transform: translateY(-50%) scale(1.1) !important;
+}
+#wo_toggle_manual_btn.active {
+    color: #b8860b !important;
+}
+#wo_toggle_manual_btn.active:hover {
+    color: #9a7209 !important;
+}
+
+/* Адаптация для ТСД и мобильных */
+@media (max-width: 768px) {
+    #wo_toggle_manual_btn {
+        font-size: 18px !important;
+        right: 6px !important;
+    }
+    .wo-input {
+        padding-right: 38px !important;
+    }
+}
+
+@media (width: 480px) and (height: 800px) {
+    #wo_toggle_manual_btn {
+        font-size: 16px !important;
+        right: 4px !important;
+    }
+    .wo-input {
+        padding-right: 32px !important;
+    }
+}

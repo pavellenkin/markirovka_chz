@@ -26,6 +26,7 @@ from django.views.generic.base import RedirectView
 from settings.views import settings, certs, models, service, export, safe_download_tsd_file
 from django.conf.urls import include
 from settings import views
+from write_off.views import *
 
 
 urlpatterns = [
@@ -65,6 +66,22 @@ path('accounts/', include('django.contrib.auth.urls')),
     path('certs/set-active/', views.set_active_cert, name='set_active_cert'),
     path('clear-tsd-file/', views.clear_tsd_file, name='clear_tsd_file'),
     path('check-tsd-file/', views.check_tsd_file, name='check_tsd_file'),
+    #WRITE-OFF
+    path('write-off/', write_off, name='write_off'),
+    path('write-off/check-act/', write_off_check_act, name='write_off_check_act'),
+    path('write-off/create-act/', write_off_create_act, name='write_off_create_act'),
+    path('write-off/get-codes/', write_off_get_codes, name='write_off_get_codes'),
+    path('write-off/save-codes/', write_off_save_codes, name='write_off_save_codes'),
+    path('write-off/acts-list/', write_off_acts_list, name='write_off_acts_list'),
+    path('write-off/get-acts-data/', write_off_get_acts_data, name='write_off_get_acts_data'),
+
+    path('write-off/get-act-codes/', write_off_get_act_codes, name='write_off_get_act_codes'),
+    path('write-off/delete-code/', write_off_delete_code, name='write_off_delete_code'),
+    path('write-off/update-act-number/', write_off_update_act_number, name='write_off_update_act_number'),
+    path('write-off/delete-act/', write_off_delete_act, name='write_off_delete_act'),
+    path('write-off/export-excel/', write_off_export_excel, name='write_off_export_excel'),
+    path('write-off/export-status/', write_off_export_status, name='write_off_export_status'),
+    path('write-off/download-export/', write_off_download_export, name='write_off_download_export'),
 
 ]
 

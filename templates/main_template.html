@@ -330,7 +330,9 @@
 <!--     background-size: 400% 400%;-->
 <!--     -w…</style>-->
 </head>
-<body class="" style="background-image: url('/static/img/b42b.jpg');background-repeat:no-repeat;background-size:cover;" onload="" id="body">
+<!--<body class="" style="background-image: url('/static/img/b42b.jpg');background-repeat:no-repeat;background-size:cover;" onload="" id="body">-->
+
+<body class="" style="background-color: #f7f7f9;" onload="" id="body">
 <script>
 function getCookie(name) {
     var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
@@ -626,24 +628,85 @@ function ChangeSearch(evt) {
 }
 
 function InVisibleAbout(){
-     document.getElementById("main_check").style.display = "none";
-    document.getElementById("response_check").style.display = "block";
-        setTimeout(function () {
-            document.getElementById("main_check").style.display = "block";
-            document.getElementById("response_check").style.display = "none";
-            location.reload(true);
-        }, 3200);
+    console.log('InVisibleAbout вызвана');
+    var main = document.getElementById('main_check');
+    var resp = document.getElementById('response_check');
+
+    if (main) {
+        main.style.display = 'none';
+    }
+
+    if (resp) {
+        resp.style.display = 'block';
+        resp.style.position = 'fixed';
+        resp.style.top = '50%';
+        resp.style.left = '50%';
+        resp.style.transform = 'translate(-50%, -50%)';
+        resp.style.width = '100%';
+        resp.style.maxWidth = '480px';
+        resp.style.zIndex = '99999';
+        resp.style.border = '3px solid #0066cc';
+        resp.style.background = '#ffffff';
+        resp.style.boxShadow = '0 0 50px rgba(0,0,0,0.2)';
+        resp.style.borderRadius = '16px';
+        resp.style.overflow = 'hidden';
+        resp.style.padding = '0';
+    }
+
+    setTimeout(function () {
+        var main = document.getElementById('main_check');
+        var resp = document.getElementById('response_check');
+        if (main) {
+            main.style.display = 'block';
+            main.style.position = 'absolute';
+            main.style.top = '50%';
+            main.style.left = '50%';
+            main.style.transform = 'translate(-50%, -50%)';
+        }
+        if (resp) {
+            resp.style.display = 'none';
+        }
+        location.reload(true);
+    }, 3200);
 }
 
 function VisibleAbout(){
+    console.log('VisibleAbout вызвана');
+    var main = document.getElementById('main_check');
+    var resp = document.getElementById('response_check');
 
-    document.getElementById("main_check").style.display = "none";
+    if (main) {
+        main.style.display = 'none';
+    }
 
-    document.getElementById("response_check").style.display = "block";
+    if (resp) {
+        resp.style.display = 'block';
+        resp.style.position = 'fixed';
+        resp.style.top = '50%';
+        resp.style.left = '50%';
+        resp.style.transform = 'translate(-50%, -50%)';
+        resp.style.width = '100%';
+        resp.style.maxWidth = '480px';
+        resp.style.zIndex = '99999';
+        resp.style.border = '3px solid #00cc00';
+        resp.style.background = '#ffffff';
+        resp.style.boxShadow = '0 0 50px rgba(0,0,0,0.2)';
+        resp.style.borderRadius = '16px';
+        resp.style.overflow = 'hidden';
+        resp.style.padding = '0';
+    }
 
-    document.getElementById("button_close").style.display = "block";
+    var closeBtn = document.getElementById('button_close');
+    if (closeBtn) {
+        closeBtn.style.display = 'block';
+    }
 
+    var header = document.getElementById('card_header');
+    if (header) {
+        header.style.display = 'block';
+    }
 
+    console.log('response_check показан по центру');
 }
 
 function ClickButton() {
@@ -719,96 +782,281 @@ function SendCode() {
 
 
                                 document.querySelector('input#searchInput').value = '';
-                                if (data.status === 'set'){
+                                    if (data.status === 'set'){
+                                        // Показываем карточку ответа
+                                        var mainCheck = document.getElementById('main_check');
+                                        var responseCheck = document.getElementById('response_check');
 
-                                    document.getElementById('card_header').innerHTML = data.body.collapse_button;
-                                    document.getElementById("card_header").style.display = "block";
-                                    document.getElementById("message-bar-text").innerHTML = "<b>" + data.body.product_name+"</b><br>Товарная группа ("+ data.body.product_group_id +"): <b>"+ data.body.product_group+"</b><br>GTIN: <b>"+data.body.product_gtin+"</b><br>"+data.body.type_producer+":  <b>"+data.body.producer_name_comp+"</b><br>Собственник: <b>"+data.body.owner+"</b><br>"+data.body.status_check+"Дата производства: <b>"+data.body.produced_date+"</b><br>Годен до: <b>"+data.body.expire_date+"</b><br>"+data.body.check_code_input+data.body.collapse;;
-                                    document.getElementById("message-valid-text").innerHTML = data.body.validity_info;
-                                    const code = data.body.code_content;
-
-                                                                        document.getElementById('code_content').textContent = code;
-                                                                        const collapse_content = data.body.collapse_content;
-                                                                        document.getElementById('collapse_content').textContent = collapse_content;
-                                    document.getElementById("message-leading-symbol-text").innerHTML = data.body.leading_symbol_info;
-                                    if (data.body.button_close === 'visible'){
-                                            VisibleAbout();
-                                    }
-
-                                }
-
-                                if (data.status === 'box'){
-                                    document.getElementById('card_header').innerHTML = data.body.collapse_button;
-                                    document.getElementById("card_header").style.display = "block";
-                                    document.getElementById("message-bar-text").innerHTML = "Собственник:<br><b>"+data.body.owner+"</b><br>"+data.body.status_check+"Дата эмиссии: <b>"+data.body.emission_date+"</b><br>Дата ввода в оборот: <b>"+data.body.introduced_date+"</b><br>"+data.body.collapse;
-
-                                    if (data.body.button_close === 'visible'){
-                                            VisibleAbout();
-                                                }
-                                    const collapse_content = data.body.collapse_content;
-                                                                        document.getElementById('collapse_content').textContent = collapse_content;
-
-                                }
-                                if (data.status === 'success'){
-
-//                                    if (data.body.audio == 'success'){
-////                                            var audio = new Audio('/static/audio/cock.wav');
-////                                            audio.play();
-//                                    }else{
-////                                            var audio = new Audio('/static/audio/error.wav');
-////                                            audio.play();
-//                                        }
-
-                                    document.getElementById("message-bar-text").innerHTML = "<b>" + data.body.product_name+"</b><br>Товарная группа ("+ data.body.product_group_id +"): <b>"+ data.body.product_group+"</b><br>GTIN: <b>"+data.body.product_gtin+"</b><br>"+data.body.type_producer+":<br><b>"+data.body.producer_name_comp+"</b><br>Собственник:<br><b>"+data.body.owner+"</b><br>"+data.body.status_check+"Дата производства: <b>"+data.body.produced_date+"</b><br>Годен до: <b>"+data.body.expire_date+"</b><br>"+data.body.check_code_input;
-                                    document.getElementById("message-valid-text").innerHTML = data.body.validity_info;
-                                    const code = data.body.code_content;
-
-
-
-                                                                        document.getElementById('code_content').textContent = code;
-                                    document.getElementById("message-leading-symbol-text").innerHTML = data.body.leading_symbol_info;
-                                        if (data.body.button_close === 'invisible'){
-                                               InVisibleAbout();
-                                                }
-                                        if (data.body.button_close === 'visible'){
-                                            VisibleAbout();
-                                                }
-                                        document.getElementById('card_header').textContent = data.body.text_package_type;
-                                        document.getElementById("card_header").style.display = "block";
-                                        if (data.body.state_status_ex === 'visible'){
-                                                    document.getElementById('card_footer').textContent = data.body.status_ex;
-                                                    document.getElementById("card_footer").style.display = "block";
-                                                }
+                                        if (mainCheck) {
+                                            mainCheck.style.display = 'none';
+                                        }
+                                        if (responseCheck) {
+                                            responseCheck.style.cssText = '';
+                                            responseCheck.style.display = 'block';
+                                            responseCheck.style.position = 'fixed';
+                                            responseCheck.style.top = '50%';
+                                            responseCheck.style.left = '50%';
+                                            responseCheck.style.transform = 'translate(-50%, -50%)';
+                                            responseCheck.style.width = '100%';
+                                            responseCheck.style.maxWidth = '480px';
+                                            responseCheck.style.zIndex = '99999';
+                                            responseCheck.style.background = '#ffffff';
+                                            responseCheck.style.border = '2px solid #696969';
+                                            responseCheck.style.borderRadius = '16px';
+                                            responseCheck.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
+                                            responseCheck.style.overflow = 'hidden';
+                                            responseCheck.style.padding = '0';
                                         }
 
+                                        // ✅ ИСПРАВЛЕНО: используем innerHTML для card_header
+                                        document.getElementById('card_header').innerHTML = data.body.collapse_button || data.body.text_package_type || 'Тип упаковки';
+                                        document.getElementById('card_header').style.display = 'block';
+
+                                        document.getElementById('message-bar-text').innerHTML = "<b>" + data.body.product_name + "</b><br>Товарная группа (" + data.body.product_group_id + "): <b>" + data.body.product_group + "</b><br>GTIN: <b>" + data.body.product_gtin + "</b><br>" + data.body.type_producer + ":  <b>" + data.body.producer_name_comp + "</b><br>Собственник: <b>" + data.body.owner + "</b><br>" + data.body.status_check + "Дата производства: <b>" + data.body.produced_date + "</b><br>Годен до: <b>" + data.body.expire_date + "</b><br>" + data.body.check_code_input + data.body.collapse;
+                                        document.getElementById('message-valid-text').innerHTML = data.body.validity_info;
+                                        document.getElementById('message-valid-text').style.display = 'block';
+
+                                        const code = data.body.code_content;
+                                        document.getElementById('code_content').textContent = code;
+
+                                        const collapse_content = data.body.collapse_content;
+                                        document.getElementById('collapse_content').textContent = collapse_content;
+
+                                        document.getElementById('message-leading-symbol-text').innerHTML = data.body.leading_symbol_info;
+                                        document.getElementById('message-leading-symbol-text').style.display = 'block';
+
+                                        // Показываем кнопку закрытия
+                                        document.getElementById('button_close').style.setProperty('display', 'block', 'important');
+
+                                        if (data.body.state_status_ex === 'visible') {
+                                            document.getElementById('card_footer').textContent = data.body.status_ex;
+                                            document.getElementById('card_footer').style.display = 'block';
+                                        }
+
+                                        if (data.body.button_close === 'visible') {
+                                            VisibleAbout();
+                                        }
+                                            // Показываем заголовок с !important
+                                            var header = document.getElementById('card_header');
+                                            if (header) {
+                                                header.style.setProperty('display', 'block', 'important');
+                                            }
+                                    }
+
+if (data.status === 'box'){
+    // Показываем карточку ответа
+    var mainCheck = document.getElementById('main_check');
+    var responseCheck = document.getElementById('response_check');
+
+    if (mainCheck) {
+        mainCheck.style.display = 'none';
+    }
+    if (responseCheck) {
+        responseCheck.style.cssText = '';
+        responseCheck.style.display = 'block';
+        responseCheck.style.position = 'fixed';
+        responseCheck.style.top = '50%';
+        responseCheck.style.left = '50%';
+        responseCheck.style.transform = 'translate(-50%, -50%)';
+        responseCheck.style.width = '100%';
+        responseCheck.style.maxWidth = '480px';
+        responseCheck.style.zIndex = '99999';
+        responseCheck.style.background = '#ffffff';
+        responseCheck.style.border = '2px solid #696969';
+        responseCheck.style.borderRadius = '16px';
+        responseCheck.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
+        responseCheck.style.overflow = 'hidden';
+        responseCheck.style.padding = '0';
+    }
+
+    // ✅ ИСПРАВЛЕНО: используем innerHTML для card_header
+    document.getElementById('card_header').innerHTML = data.body.collapse_button || data.body.text_package_type || 'Коробка';
+    document.getElementById('card_header').style.display = 'block';
+
+    document.getElementById('message-bar-text').innerHTML = "Собственник:<br><b>" + data.body.owner + "</b><br>" + data.body.status_check + "Дата эмиссии: <b>" + data.body.emission_date + "</b><br>Дата ввода в оборот: <b>" + data.body.introduced_date + "</b><br>" + data.body.collapse;
+
+    const collapse_content = data.body.collapse_content;
+    document.getElementById('collapse_content').textContent = collapse_content;
+
+    // Показываем кнопку закрытия
+    document.getElementById('button_close').style.setProperty('display', 'block', 'important');
+
+    if (data.body.button_close === 'visible') {
+        VisibleAbout();
+    }
+        // Показываем заголовок с !important
+        var header = document.getElementById('card_header');
+        if (header) {
+            header.style.setProperty('display', 'block', 'important');
+        }
+}
+
+if (data.status === 'success'){
+    // Показываем карточку ответа
+    var mainCheck = document.getElementById('main_check');
+    var responseCheck = document.getElementById('response_check');
+
+    if (mainCheck) {
+        mainCheck.style.display = 'none';
+    }
+    if (responseCheck) {
+        responseCheck.style.cssText = '';
+        responseCheck.style.display = 'block';
+        responseCheck.style.position = 'fixed';
+        responseCheck.style.top = '50%';
+        responseCheck.style.left = '50%';
+        responseCheck.style.transform = 'translate(-50%, -50%)';
+        responseCheck.style.width = '100%';
+        responseCheck.style.maxWidth = '480px';
+        responseCheck.style.zIndex = '99999';
+        responseCheck.style.background = '#ffffff';
+        responseCheck.style.border = '2px solid #696969';
+        responseCheck.style.borderRadius = '16px';
+        responseCheck.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
+        responseCheck.style.overflow = 'hidden';
+        responseCheck.style.padding = '0';
+    }
+
+    // Заполняем данные
+    document.getElementById('message-bar-text').innerHTML = "<b>" + data.body.product_name + "</b><br>Товарная группа (" + data.body.product_group_id + "): <b>" + data.body.product_group + "</b><br>GTIN: <b>" + data.body.product_gtin + "</b><br>" + data.body.type_producer + ":<br><b>" + data.body.producer_name_comp + "</b><br>Собственник:<br><b>" + data.body.owner + "</b><br>" + data.body.status_check + "Дата производства: <b>" + data.body.produced_date + "</b><br>Годен до: <b>" + data.body.expire_date + "</b><br>" + data.body.check_code_input;
+    document.getElementById('message-valid-text').innerHTML = data.body.validity_info;
+    document.getElementById('message-valid-text').style.display = 'block';
+
+    const code = data.body.code_content;
+    document.getElementById('code_content').textContent = code;
+
+    document.getElementById('message-leading-symbol-text').innerHTML = data.body.leading_symbol_info;
+    document.getElementById('message-leading-symbol-text').style.display = 'block';
+
+    // ✅ ИСПРАВЛЕНО: используем innerHTML вместо textContent
+    // Если есть collapse_button — показываем его, иначе показываем text_package_type
+    if (data.body.collapse_button) {
+        document.getElementById('card_header').innerHTML = data.body.collapse_button;
+    } else {
+        document.getElementById('card_header').textContent = data.body.text_package_type || 'Единица товара';
+    }
+    document.getElementById('card_header').style.display = 'block';
+
+    // Показываем кнопку закрытия
+    document.getElementById('button_close').style.setProperty('display', 'block', 'important');
+
+    // Показываем футер если есть
+    if (data.body.state_status_ex === 'visible') {
+        document.getElementById('card_footer').textContent = data.body.status_ex;
+        document.getElementById('card_footer').style.display = 'block';
+    }
+
+    if (data.body.button_close === 'invisible') {
+        InVisibleAbout();
+    }
+    if (data.body.button_close === 'visible') {
+        VisibleAbout();
+    }
+
+    // Показываем заголовок с !important
+var header = document.getElementById('card_header');
+if (header) {
+    header.style.setProperty('display', 'block', 'important');
+}
+}
+
                                 if (data.status === 'error'){
-//                                    var audio = new Audio('/static/audio/error.wav');
-//                                    audio.play();
+                                    console.log('Ошибка от сервера:', data.errorMessage);
 
-                                    document.getElementById("main_check").style.display = "none";
-                                    document.getElementById("response_check").style.display = "block";
-                                    document.getElementById("card_footer").style.display = "none";
-                                    document.getElementById("card_header").style.display = "none";
-                                    document.getElementById("button_close").style.display = "none";
-                                    svg = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-qr-code text-danger" viewBox="0 0 16 16"><path d="M2 2h2v2H2z"/><path d="M6 0v6H0V0zM5 1H1v4h4zM4 12H2v2h2z"/><path d="M6 10v6H0v-6zm-5 1v4h4v-4zm11-9h2v2h-2z"/><path d="M10 0v6h6V0zm5 1v4h-4V1zM8 1V0h1v2H8v2H7V1zm0 5V4h1v2zM6 8V7h1V6h1v2h1V7h5v1h-4v1H7V8zm0 0v1H2V8H1v1H0V7h3v1zm10 1h-1V7h1zm-1 0h-1v2h2v-1h-1zm-4 0h2v1h-1v1h-1zm2 3v-1h-1v1h-1v1H9v1h3v-2zm0 0h3v1h-2v1h-1zm-4-1v1h1v-2H7v1z"/><path d="M7 12h1v3h4v1H7zm9 2v2h-3v-1h2v-1z"/></svg><br>'
-                                    document.getElementById("message-bar-text").innerHTML = svg + "<br><h6>"+ data.errorMessage+"</h6>"
+                                    // Скрываем основную карточку
+                                    var mainCheck = document.getElementById('main_check');
+                                    var responseCheck = document.getElementById('response_check');
+
+                                    if (mainCheck) {
+                                        mainCheck.style.display = 'none';
+                                        mainCheck.style.position = 'absolute';
+                                        mainCheck.style.top = '50%';
+                                        mainCheck.style.left = '50%';
+                                        mainCheck.style.transform = 'translate(-50%, -50%)';
+                                    }
+
+                                    if (responseCheck) {
+                                        // Сбрасываем все стили и устанавливаем заново с центрированием
+                                        responseCheck.style.cssText = '';
+                                        responseCheck.style.display = 'block';
+                                        responseCheck.style.position = 'fixed';
+                                        responseCheck.style.top = '50%';
+                                        responseCheck.style.left = '50%';
+                                        responseCheck.style.transform = 'translate(-50%, -50%)';
+                                        responseCheck.style.width = '100%';
+                                        responseCheck.style.maxWidth = '480px';
+                                        responseCheck.style.zIndex = '99999';
+                                        responseCheck.style.background = '#ffffff';
+                                        responseCheck.style.border = '2px solid #696969';
+                                        responseCheck.style.borderRadius = '16px';
+                                        responseCheck.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
+                                        responseCheck.style.overflow = 'hidden';
+                                        responseCheck.style.padding = '0';
+                                        console.log('response_check показан для ошибки');
+                                    }
+
+                                    // Скрываем ненужные элементы
+                                    document.getElementById('card_footer').style.display = 'none';
+                                    document.getElementById('card_header').style.display = 'none';
+                                    document.getElementById('button_close').style.display = 'none';
+                                    document.getElementById('message-valid-text').style.display = 'none';
+
+                                    // Показываем сообщение об ошибке
+                                    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-qr-code text-danger" viewBox="0 0 16 16"><path d="M2 2h2v2H2z"/><path d="M6 0v6H0V0zM5 1H1v4h4zM4 12H2v2h2z"/><path d="M6 10v6H0v-6zm-5 1v4h4v-4zm11-9h2v2h-2z"/><path d="M10 0v6h6V0zm5 1v4h-4V1zM8 1V0h1v2H8v2H7V1zm0 5V4h1v2zM6 8V7h1V6h1v2h1V7h5v1h-4v1H7V8zm0 0v1H2V8H1v1H0V7h3v1zm10 1h-1V7h1zm-1 0h-1v2h2v-1h-1zm-4 0h2v1h-1v1h-1zm2 3v-1h-1v1h-1v1H9v1h3v-2zm0 0h3v1h-2v1h-1zm-4-1v1h1v-2H7v1z"/><path d="M7 12h1v3h4v1H7zm9 2v2h-3v-1h2v-1z"/></svg><br>';
+                                    document.getElementById('message-bar-text').innerHTML = svg + "<br><h6>" + data.errorMessage + "</h6>";
+
                                     setTimeout(function () {
-
                                         location.reload(true);
-
                                     }, 1500);
                                 }
                          },
                         error: function(jqxhr, status, errorMsg) {
                                 $('#preloader').fadeOut(500);
                               if (status === 'timeout'){
-                                    document.getElementById("main_check").style.display = "none";
-                                    document.getElementById("response_check").style.display = "block";
-                                    document.getElementById("message-valid-text").style.display = "none";
-                                    document.getElementById("card_footer").style.display = "none";
-                                    document.getElementById("button_close").style.display = "none";
-                                    svg = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-exclamation-triangle text-danger" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/><path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/></svg><br>'
-                                    document.getElementById("message-bar-text").innerHTML = svg + "<br><h6>Время ожидания истекло</h6>"
+
+                                    console.log('Таймаут запроса');
+                                    // Скрываем основную карточку
+                                    var mainCheck = document.getElementById('main_check');
+                                    var responseCheck = document.getElementById('response_check');
+
+                                    if (mainCheck) {
+                                        mainCheck.style.display = 'none';
+                                        mainCheck.style.position = 'absolute';
+                                        mainCheck.style.top = '50%';
+                                        mainCheck.style.left = '50%';
+                                        mainCheck.style.transform = 'translate(-50%, -50%)';
+                                    }
+
+                                    if (responseCheck) {
+                                        // Сбрасываем все стили и устанавливаем заново с центрированием
+                                        responseCheck.style.cssText = '';
+                                        responseCheck.style.display = 'block';
+                                        responseCheck.style.position = 'fixed';
+                                        responseCheck.style.top = '50%';
+                                        responseCheck.style.left = '50%';
+                                        responseCheck.style.transform = 'translate(-50%, -50%)';
+                                        responseCheck.style.width = '100%';
+                                        responseCheck.style.maxWidth = '480px';
+                                        responseCheck.style.zIndex = '99999';
+                                        responseCheck.style.background = '#ffffff';
+                                        responseCheck.style.border = '2px solid #696969';
+                                        responseCheck.style.borderRadius = '16px';
+                                        responseCheck.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
+                                        responseCheck.style.overflow = 'hidden';
+                                        responseCheck.style.padding = '0';
+                                        console.log('response_check показан для таймаута');
+                                    }
+
+                                    // Скрываем ненужные элементы
+                                    document.getElementById('card_footer').style.display = 'none';
+                                    document.getElementById('card_header').style.display = 'none';
+                                    document.getElementById('button_close').style.display = 'none';
+                                    document.getElementById('message-valid-text').style.display = 'none';
+                                    document.getElementById('message-leading-symbol-text').style.display = 'none';
+
+                                    // Показываем сообщение о таймауте
+                                    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-exclamation-triangle text-danger" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/><path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/></svg><br>';
+                                    document.getElementById('message-bar-text').innerHTML = svg + "<br><h6>Время ожидания истекло</h6>";
 
 
                                     setTimeout(function () {
@@ -830,11 +1078,37 @@ function SendCode() {
 }
 
 function addArttoInvent() {
+    console.log('addArttoInvent вызвана');
     document.getElementById("response_check").style.display = "none";
     document.getElementById("apply_change").style.display = "none";
     document.getElementById("main_check").style.display = "none";
-    document.getElementById("search_art").style.display = "block";
 
+    var el = document.getElementById('search_art');
+    if (el) {
+        el.style.cssText = '';
+        el.style.display = 'block';
+        el.style.position = 'fixed';
+        el.style.top = '50%';
+        el.style.left = '50%';
+        el.style.transform = 'translate(-50%, -50%)';
+        el.style.width = '100%';
+        el.style.maxWidth = '480px';
+        el.style.zIndex = '99999';
+        el.style.background = '#ffffff';
+        el.style.border = '2px solid #696969';
+        el.style.borderRadius = '16px';
+        el.style.boxShadow = '0 8px 32px rgba(0,0,0,0.15)';
+        el.style.overflow = 'hidden';
+        el.style.padding = '0';
+        console.log('search_art показан');
+    }
+
+    setTimeout(function() {
+        var input = document.getElementById('articleSearchInput');
+        if (input) {
+            input.focus();
+        }
+    }, 300);
 }
 
 
@@ -1030,7 +1304,7 @@ function ChangeDate(){
                              document.getElementById("ki").value = data.body.spl_string;
                              document.getElementById("pr_date").value = data.body.produced_date;
                              document.getElementById("exp_date").value = data.body.expire_date;
-                             document.getElementById("bar-text").innerHTML = '<h6 class="text-primary">'+data.body.product_name+'</h3><hr class="hr hr-blurry"/><h6>GTIN: '+data.body.product_gtin+"</h4>"
+                             document.getElementById("bar-text").innerHTML = '<h3 class="text-primary">'+data.body.product_name+'</h3><hr class="hr hr-blurry"/><h5>GTIN: '+data.body.product_gtin+"</h5><h5 id='product_group'>Товарная группа: "+data.body.product_group+"</h5>"
                                 }
                              }
                              else
@@ -1078,6 +1352,11 @@ function ApplyChangeDate(){
         pr_date = $('input[name="pr_date"]').val();
         exp_date = $('input[name="exp_date"]').val();
 
+        var fullText = document.getElementById('product_group').textContent;
+        var product_group = fullText.replace('Товарная группа: ', '');
+
+
+
         if (!dateReg.test(pr_date) && !dateReg.test(exp_date)){
             $('#preloader').toggle();
             document.getElementById("exp_date").classList.add("is-invalid");
@@ -1120,7 +1399,8 @@ function ApplyChangeDate(){
                                 apply_request: 'true',
                                 ki: ki,
                                 pr_date: pr_date,
-                                exp_date: exp_date
+                                exp_date: exp_date,
+                                product_group: product_group
                                 },
                                 success: async function(data){
                                 $('#preloader').toggle();

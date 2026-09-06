@@ -27,18 +27,16 @@ def format_code(code):
     return code
 
 def code_validity(code):
-
     numb_attempts = 0
     while True:
         if numb_attempts >= 12:
-            return False, "🐛 # ОШИБКА #"
+            return False, '<i class="bi bi-bug-fill text-danger"></i> ОШИБКА'
         numb_attempts += 1
         try:
             status_load, token = load_token()
             if not status_load:
                 status, token = auth()
             url = "https://markirovka.crpt.ru/api/v3/true-api/cises/check"
-            #code = code.replace('\x1d', '')
             print("VALIDITY_CODE: ", code)
             request = {
                 "codes":[f"{code}"]
@@ -52,11 +50,13 @@ def code_validity(code):
             print("VALIDITY")
             print("Response: ", send.content.decode(), "\n")
             response_result = json.loads(send.content.decode())['result']
-            print(response_result)
+
             if response_result is True:
-                return True, "✅ КМ валиден"
+                print("✅ КИ валиден | ", response_result)
+                return True, 'КИ валиден'
             else:
-                return False, "⚠️ КМ не валиден"
+                print("⚠️ КИ не валиден | ", response_result)
+                return False, 'КИ не валиден'
         except Exception:
             import sys
             from error_log.views import create_item_error_log
@@ -66,4 +66,4 @@ def code_validity(code):
             create_item_error_log(
                 frame.f_code.co_filename, exc_type, exc_value, lineno
                         )
-            return False, "🐛 # ОШИБКА #"
+            return False, 'ОШИБКА'

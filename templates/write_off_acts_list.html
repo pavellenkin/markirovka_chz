@@ -1,0 +1,1957 @@
+{% extends 'main_template.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+.ae-acts-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    background-color: #f7f7f9;
+}
+
+.ae-acts-list-container .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ae-acts-list-container .header h2 {
+    margin: 0;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    color: #1f1f1f;
+}
+
+.ae-acts-list-container .filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.ae-acts-list-container .filters input,
+.ae-acts-list-container .filters select {
+    padding: 8px 12px;
+    border: 2px solid #696969;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    outline: none;
+    transition: border-color 0.3s ease;
+    min-width: 150px;
+}
+
+.ae-acts-list-container .filters input:focus,
+.ae-acts-list-container .filters select:focus {
+    border-color: #b8860b;
+}
+
+.ae-acts-list-container .filters .btn {
+    padding: 8px 20px;
+    border: 2px solid #696969;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    color: #1f1f1f;
+}
+
+.ae-acts-list-container .filters .btn:hover {
+    background: #1f1f1f;
+    color: #ffffff;
+}
+
+.ae-acts-list-container .table-container {
+    background: #ffffff;
+    border: 2px solid #696969;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.ae-acts-list-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+}
+
+.ae-acts-list-container table thead {
+    background: #1f1f1f;
+    color: #ffffff;
+}
+
+.ae-acts-list-container table thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+}
+
+.ae-acts-list-container table tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #e8e8ec;
+    font-size: 13px;
+    color: #1f1f1f;
+}
+
+.ae-acts-list-container table tbody tr:hover {
+    background: #f5f5f7;
+}
+
+.ae-acts-list-container table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.ae-acts-list-container .actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.ae-acts-list-container .actions .btn {
+    padding: 4px 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ae-acts-list-container .actions .btn-excel {
+    background: #3a8c6b;
+    color: #ffffff;
+}
+.ae-acts-list-container .actions .btn-excel:hover {
+    background: #2d7056;
+}
+
+.ae-acts-list-container .actions .btn-view {
+    background: #2d6a9f;
+    color: #ffffff;
+}
+.ae-acts-list-container .actions .btn-view:hover {
+    background: #1f4f7a;
+}
+
+.ae-acts-list-container .actions .btn-delete {
+    background: #b33c3c;
+    color: #ffffff;
+}
+.ae-acts-list-container .actions .btn-delete:hover {
+    background: #8f2f2f;
+}
+
+.ae-acts-list-container .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.ae-acts-list-container .pagination .btn {
+    padding: 6px 14px;
+    border: 2px solid #696969;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    color: #1f1f1f;
+}
+
+.ae-acts-list-container .pagination .btn.active {
+    background: #1f1f1f;
+    color: #ffffff;
+    border-color: #1f1f1f;
+}
+
+.ae-acts-list-container .pagination .btn:hover:not(.active) {
+    background: #f0f0f2;
+}
+
+.wo-view-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999999;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.wo-view-modal-dialog {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto !important;
+    animation: woFadeIn 0.2s ease;
+}
+
+.wo-view-modal-content {
+    background: #ffffff;
+    border: 2px solid #696969;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.wo-view-modal-header {
+    background: #1f1f1f;
+    color: #ffffff;
+    padding: 14px 20px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.wo-view-modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wo-view-modal-close {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0.8;
+    padding: 0 8px;
+}
+.wo-view-modal-close:hover { opacity: 1; }
+
+.wo-view-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.wo-view-act-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    background: #f0f0f2;
+    border-radius: 8px;
+    flex-wrap: wrap;
+}
+
+.wo-view-act-info label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1f1f1f;
+    margin: 0;
+}
+
+.wo-view-act-info input {
+    border: 2px solid #696969;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+    flex: 1;
+    min-width: 150px;
+    background: #ffffff;
+    color: #1f1f1f;
+    outline: none;
+}
+
+.wo-view-act-info input:focus {
+    border-color: #b8860b;
+}
+
+.wo-view-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.wo-view-actions .btn {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.wo-view-actions .btn-excel {
+    background: #3a8c6b;
+    color: #ffffff;
+}
+.wo-view-actions .btn-excel:hover {
+    background: #2d7056;
+}
+
+.wo-view-actions .btn-save {
+    background: #2d6a9f;
+    color: #ffffff;
+}
+.wo-view-actions .btn-save:hover {
+    background: #1f4f7a;
+}
+
+.wo-view-codes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.wo-view-codes-table thead {
+    background: #f0f0f2;
+}
+
+.wo-view-codes-table thead th {
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    color: #1f1f1f;
+    border-bottom: 2px solid #e8e8ec;
+}
+
+.wo-view-codes-table tbody td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e8e8ec;
+    color: #1f1f1f;
+    word-break: break-all;
+}
+
+.wo-view-codes-table tbody tr:hover {
+    background: #f5f5f7;
+}
+
+.wo-view-codes-table .code-text {
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+}
+
+.wo-view-codes-table .btn-delete-code {
+    background: #b33c3c;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+.wo-view-codes-table .btn-delete-code:hover {
+    background: #8f2f2f;
+}
+
+.wo-view-codes-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.wo-view-codes-pagination .btn {
+    padding: 4px 12px;
+    border: 2px solid #696969;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    color: #1f1f1f;
+}
+
+.wo-view-codes-pagination .btn.active {
+    background: #1f1f1f;
+    color: #ffffff;
+    border-color: #1f1f1f;
+}
+
+.wo-view-codes-pagination .btn:hover:not(.active) {
+    background: #f0f0f2;
+}
+
+.wo-view-codes-info {
+    font-size: 13px;
+    color: #696969;
+    text-align: center;
+    margin-top: 8px;
+}
+
+#woToastContainer {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 350px;
+    width: 100%;
+    pointer-events: none;
+}
+
+.wo-toast {
+    background: #ffffff;
+    border: 2px solid #696969;
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    animation: woToastIn 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 200px;
+    pointer-events: auto;
+}
+
+.wo-toast-success { border-left: 4px solid #3a8c6b; }
+.wo-toast-error { border-left: 4px solid #b33c3c; }
+.wo-toast-warning { border-left: 4px solid #b8860b; }
+.wo-toast-info { border-left: 4px solid #2d6a9f; }
+
+.wo-toast-icon { font-size: 20px; }
+.wo-toast-icon.success { color: #3a8c6b; }
+.wo-toast-icon.error { color: #b33c3c; }
+.wo-toast-icon.warning { color: #b8860b; }
+.wo-toast-icon.info { color: #2d6a9f; }
+
+.wo-toast-text {
+    font-size: 14px;
+    color: #1f1f1f;
+    flex: 1;
+}
+
+.wo-toast-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #999;
+    padding: 0 4px;
+}
+.wo-toast-close:hover { color: #1f1f1f; }
+
+@keyframes woToastIn {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.wo-toast-out {
+    animation: woToastOut 0.3s ease forwards;
+}
+
+@keyframes woToastOut {
+    from { opacity: 1; transform: translateX(50px); }
+    to { opacity: 0; transform: translateX(50px); }
+}
+
+.wo-confirm-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999999;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.wo-confirm-modal-dialog {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto !important;
+    animation: woFadeIn 0.2s ease;
+}
+
+.wo-confirm-modal-content {
+    background: #ffffff;
+    border: 2px solid #696969;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    width: 100%;
+}
+
+.wo-confirm-modal-header {
+    padding: 14px 20px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e8e8ec;
+}
+
+.wo-confirm-modal-header.info { background: #2d6a9f; color: #ffffff; }
+.wo-confirm-modal-header.warning { background: #b8860b; color: #ffffff; }
+.wo-confirm-modal-header.danger { background: #b33c3c; color: #ffffff; }
+.wo-confirm-modal-header.success { background: #3a8c6b; color: #ffffff; }
+
+.wo-confirm-modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wo-confirm-modal-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 0 8px;
+}
+.wo-confirm-modal-close:hover { opacity: 1; }
+
+.wo-confirm-modal-body {
+    padding: 24px 20px;
+    text-align: center;
+}
+
+.wo-confirm-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+.wo-confirm-icon.info { color: #2d6a9f; }
+.wo-confirm-icon.warning { color: #b8860b; }
+.wo-confirm-icon.danger { color: #b33c3c; }
+.wo-confirm-icon.success { color: #3a8c6b; }
+
+.wo-confirm-message {
+    font-size: 16px;
+    color: #1f1f1f;
+    line-height: 1.5;
+}
+
+.wo-confirm-message small {
+    color: #696969;
+    font-size: 13px;
+}
+
+.wo-confirm-modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid #e8e8ec;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.wo-confirm-modal-footer .btn {
+    padding: 8px 24px;
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    min-width: 100px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.wo-confirm-modal-footer .btn-cancel {
+    background: #696969;
+    color: #ffffff;
+}
+.wo-confirm-modal-footer .btn-cancel:hover {
+    background: #1f1f1f;
+}
+
+.wo-confirm-modal-footer .btn-confirm {
+    background: #b33c3c;
+    color: #ffffff;
+}
+.wo-confirm-modal-footer .btn-confirm:hover {
+    background: #8f2f2f;
+}
+
+.wo-confirm-modal-footer .btn-confirm.success {
+    background: #3a8c6b;
+}
+.wo-confirm-modal-footer .btn-confirm.success:hover {
+    background: #2d7056;
+}
+
+.wo-confirm-modal-footer .btn-confirm.info {
+    background: #2d6a9f;
+}
+.wo-confirm-modal-footer .btn-confirm.info:hover {
+    background: #1f4f7a;
+}
+
+@keyframes woFadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .ae-acts-list-container { padding: 10px; }
+    .ae-acts-list-container .header { flex-direction: column; align-items: flex-start; }
+    .ae-acts-list-container .filters { flex-direction: column; width: 100%; }
+    .ae-acts-list-container .filters input,
+    .ae-acts-list-container .filters select,
+    .ae-acts-list-container .filters .btn { width: 100%; min-width: unset; }
+    .ae-acts-list-container table { font-size: 12px; }
+    .ae-acts-list-container table thead th,
+    .ae-acts-list-container table tbody td { padding: 6px 8px; }
+    .ae-acts-list-container .actions .btn { font-size: 10px; padding: 3px 8px; }
+
+    .wo-view-modal-dialog { max-width: 100% !important; margin: 0.5rem !important; }
+    .wo-view-modal-body { padding: 12px; }
+    .wo-view-act-info { flex-direction: column; align-items: stretch; gap: 8px; }
+    .wo-view-act-info input { min-width: unset; }
+    .wo-view-actions { justify-content: center; }
+    .wo-view-codes-table { font-size: 11px; }
+    .wo-view-codes-table thead th,
+    .wo-view-codes-table tbody td { padding: 4px 6px; }
+    .wo-view-codes-table .code-text { font-size: 10px; }
+    .wo-confirm-modal-dialog { max-width: 100% !important; margin: 0.5rem !important; }
+    .wo-confirm-modal-footer .btn { min-width: 80px; padding: 6px 16px; font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+    .ae-acts-list-container table thead { display: none; }
+    .ae-acts-list-container table tbody td {
+        display: block;
+        padding: 6px 10px;
+        border-bottom: none;
+    }
+    .ae-acts-list-container table tbody td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        display: inline-block;
+        width: 100px;
+        color: #696969;
+    }
+    .ae-acts-list-container table tbody tr {
+        display: block;
+        border-bottom: 2px solid #696969;
+        padding: 6px 0;
+    }
+    .ae-acts-list-container table tbody tr:last-child { border-bottom: none; }
+
+    #woToastContainer { max-width: 90%; right: 5%; top: 10px; }
+    .wo-toast { min-width: unset; font-size: 13px; padding: 10px 14px; }
+    .wo-toast-text { font-size: 13px; }
+}
+
+@media (width: 480px) and (height: 800px) {
+    .ae-acts-list-container { padding: 6px; }
+    .ae-acts-list-container table { font-size: 11px; }
+    .ae-acts-list-container table thead th,
+    .ae-acts-list-container table tbody td { padding: 4px 6px; }
+    .ae-acts-list-container .actions .btn { font-size: 9px; padding: 2px 6px; }
+    .ae-acts-list-container .filters input,
+    .ae-acts-list-container .filters select { font-size: 12px; padding: 6px 10px; min-width: unset; }
+    .ae-acts-list-container .filters .btn { font-size: 12px; padding: 6px 14px; }
+
+    .wo-view-modal-dialog { max-width: 100% !important; margin: 0.2rem !important; }
+    .wo-view-modal-body { padding: 8px; }
+    .wo-view-modal-header { padding: 8px 12px; min-height: 36px; }
+    .wo-view-modal-title { font-size: 13px; }
+    .wo-view-modal-close { font-size: 18px; }
+    .wo-view-act-info { padding: 8px 12px; gap: 6px; }
+    .wo-view-act-info label { font-size: 12px; }
+    .wo-view-act-info input { font-size: 12px; padding: 4px 8px; }
+    .wo-view-actions .btn { font-size: 11px; padding: 4px 10px; }
+    .wo-view-codes-table { font-size: 10px; }
+    .wo-view-codes-table thead th,
+    .wo-view-codes-table tbody td { padding: 3px 4px; }
+    .wo-view-codes-table .code-text { font-size: 9px; }
+    .wo-view-codes-pagination .btn { font-size: 10px; padding: 3px 8px; }
+    .wo-view-codes-info { font-size: 11px; }
+
+    .wo-confirm-modal-dialog { max-width: 100% !important; margin: 0.2rem !important; }
+    .wo-confirm-modal-header { padding: 8px 12px; min-height: 36px; }
+    .wo-confirm-modal-title { font-size: 13px; }
+    .wo-confirm-modal-close { font-size: 18px; }
+    .wo-confirm-modal-body { padding: 12px 16px; }
+    .wo-confirm-icon { font-size: 32px; }
+    .wo-confirm-message { font-size: 13px; }
+    .wo-confirm-modal-footer { padding: 8px 12px; }
+    .wo-confirm-modal-footer .btn { font-size: 11px; padding: 4px 12px; min-width: 60px; }
+
+    #woToastContainer { max-width: 90%; right: 5%; top: 8px; }
+    .wo-toast { padding: 6px 10px; min-width: unset; font-size: 11px; border-radius: 8px; }
+    .wo-toast-text { font-size: 11px; }
+    .wo-toast-icon { font-size: 16px; }
+}
+
+/* ============================================ */
+/*        TOAST ПОВЕРХ ВСЕГО                     */
+/* ============================================ */
+#woToastContainer {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    z-index: 999999999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    max-width: 350px !important;
+    width: 100% !important;
+    pointer-events: none !important;
+}
+
+.wo-toast {
+    position: relative !important;
+    z-index: 999999999 !important;
+    background: #ffffff !important;
+    border: 2px solid #696969 !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15) !important;
+    animation: woToastIn 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 200px !important;
+    pointer-events: auto !important;
+}
+
+/* ============================================ */
+/*        МОДАЛЬНОЕ ОКНО ПРОГРЕССА ЭКСПОРТА      */
+/* ============================================ */
+
+#woExportModal .wo-modal-dialog {
+    max-width: 500px !important;
+}
+
+#woExportModal .wo-modal-content {
+    border-radius: 16px !important;
+    overflow: hidden !important;
+}
+
+#woExportModal .wo-modal-header {
+    background: #2d6a9f !important;
+    color: #ffffff !important;
+    padding: 14px 20px !important;
+    min-height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+#woExportModal .wo-modal-header .wo-modal-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+#woExportModal .wo-modal-header .wo-modal-close {
+    background: none !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-size: 24px !important;
+    cursor: pointer !important;
+    opacity: 0.8 !important;
+    padding: 0 8px !important;
+}
+
+#woExportModal .wo-modal-header .wo-modal-close:hover {
+    opacity: 1 !important;
+}
+
+#woExportModal .wo-modal-body {
+    padding: 24px !important;
+    background: #ffffff !important;
+}
+
+#woExportModal .wo-modal-body .bi-hourglass-split {
+    font-size: 48px !important;
+    color: #2d6a9f !important;
+}
+
+#woExportModal .wo-modal-body .bi-check-circle-fill {
+    font-size: 48px !important;
+    color: #3a8c6b !important;
+}
+
+#woExportMessage {
+    text-align: center !important;
+    font-size: 16px !important;
+    color: #1f1f1f !important;
+    margin-bottom: 12px !important;
+}
+
+#woExportProgressContainer {
+    width: 100% !important;
+    background: #f0f0f2 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    height: 12px !important;
+}
+
+#woExportProgressBar {
+    width: 0% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, #2d6a9f, #3a8c6b) !important;
+    transition: width 0.3s ease !important;
+    border-radius: 8px !important;
+}
+
+#woExportProgressText {
+    text-align: center !important;
+    font-size: 13px !important;
+    color: #696969 !important;
+    margin-top: 6px !important;
+}
+
+#woExportResultMessage {
+    text-align: center !important;
+    font-size: 16px !important;
+    color: #1f1f1f !important;
+    margin-bottom: 16px !important;
+}
+
+#woExportModal .btn-success {
+    padding: 10px 32px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    background: #3a8c6b !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+}
+
+#woExportModal .btn-success:hover {
+    background: #2d7056 !important;
+}
+
+#woExportModal .btn-secondary {
+    padding: 10px 32px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    background: #696969 !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+}
+
+#woExportModal .btn-secondary:hover {
+    background: #1f1f1f !important;
+}
+
+/* Для ТСД и мобильных */
+@media (max-width: 500px) {
+    #woExportModal .wo-modal-dialog {
+        max-width: 100% !important;
+        margin: 0.5rem !important;
+    }
+    #woExportModal .wo-modal-body {
+        padding: 16px !important;
+    }
+    #woExportModal .btn-success,
+    #woExportModal .btn-secondary {
+        padding: 8px 20px !important;
+        font-size: 13px !important;
+        min-width: 80px !important;
+    }
+}
+
+@media (width: 480px) and (height: 800px) {
+    #woExportModal .wo-modal-header {
+        padding: 10px 14px !important;
+        min-height: 40px !important;
+    }
+    #woExportModal .wo-modal-title {
+        font-size: 14px !important;
+    }
+    #woExportModal .wo-modal-body {
+        padding: 12px !important;
+    }
+    #woExportModal .btn-success,
+    #woExportModal .btn-secondary {
+        padding: 6px 14px !important;
+        font-size: 12px !important;
+        min-width: 60px !important;
+    }
+}
+
+    /* ============================================ */
+/*        МОДАЛЬНОЕ ОКНО ПРОГРЕССА ЭКСПОРТА      */
+/* ============================================ */
+
+#woExportModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999999;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#woExportModal .wo-modal-dialog {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    animation: woFadeIn 0.2s ease;
+}
+
+#woExportModal .wo-modal-content {
+    background: #ffffff;
+    border: 2px solid #696969;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    width: 100%;
+}
+
+#woExportModal .wo-modal-header {
+    background: #2d6a9f !important;
+    color: #ffffff !important;
+    padding: 14px 20px !important;
+    min-height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    border-bottom: none !important;
+}
+
+#woExportModal .wo-modal-header .wo-modal-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+#woExportModal .wo-modal-header .wo-modal-close {
+    background: none !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-size: 24px !important;
+    cursor: pointer !important;
+    opacity: 0.8 !important;
+    padding: 0 8px !important;
+}
+
+#woExportModal .wo-modal-header .wo-modal-close:hover {
+    opacity: 1 !important;
+}
+
+#woExportModal .wo-modal-body {
+    padding: 24px !important;
+    background: #ffffff !important;
+}
+
+#woExportModal .wo-modal-body .bi-hourglass-split {
+    font-size: 48px !important;
+    color: #2d6a9f !important;
+}
+
+#woExportModal .wo-modal-body .bi-check-circle-fill {
+    font-size: 48px !important;
+    color: #3a8c6b !important;
+}
+
+#woExportMessage {
+    text-align: center !important;
+    font-size: 16px !important;
+    color: #1f1f1f !important;
+    margin-bottom: 12px !important;
+}
+
+#woExportProgressContainer {
+    width: 100% !important;
+    background: #f0f0f2 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    height: 12px !important;
+}
+
+#woExportProgressBar {
+    width: 0% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, #2d6a9f, #3a8c6b) !important;
+    transition: width 0.3s ease !important;
+    border-radius: 8px !important;
+}
+
+#woExportProgressText {
+    text-align: center !important;
+    font-size: 13px !important;
+    color: #696969 !important;
+    margin-top: 6px !important;
+}
+
+#woExportResultMessage {
+    text-align: center !important;
+    font-size: 16px !important;
+    color: #1f1f1f !important;
+    margin-bottom: 16px !important;
+}
+
+#woExportModal .btn-success {
+    padding: 10px 32px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    background: #3a8c6b !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+}
+
+#woExportModal .btn-success:hover {
+    background: #2d7056 !important;
+}
+
+#woExportModal .btn-secondary {
+    padding: 10px 32px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    background: #696969 !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+}
+
+#woExportModal .btn-secondary:hover {
+    background: #1f1f1f !important;
+}
+
+/* Анимация */
+@keyframes woFadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Для ТСД и мобильных */
+@media (max-width: 500px) {
+    #woExportModal .wo-modal-dialog {
+        max-width: 100% !important;
+        margin: 0.5rem !important;
+    }
+    #woExportModal .wo-modal-body {
+        padding: 16px !important;
+    }
+    #woExportModal .btn-success,
+    #woExportModal .btn-secondary {
+        padding: 8px 20px !important;
+        font-size: 13px !important;
+        min-width: 80px !important;
+    }
+}
+
+@media (width: 480px) and (height: 800px) {
+    #woExportModal .wo-modal-header {
+        padding: 10px 14px !important;
+        min-height: 40px !important;
+    }
+    #woExportModal .wo-modal-title {
+        font-size: 14px !important;
+    }
+    #woExportModal .wo-modal-body {
+        padding: 12px !important;
+    }
+    #woExportModal .btn-success,
+    #woExportModal .btn-secondary {
+        padding: 6px 14px !important;
+        font-size: 12px !important;
+        min-width: 60px !important;
+    }
+}
+</style>
+
+<div class="ae-acts-list-container">
+    <div class="header">
+        <h2><i class="bi bi-list-ul"></i> Список актов списания</h2>
+        <a href="{% url 'write_off' %}" class="btn" style="padding: 8px 20px; border: 2px solid #696969; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; background: #ffffff; color: #1f1f1f; text-decoration: none;">
+            <i class="bi bi-arrow-left"></i> Назад
+        </a>
+    </div>
+
+    <div class="filters">
+        <input type="text" id="searchInput" placeholder="Поиск по номеру акта...">
+        <input type="date" id="dateFromInput">
+        <input type="date" id="dateToInput">
+        <button class="btn" onclick="loadActs(1);"><i class="bi bi-search"></i> Найти</button>
+        <button class="btn" onclick="resetFilters();"><i class="bi bi-arrow-counterclockwise"></i> Сбросить</button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Номер акта</th>
+                    <th>Дата создания</th>
+                    <th>Кол-во кодов</th>
+                    <th>Перезаписано</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody id="actsTableBody">
+                <tr><td colspan="6" style="text-align: center; padding: 40px; color: #696969;">Загрузка...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination" id="paginationContainer"></div>
+</div>
+
+<!-- TOAST КОНТЕЙНЕР -->
+<div id="woToastContainer"></div>
+
+<!-- МОДАЛЬНОЕ ОКНО ПРОСМОТРА АКТА -->
+<div class="wo-view-modal" id="woViewModal">
+    <div class="wo-view-modal-dialog">
+        <div class="wo-view-modal-content">
+            <div class="wo-view-modal-header">
+                <h5 class="wo-view-modal-title"><i class="bi bi-file-earmark-text"></i> Акт списания</h5>
+                <button type="button" class="wo-view-modal-close" onclick="woCloseViewModal();">×</button>
+            </div>
+            <div class="wo-view-modal-body">
+                <div class="wo-view-act-info">
+                    <label for="woEditActNumber">Номер акта:</label>
+                    <input type="text" id="woEditActNumber" placeholder="Номер акта">
+                    <div class="wo-view-actions">
+                        <button class="btn btn-excel" onclick="woExportFromView();">
+                            <i class="bi bi-file-earmark-excel"></i> Excel
+                        </button>
+                        <button class="btn btn-save" onclick="woSaveActNumber();">
+                            <i class="bi bi-check-lg"></i> Сохранить
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                    <span style="font-weight: 600; font-size: 14px; color: #1f1f1f;">
+                        <i class="bi bi-qr-code"></i> Коды маркировки
+                    </span>
+                    <span style="font-size: 13px; color: #696969;" id="woViewCodesTotal">Всего: 0</span>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="wo-view-codes-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">№</th>
+                                <th>Код</th>
+                                <th style="width: 100px;">Статус</th>
+                                <th style="width: 70px;">Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody id="woViewCodesBody">
+                            <tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">Загрузка...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="wo-view-codes-pagination" id="woViewCodesPagination"></div>
+                <div class="wo-view-codes-info" id="woViewCodesInfo"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ -->
+<div class="wo-confirm-modal" id="woConfirmModal">
+    <div class="wo-confirm-modal-dialog">
+        <div class="wo-confirm-modal-content">
+            <div class="wo-confirm-modal-header" id="woConfirmHeader">
+                <h5 class="wo-confirm-modal-title"><i class="bi bi-question-circle"></i> <span id="woConfirmTitle">Подтверждение</span></h5>
+                <button type="button" class="wo-confirm-modal-close" id="woConfirmCloseBtn">×</button>
+            </div>
+            <div class="wo-confirm-modal-body">
+                <div class="wo-confirm-icon" id="woConfirmIcon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                <div class="wo-confirm-message" id="woConfirmMessage">Вы уверены?</div>
+            </div>
+            <div class="wo-confirm-modal-footer">
+                <button type="button" class="btn btn-cancel" id="woConfirmCancelBtn">
+                    <i class="bi bi-x-lg"></i> <span id="woConfirmCancelText">Отмена</span>
+                </button>
+                <button type="button" class="btn btn-confirm" id="woConfirmOkBtn">
+                    <i class="bi bi-check-lg"></i> <span id="woConfirmOkText">OK</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== МОДАЛЬНОЕ ОКНО ПРОГРЕССА ЭКСПОРТА ===== -->
+<div class="wo-modal" id="woExportModal" style="display: none;">
+    <div class="wo-modal-dialog" style="max-width: 500px;">
+        <div class="wo-modal-content">
+            <div class="wo-modal-header" style="background: #2d6a9f; color: #ffffff;">
+                <h5 class="wo-modal-title"><i class="bi bi-file-earmark-excel"></i> Экспорт в Excel</h5>
+                <button type="button" class="wo-modal-close" onclick="woCloseExportModal();" style="color: #ffffff;">×</button>
+            </div>
+            <div class="wo-modal-body" style="padding: 24px;">
+                <div id="woExportStatus">
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <i class="bi bi-hourglass-split" style="font-size: 48px; color: #2d6a9f;"></i>
+                    </div>
+                    <div id="woExportMessage" style="text-align: center; font-size: 16px; color: #1f1f1f; margin-bottom: 12px;">
+                        Подготовка данных...
+                    </div>
+                    <div id="woExportProgressContainer" style="width: 100%; background: #f0f0f2; border-radius: 8px; overflow: hidden; height: 12px;">
+                        <div id="woExportProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #2d6a9f, #3a8c6b); transition: width 0.3s ease; border-radius: 8px;"></div>
+                    </div>
+                    <div id="woExportProgressText" style="text-align: center; font-size: 13px; color: #696969; margin-top: 6px;">
+                        0%
+                    </div>
+                </div>
+                <div id="woExportResult" style="display: none; text-align: center;">
+                    <div style="font-size: 48px; color: #3a8c6b; margin-bottom: 12px;">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div id="woExportResultMessage" style="font-size: 16px; color: #1f1f1f; margin-bottom: 16px;">
+                        Готово!
+                    </div>
+                    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                        <button class="btn btn-success" id="woExportDownloadBtn" onclick="woDownloadExport();" style="padding: 10px 32px; font-weight: 600; font-size: 14px; border-radius: 8px; border: none; background: #3a8c6b; color: #ffffff; cursor: pointer;">
+                            <i class="bi bi-download"></i> Выгрузить
+                        </button>
+                        <button class="btn btn-secondary" onclick="woCloseExportModal();" style="padding: 10px 32px; font-weight: 600; font-size: 14px; border-radius: 8px; border: none; background: #696969; color: #ffffff; cursor: pointer;">
+                            <i class="bi bi-x-lg"></i> Отмена
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================ //
+// ====== ЭКСПОРТ В EXCEL С ПРОГРЕССОМ ====== //
+// ============================================ //
+
+var woExportId = null;
+var woExportActNumber = '';
+
+function exportExcelWithProgress(actNumber) {
+    console.log('📊 Экспорт акта:', actNumber);
+
+    woExportId = 'export_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+    woExportActNumber = actNumber;
+
+    var modal = document.getElementById('woExportModal');
+    if (!modal) {
+        console.error('❌ Модальное окно woExportModal не найдено!');
+        woShowToast('Ошибка: модальное окно не найдено', 'error');
+        return;
+    }
+
+    document.getElementById('woExportStatus').style.display = 'block';
+    document.getElementById('woExportResult').style.display = 'none';
+    document.getElementById('woExportMessage').textContent = 'Отправка запроса...';
+    document.getElementById('woExportProgressBar').style.width = '10%';
+    document.getElementById('woExportProgressText').textContent = '10%';
+    document.getElementById('woExportDownloadBtn').style.display = 'inline-flex';
+    modal.style.display = 'flex';
+
+    console.log('✅ Модальное окно показано');
+
+    $.ajax({
+        url: '/write-off/export-excel/',
+        method: 'POST',
+        dataType: 'json',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        data: {
+            act_number: actNumber,
+            export_id: woExportId
+        },
+        success: function(data) {
+            console.log('Ответ сервера:', data);
+            if (data.status === 'processing') {
+                document.getElementById('woExportMessage').textContent = data.message || 'Обработка...';
+                document.getElementById('woExportProgressBar').style.width = '30%';
+                document.getElementById('woExportProgressText').textContent = '30%';
+                setTimeout(woCheckExportStatus, 1000);
+            } else if (data.status === 'error') {
+                document.getElementById('woExportStatus').style.display = 'none';
+                document.getElementById('woExportResult').style.display = 'block';
+                document.getElementById('woExportResultMessage').textContent = '❌ ' + (data.message || 'Ошибка обработки');
+                document.getElementById('woExportDownloadBtn').style.display = 'none';
+            } else {
+                document.getElementById('woExportStatus').style.display = 'none';
+                document.getElementById('woExportResult').style.display = 'block';
+                document.getElementById('woExportResultMessage').textContent = 'Готово к скачиванию!';
+                document.getElementById('woExportDownloadBtn').dataset.downloadUrl = data.download_url;
+            }
+        },
+        error: function(jqxhr, status, errorMsg) {
+            console.error('Ошибка отправки:', status, errorMsg);
+            document.getElementById('woExportStatus').style.display = 'none';
+            document.getElementById('woExportResult').style.display = 'block';
+            document.getElementById('woExportResultMessage').textContent = '❌ Ошибка: ' + errorMsg;
+            document.getElementById('woExportDownloadBtn').style.display = 'none';
+        }
+    });
+}
+
+function woCheckExportStatus() {
+    if (!woExportId) return;
+
+    console.log('🔍 Проверка статуса экспорта:', woExportId);
+
+    $.ajax({
+        url: '/write-off/export-status/',
+        method: 'get',
+        dataType: 'json',
+        data: {
+            export_id: woExportId
+        },
+        success: function(data) {
+            console.log('Статус экспорта:', data);
+
+            if (data.status === 'processing') {
+                var progress = data.progress || 0;
+                document.getElementById('woExportMessage').textContent = data.message || 'Обработка...';
+                document.getElementById('woExportProgressBar').style.width = progress + '%';
+                document.getElementById('woExportProgressText').textContent = progress + '%';
+                setTimeout(woCheckExportStatus, 1000);
+            } else if (data.status === 'ready') {
+                console.log('✅ Экспорт готов!');
+                document.getElementById('woExportStatus').style.display = 'none';
+                document.getElementById('woExportResult').style.display = 'block';
+                document.getElementById('woExportResultMessage').textContent = data.message || 'Готово к скачиванию!';
+
+                var downloadBtn = document.getElementById('woExportDownloadBtn');
+                if (downloadBtn) {
+                    downloadBtn.style.display = 'inline-flex';
+                    downloadBtn.dataset.downloadUrl = data.download_url;
+                    downloadBtn.onclick = function() {
+                        woDownloadExport();
+                    };
+                }
+            } else if (data.status === 'error') {
+                document.getElementById('woExportStatus').style.display = 'none';
+                document.getElementById('woExportResult').style.display = 'block';
+                document.getElementById('woExportResultMessage').textContent = '❌ ' + (data.message || 'Ошибка обработки');
+                var downloadBtn = document.getElementById('woExportDownloadBtn');
+                if (downloadBtn) {
+                    downloadBtn.style.display = 'none';
+                }
+            }
+        },
+        error: function(jqxhr, status, errorMsg) {
+            console.log('Ошибка проверки статуса:', status, errorMsg);
+            setTimeout(woCheckExportStatus, 2000);
+        }
+    });
+}
+
+function woDownloadExport() {
+    var downloadBtn = document.getElementById('woExportDownloadBtn');
+    var downloadUrl = downloadBtn ? downloadBtn.dataset.downloadUrl : null;
+
+    console.log('Скачивание файла:', downloadUrl);
+
+    if (downloadUrl) {
+        // Создаём ссылку с атрибутом download
+        var link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = '';  // Пусть сервер задаёт имя
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        woShowToast('📥 Начинается скачивание...', 'success');
+        setTimeout(function() {
+            woCloseExportModal();
+        }, 2000);
+    } else {
+        woShowToast('Ошибка: ссылка для скачивания не найдена', 'error');
+    }
+}
+
+function woCloseExportModal() {
+    var modal = document.getElementById('woExportModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    document.getElementById('woExportStatus').style.display = 'block';
+    document.getElementById('woExportResult').style.display = 'none';
+    document.getElementById('woExportProgressBar').style.width = '0%';
+    document.getElementById('woExportProgressText').textContent = '0%';
+    woExportId = null;
+    woExportActNumber = '';
+}
+
+// ===== ЭКСПОРТ ИЗ ОКНА ПРОСМОТРА =====
+function woExportFromView() {
+    if (currentViewActNumber) {
+        console.log('📊 Экспорт из окна просмотра:', currentViewActNumber);
+        exportExcelWithProgress(currentViewActNumber);
+    } else {
+        woShowToast('Номер акта не найден', 'error');
+    }
+}
+
+// ============================================ //
+// ====== TOAST СИСТЕМА ====== //
+// ============================================ //
+
+function woShowToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3000;
+
+    var container = document.getElementById('woToastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'woToastContainer';
+        container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 8px; max-width: 350px; width: 100%; pointer-events: none;';
+        document.body.appendChild(container);
+    }
+
+    var icons = {
+        success: 'bi-check-circle-fill',
+        error: 'bi-x-circle-fill',
+        warning: 'bi-exclamation-triangle-fill',
+        info: 'bi-info-circle-fill'
+    };
+
+    var toast = document.createElement('div');
+    toast.className = 'wo-toast wo-toast-' + type;
+    toast.innerHTML = '<span class="wo-toast-icon ' + type + '"><i class="bi ' + (icons[type] || icons.info) + '"></i></span><span class="wo-toast-text">' + message + '</span><button class="wo-toast-close" onclick="this.parentElement.remove();">×</button>';
+
+    container.appendChild(toast);
+
+    setTimeout(function() {
+        toast.classList.add('wo-toast-out');
+        setTimeout(function() {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 300);
+    }, duration);
+}
+
+// ============================================ //
+// ====== МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ====== //
+// ============================================ //
+
+var woConfirmAction = null;
+
+function woShowConfirm(options) {
+    var modal = document.getElementById('woConfirmModal');
+    var header = document.getElementById('woConfirmHeader');
+    var title = document.getElementById('woConfirmTitle');
+    var icon = document.getElementById('woConfirmIcon');
+    var message = document.getElementById('woConfirmMessage');
+    var cancelText = document.getElementById('woConfirmCancelText');
+    var okText = document.getElementById('woConfirmOkText');
+    var okBtn = document.getElementById('woConfirmOkBtn');
+    var closeBtn = document.getElementById('woConfirmCloseBtn');
+    var cancelBtn = document.getElementById('woConfirmCancelBtn');
+
+    var defaults = {
+        title: 'Подтверждение',
+        message: 'Вы уверены?',
+        icon: 'warning',
+        confirmText: 'OK',
+        cancelText: 'Отмена',
+        confirmClass: 'danger',
+        onConfirm: null,
+        onCancel: null
+    };
+
+    var settings = {};
+    for (var key in defaults) {
+        if (defaults.hasOwnProperty(key)) {
+            settings[key] = options.hasOwnProperty(key) ? options[key] : defaults[key];
+        }
+    }
+
+    title.textContent = settings.title;
+    header.className = 'wo-confirm-modal-header ' + settings.icon;
+
+    var iconsMap = {
+        info: 'bi-info-circle-fill',
+        warning: 'bi-exclamation-triangle-fill',
+        danger: 'bi-exclamation-circle-fill',
+        success: 'bi-check-circle-fill'
+    };
+    icon.className = 'wo-confirm-icon ' + settings.icon;
+    icon.innerHTML = '<i class="bi ' + (iconsMap[settings.icon] || iconsMap.warning) + '"></i>';
+
+    message.innerHTML = settings.message;
+    cancelText.textContent = settings.cancelText;
+    okText.textContent = settings.confirmText;
+    okBtn.className = 'btn btn-confirm ' + settings.confirmClass;
+
+    woConfirmAction = {
+        onConfirm: settings.onConfirm || null,
+        onCancel: settings.onCancel || null
+    };
+
+    okBtn.onclick = function() {
+        console.log('✅ Кнопка "Удалить" нажата');
+        woCloseConfirmModal();
+        if (woConfirmAction && typeof woConfirmAction.onConfirm === 'function') {
+            woConfirmAction.onConfirm();
+        }
+        woConfirmAction = null;
+    };
+
+    closeBtn.onclick = function() {
+        woCloseConfirmModal();
+        if (woConfirmAction && typeof woConfirmAction.onCancel === 'function') {
+            woConfirmAction.onCancel();
+        }
+        woConfirmAction = null;
+    };
+
+    cancelBtn.onclick = function() {
+        woCloseConfirmModal();
+        if (woConfirmAction && typeof woConfirmAction.onCancel === 'function') {
+            woConfirmAction.onCancel();
+        }
+        woConfirmAction = null;
+    };
+
+    modal.style.display = 'flex';
+}
+
+function woCloseConfirmModal() {
+    document.getElementById('woConfirmModal').style.display = 'none';
+}
+
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('wo-confirm-modal')) {
+        woCloseConfirmModal();
+        if (woConfirmAction && typeof woConfirmAction.onCancel === 'function') {
+            woConfirmAction.onCancel();
+        }
+        woConfirmAction = null;
+    }
+    if (e.target.classList.contains('wo-view-modal')) {
+        woCloseViewModal();
+    }
+});
+
+// ============================================ //
+// ====== ОСНОВНЫЕ ФУНКЦИИ ====== //
+// ============================================ //
+
+var currentPage = 1;
+var totalPages = 1;
+var currentViewActNumber = '';
+var currentViewActId = null;
+var currentCodesPage = 1;
+
+function loadActs(page) {
+    currentPage = page || 1;
+
+    var search = document.getElementById('searchInput').value;
+    var dateFrom = document.getElementById('dateFromInput').value;
+    var dateTo = document.getElementById('dateToInput').value;
+
+    $('#preloader').show();
+
+    $.ajax({
+        url: '/write-off/get-acts-data/',
+        method: 'get',
+        dataType: 'json',
+        data: {
+            page: currentPage,
+            search: search,
+            date_from: dateFrom,
+            date_to: dateTo
+        },
+        success: function(data) {
+            $('#preloader').fadeOut(500);
+            if (data.status === 'success') {
+                renderTable(data.data);
+                renderPagination(data);
+            }
+        },
+        error: function(jqxhr, status, errorMsg) {
+            $('#preloader').fadeOut(500);
+            woShowToast('Ошибка загрузки данных', 'error');
+        }
+    });
+}
+
+function renderTable(data) {
+    var tbody = document.getElementById('actsTableBody');
+
+    if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #696969;">Нет данных</td></tr>';
+        return;
+    }
+
+    var html = '';
+    for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+        var actNumberEscaped = item.act_number.replace(/'/g, "\\'");
+        html += '<tr>' +
+            '<td data-label="№">' + ((currentPage - 1) * 20 + i + 1) + '</td>' +
+            '<td data-label="Номер акта"><strong>' + escapeHtml(item.act_number) + '</strong></td>' +
+            '<td data-label="Дата создания">' + item.created_at + '</td>' +
+            '<td data-label="Кол-во кодов">' + item.codes_count + '</td>' +
+            '<td data-label="Перезаписано">' + (item.overwritten_count || 0) + '</td>' +
+            '<td data-label="Действия" class="actions">' +
+                '<button class="btn btn-view" onclick="woViewAct(\'' + actNumberEscaped + '\', ' + item.id + ')" title="Просмотр"><i class="bi bi-eye"></i></button>' +
+                '<button class="btn btn-excel" onclick="exportExcelWithProgress(\'' + actNumberEscaped + '\')" title="Экспорт в Excel"><i class="bi bi-file-earmark-excel"></i></button>' +
+                '<button class="btn btn-delete" onclick="woDeleteAct(\'' + actNumberEscaped + '\')" title="Удалить"><i class="bi bi-trash3"></i></button>' +
+            '</td>' +
+        '</tr>';
+    }
+    tbody.innerHTML = html;
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function renderPagination(data) {
+    var container = document.getElementById('paginationContainer');
+    totalPages = data.pages || 1;
+
+    if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+    }
+
+    var html = '';
+    if (data.has_previous) {
+        html += '<button class="btn" onclick="loadActs(' + (currentPage - 1) + ')"><i class="bi bi-chevron-left"></i></button>';
+    }
+
+    for (var i = 1; i <= totalPages; i++) {
+        if (i === currentPage) {
+            html += '<button class="btn active">' + i + '</button>';
+        } else if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) {
+            html += '<button class="btn" onclick="loadActs(' + i + ')">' + i + '</button>';
+        } else if (i === currentPage - 3 || i === currentPage + 3) {
+            html += '<span style="padding: 6px 8px;">...</span>';
+        }
+    }
+
+    if (data.has_next) {
+        html += '<button class="btn" onclick="loadActs(' + (currentPage + 1) + ')"><i class="bi bi-chevron-right"></i></button>';
+    }
+
+    container.innerHTML = html;
+}
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('dateFromInput').value = '';
+    document.getElementById('dateToInput').value = '';
+    loadActs(1);
+}
+
+// ============================================ //
+// ====== МОДАЛЬНОЕ ОКНО ПРОСМОТРА ====== //
+// ============================================ //
+
+function woViewAct(actNumber, actId) {
+    currentViewActNumber = actNumber;
+    currentViewActId = actId;
+    document.getElementById('woEditActNumber').value = actNumber;
+    document.getElementById('woViewModal').style.display = 'flex';
+    currentCodesPage = 1;
+    woLoadCodes(actNumber, 1);
+}
+
+function woCloseViewModal() {
+    document.getElementById('woViewModal').style.display = 'none';
+}
+
+function woLoadCodes(actNumber, page) {
+    currentCodesPage = page || 1;
+    var tbody = document.getElementById('woViewCodesBody');
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">Загрузка...</td></tr>';
+
+    $.ajax({
+        url: '/write-off/get-act-codes/',
+        method: 'get',
+        dataType: 'json',
+        data: {
+            act_number: actNumber,
+            page: currentCodesPage
+        },
+        success: function(data) {
+            if (data.status === 'success') {
+                woRenderCodes(data);
+            } else {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">' + (data.message || 'Ошибка загрузки') + '</td></tr>';
+                woShowToast(data.message || 'Ошибка загрузки кодов', 'error');
+            }
+        },
+        error: function() {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">Ошибка загрузки</td></tr>';
+            woShowToast('Ошибка загрузки кодов', 'error');
+        }
+    });
+}
+
+function woRenderCodes(data) {
+    var tbody = document.getElementById('woViewCodesBody');
+    var codes = data.codes || [];
+    var total = data.total || 0;
+    var page = data.page || 1;
+    var pages = data.pages || 1;
+
+    document.getElementById('woViewCodesTotal').textContent = 'Всего: ' + total;
+
+    if (codes.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">Нет кодов</td></tr>';
+    } else {
+        var html = '';
+        var startIndex = (page - 1) * 20;
+        for (var i = 0; i < codes.length; i++) {
+            var item = codes[i];
+            var statusClass = item.is_overwritten ? 'color: #b8860b;' : 'color: #3a8c6b;';
+            var statusText = item.is_overwritten ? 'Перезаписан' : 'Активен';
+            html += '<tr>' +
+                '<td>' + (startIndex + i + 1) + '</td>' +
+                '<td class="code-text">' + escapeHtml(item.code) + '</td>' +
+                '<td style="' + statusClass + '">' + statusText + '</td>' +
+                '<td><button class="btn-delete-code" onclick="woDeleteCode(' + item.id + ', \'' + escapeHtml(item.code) + '\')" title="Удалить код"><i class="bi bi-trash3"></i></button></td>' +
+            '</tr>';
+        }
+        tbody.innerHTML = html;
+    }
+
+    var pagContainer = document.getElementById('woViewCodesPagination');
+    if (pages <= 1) {
+        pagContainer.innerHTML = '';
+    } else {
+        var pagHtml = '';
+        if (page > 1) {
+            pagHtml += '<button class="btn" onclick="woLoadCodes(\'' + currentViewActNumber + '\', ' + (page - 1) + ')"><i class="bi bi-chevron-left"></i></button>';
+        }
+        for (var j = 1; j <= pages; j++) {
+            if (j === page) {
+                pagHtml += '<button class="btn active">' + j + '</button>';
+            } else if (j === 1 || j === pages || Math.abs(j - page) <= 2) {
+                pagHtml += '<button class="btn" onclick="woLoadCodes(\'' + currentViewActNumber + '\', ' + j + ')">' + j + '</button>';
+            } else if (j === page - 3 || j === page + 3) {
+                pagHtml += '<span style="padding: 6px 8px;">...</span>';
+            }
+        }
+        if (page < pages) {
+            pagHtml += '<button class="btn" onclick="woLoadCodes(\'' + currentViewActNumber + '\', ' + (page + 1) + ')"><i class="bi bi-chevron-right"></i></button>';
+        }
+        pagContainer.innerHTML = pagHtml;
+    }
+
+    document.getElementById('woViewCodesInfo').textContent = 'Показано ' + codes.length + ' из ' + total + ' кодов';
+}
+
+// ===== УДАЛЕНИЕ КОДА =====
+function woDeleteCode(codeId, codeText) {
+    woShowConfirm({
+        title: 'Удаление кода',
+        message: 'Вы уверены, что хотите удалить код?<br><small>' + codeText + '</small>',
+        icon: 'danger',
+        confirmText: 'Удалить',
+        confirmClass: 'danger',
+        onConfirm: function() {
+            $('#preloader').show();
+            $.ajax({
+                url: '/write-off/delete-code/',
+                method: 'post',
+                dataType: 'json',
+                headers: {
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                data: {
+                    code_id: codeId,
+                    act_number: currentViewActNumber
+                },
+                success: function(data) {
+                    $('#preloader').fadeOut(500);
+                    if (data.status === 'success') {
+                        woShowToast('Код успешно удалён', 'success');
+                        woLoadCodes(currentViewActNumber, currentCodesPage);
+                        loadActs(currentPage);
+                    } else {
+                        woShowToast(data.message || 'Ошибка удаления кода', 'error');
+                    }
+                },
+                error: function() {
+                    $('#preloader').fadeOut(500);
+                    woShowToast('Ошибка удаления кода', 'error');
+                }
+            });
+        }
+    });
+}
+
+// ===== СОХРАНЕНИЕ НОМЕРА АКТА =====
+function woSaveActNumber() {
+    var newNumber = document.getElementById('woEditActNumber').value.trim();
+    if (!newNumber) {
+        woShowToast('Введите номер акта', 'warning');
+        return;
+    }
+    if (newNumber === currentViewActNumber) {
+        woShowToast('Номер акта не изменён', 'info');
+        return;
+    }
+
+    woShowConfirm({
+        title: 'Изменение номера акта',
+        message: 'Изменить номер акта с <strong>"' + currentViewActNumber + '"</strong> на <strong>"' + newNumber + '"</strong>?',
+        icon: 'warning',
+        confirmText: 'Сохранить',
+        confirmClass: 'success',
+        onConfirm: function() {
+            $('#preloader').show();
+            $.ajax({
+                url: '/write-off/update-act-number/',
+                method: 'post',
+                dataType: 'json',
+                headers: {
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                data: {
+                    old_number: currentViewActNumber,
+                    new_number: newNumber
+                },
+                success: function(data) {
+                    $('#preloader').fadeOut(500);
+                    if (data.status === 'success') {
+                        currentViewActNumber = newNumber;
+                        woShowToast('Номер акта изменён', 'success');
+                        loadActs(currentPage);
+                    } else {
+                        woShowToast(data.message || 'Ошибка изменения номера', 'error');
+                    }
+                },
+                error: function() {
+                    $('#preloader').fadeOut(500);
+                    woShowToast('Ошибка изменения номера', 'error');
+                }
+            });
+        }
+    });
+}
+
+// ===== УДАЛЕНИЕ АКТА =====
+function woDeleteAct(actNumber) {
+    woShowConfirm({
+        title: 'Удаление акта',
+        message: 'Вы уверены, что хотите удалить акт <strong>"' + actNumber + '"</strong>?<br><small style="color: #696969;">Все коды, связанные с этим актом, будут также удалены.</small>',
+        icon: 'danger',
+        confirmText: 'Удалить',
+        confirmClass: 'danger',
+        onConfirm: function() {
+            $('#preloader').show();
+            $.ajax({
+                url: '/write-off/delete-act/',
+                method: 'post',
+                dataType: 'json',
+                headers: {
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                data: {
+                    act_number: actNumber
+                },
+                success: function(data) {
+                    $('#preloader').fadeOut(500);
+                    if (data.status === 'success') {
+                        woShowToast('Акт "' + actNumber + '" удалён', 'success');
+                        loadActs(currentPage);
+                    } else {
+                        woShowToast(data.message || 'Ошибка удаления', 'error');
+                    }
+                },
+                error: function(jqxhr, status, errorMsg) {
+                    $('#preloader').fadeOut(500);
+                    woShowToast('Ошибка удаления: ' + errorMsg, 'error');
+                }
+            });
+        }
+    });
+}
+
+// === ПРИ ЗАГРУЗКЕ ===
+document.addEventListener('DOMContentLoaded', function() {
+    loadActs(1);
+
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            loadActs(1);
+        }
+    });
+
+    document.getElementById('woEditActNumber').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            woSaveActNumber();
+        }
+    });
+});
+
+
+</script>
+
+{% endblock %}

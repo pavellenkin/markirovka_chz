@@ -17,7 +17,7 @@ def cis_notes(code):
     date_now = datetime.now()
     type_doc = "CIS_NOTICE"
     body_doc = {
-        "participantInn": "7712035729",
+        "participantInn": "",
         "actionDate": str(date_now.date()),
         "action": "LOST_INVENTORY",
         "codes": [

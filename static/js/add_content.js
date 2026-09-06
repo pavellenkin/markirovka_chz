@@ -166,7 +166,7 @@ function saveCodeToLocalStorage(code) {
 
     // Проверка на дубликат
     if (codes.includes(code)) {
-        showTempMessage('⚠️ Код уже существует: ' + code.substring(0, 20) + '...', 'warning');
+        showTempMessage('Код уже существует: ' + code.substring(0, 20) + '...', 'warning');
         return;
     }
 
@@ -176,7 +176,7 @@ function saveCodeToLocalStorage(code) {
     console.log('Код сохранен:', code);
     console.log('Всего кодов:', codes.length);
 
-    showTempMessage('✅ Код добавлен! Всего: ' + codes.length, 'success');
+    showTempMessage('Код добавлен! Всего: ' + codes.length, 'success');
 }
 
 // Временное сообщение

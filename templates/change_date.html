@@ -7,34 +7,54 @@
     document.title = "Корректировка данных";
      }
 </script>
+<link rel="stylesheet" href="{% static 'css/ae_check_code.css' %}">
+<link rel="stylesheet" href="{% static 'css/ae_change_date.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+
+<div class="ae-check-container">
+    <!-- Декоративные фоновые элементы -->
+    <div class="ae-check-bg ae-top-left">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="ae-check-bg ae-bottom-right">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="ae-check-bg ae-center">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+
+    <!-- Основная карточка -->
         <div class="card position-absolute top-50 start-50 translate-middle shadow" style="background-color: #F7F7F7" id="main_check">
-           <div class="card-header bg-success text-light text-center">
-                <div class="container">
-                    <div class="row justify-content-md-start">
-                        <div class="col-1 position-absolute top-5 start-0">
-                           <button type="button" class="btn btn-sm btn-dark" onclick=" window.location = '/';" title="меню">&#9776</button>
-                        </div>
-                        <div class="col">
-                            <div class="mt-1">Корректировка сведений</div>
-                        </div>
+           <div class="card-header bg-secondary text-light text-center">
+            <div class="container">
+                <div class="row justify-content-md-start">
+                    <div class="col-1 position-absolute top-5 start-0">
+                        <button type="button" class="btn btn-sm btn-dark" onclick="window.location = '/';" title="меню">
+                            <i class="bi bi-house-fill"></i>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <div class="mt-1">Корректировка сведений</div>
                     </div>
                 </div>
             </div>
-            <div class="card-body">
-                <h5 class="card-title text-center p-3"></h5>
-
-                <div class="input-group py-1 px-3">
-                        <input inputmode="none" id="searchInput" onfocus="ChangeDate();" autofocus="autofocus" name="change_code"  class="form-control" placeholder="" autocomplete="off">
-                </div>
-              <div class="logo logo_sm text-center py-3">
-<!--                    <b>CHECK CODE	&emsp;</b>-->
-                    <img src="{% static '/img/barcode_scanner_2.png' %}" alt="" class="logo__img_sm logo__img_sm1" style="width: 80px !important; height: 80px !important;">
-              </div>
-
-          </div>
-          <div class="card-footer text-center" style="zoom:80%">
+        </div>
+        <div class="card-body">
+            <h5 class="card-title text-center p-3"></h5>
+            <div class="input-group py-1 px-3">
+                <input inputmode="none"
+                       id="searchInput"
+                       onfocus="ChangeDate();"
+                       autocomplete="off"
+                       autocapitalize="off"
+                       spellcheck="false"
+                       autofocus="autofocus"
+                       name="change_code"
+                       class="form-control"
+                       placeholder="Наведите сканер на код">
+            </div>
+            <div class="logo logo_sm text-center py-3">
+                <img src="{% static '/img/barcode_scanner_2.png' %}" alt="" class="logo__img_sm logo__img_sm1" style="width: 80px !important; height: 80px !important;">
+            </div>
+        </div>
+        <div class="card-footer text-center" style="zoom:80%">
             Отсканируй код маркировки на товаре
-          </div>
+        </div>
         </div>
         <div class="card position-absolute top-50 start-50 translate-middle bg-white" style="display: none" id="apply_change">
           <div class="card-body text-center p-5">
@@ -51,7 +71,7 @@
               </div>
         </div>
          <div class="card position-absolute top-50 start-50 translate-middle bg-white" style=" display: none" id="producer_valid">
-          <div class="card-body text-center p-3" style="zoom:85%;">
+          <div class="card-body text-center p-3" style="">
 
                 <p id="bar-text" class="card-text text-center p-1"></p>
                     <input hidden type="text" name="ki" readonly class="form-control" id="ki" aria-describedby="kiHelp">
@@ -88,17 +108,13 @@
           </div>
         </div>
         <div class="card position-absolute top-50 start-50 translate-middle bg-white" style=" display: none" id="producer_invalid">
-          <div class="card-body" style="zoom:85%;">
-
-
-
-
+          <div class="card-body" style="">
                     <p id="message-bar-text" class="card-text text-center p-1" style="zoom: 95%"></p>
                     <div class="text-center" id="button_close" style="display: none">
                         <hr class="hr hr-blurry" />
                         <button type="button" class="btn btn-sm btn-success" onclick="ButtonClose();">Закрыть</button>
                     </div>
-
           </div>
         </div>
+</div>
 {% endblock %}

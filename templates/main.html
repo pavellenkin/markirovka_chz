@@ -1,43 +1,123 @@
 {% extends 'main_template.html' %}
 {% load static %}
 {% block content %}
+<!-- Подключаем эксклюзивный CSS-файл -->
+<link rel="stylesheet" href="{% static 'css/ae_menu.css' %}">
+
+<!-- Мета-тег для правильного масштабирования на ТСД -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
 <script>
-    window.onload = function(){
+    window.onload = function() {
+        document.title = "Главная: меню";
 
-    document.title = "Главная: меню";
-     }
+        let seconds = 0;
+        const timerElement = document.getElementById('ae-uptime-display');
+
+        function updateTimer() {
+            seconds++;
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+
+            if (timerElement) {
+                const h = String(hours).padStart(2, '0');
+                const m = String(minutes).padStart(2, '0');
+                const s = String(secs).padStart(2, '0');
+                timerElement.textContent = hours > 0 ? h + ':' + m + ':' + s : m + ':' + s;
+            }
+        }
+
+        setInterval(updateTimer, 1000);
+    }
 </script>
-<div class="position-relative" id="admin_button">
-    <div class="position-absolute top-0 end-0 m-5">
-        <button type="button" class="btn btn-success m-1 shadow" onclick=" window.location = '/settings/';">ADMIN</button>
 
+<div class="ae-menu-container">
+    <!-- Декоративные фоновые элементы -->
+    <div class="ae-bg-decoration ae-top-left">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="ae-bg-decoration ae-bottom-right">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="ae-bg-decoration ae-center">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+
+    <!-- Кнопка ADMIN -->
+    <div class="ae-admin-wrapper">
+        <button type="button" class="ae-admin-btn" onclick="window.location = '/settings/';">
+            <i class="bi bi-gear-fill"></i> Настройки
+        </button>
     </div>
-</div>
-<div class=" position-absolute top-50 start-50 translate-middle text-center text-white" style="" id="main_check">
 
+    <!-- Логотип и заголовок -->
+    <div class="ae-header-block">
+        <img src="{% static 'img/datam.jpg' %}" alt="Логотип" class="ae-header-logo">
+        <div class="ae-header-text">
+            <div class="ae-header-title">АО «Авто-Евро»</div>
+            <div class="ae-header-subtitle">Маркировка товаров · Честный Знак</div>
+        </div>
+    </div>
 
-        <img src="/static/img/datam.jpg" alt="" class="logo__img_sm logo__img_sm1 shadow" style="width: 115px; height: 115px;">
-        <h5 class="m-3">Маркировка. Меню</h5>
-       <div class="container">
-            <div class="row">
-                <div class="col-xl-12 col-sm-12" id="main_button">
-                    <div class="d-grid gap-2">
+    <!-- Статус-бар -->
+    <div class="ae-status-bar">
+        <div class="ae-status-item">
+            <span class="ae-status-dot"></span>
+            <span class="ae-status-label">Система:</span>
+            <span class="ae-status-value">онлайн</span>
+        </div>
+        <div class="ae-status-divider"></div>
+        <div class="ae-status-item">
+            <i class="bi bi-clock"></i>
+            <span class="ae-status-label">В работе:</span>
+            <span class="ae-timer-display" id="ae-uptime-display">00:00</span>
+        </div>
+        <div class="ae-status-divider"></div>
+        <div class="ae-status-item">
+            <i class="bi bi-check-circle"></i>
+            <span class="ae-status-label">Статус:</span>
+            <span class="ae-status-value">готов</span>
+        </div>
+    </div>
 
+    <!-- Сетка карточек -->
+    <div class="ae-menu-grid">
+        <!-- Проверка кода маркировки -->
+        <div class="ae-menu-card ae-check" onclick="window.location = '/check_code/';">
+            <span class="ae-card-number">01</span>
+            <div class="ae-icon"><i class="bi bi-qr-code-scan"></i></div>
+            <div class="ae-card-title">Проверка кода</div>
+        </div>
 
-                    <button type="button" class="btn btn-primary m-1 shadow" onclick=" window.location = '/check_code/';" >Проверка кода маркировки</button>
+        <!-- Корректировка сведений -->
+        <div class="ae-menu-card ae-edit" onclick="window.location = '/change_date/';">
+            <span class="ae-card-number">02</span>
+            <div class="ae-icon"><i class="bi bi-pencil-square"></i></div>
+            <div class="ae-card-title">Корректировка сведений</div>
+        </div>
 
+        <!-- Инвентаризация -->
+        <div class="ae-menu-card ae-invent" onclick="window.location = '/invent/';">
+            <span class="ae-card-number">03</span>
+            <div class="ae-icon"><i class="bi bi-clipboard-check"></i></div>
+            <div class="ae-card-title">Инвентаризация</div>
+        </div>
 
-                    <button type="button" class="btn btn-success m-1 shadow" onclick=" window.location = '/change_date/';">Корректировка сведений</button>
+        <!-- Утилизация -->
+        <div class="ae-menu-card ae-utilization" onclick="window.location = '/write-off/';">
+            <span class="ae-card-number">04</span>
+            <div class="ae-icon"><i class="bi bi-clipboard-minus"></i></div>
+            <div class="ae-card-title">Списание</div>
+        </div>
 
-                    <button type="button" class="btn btn-warning m-1 shadow" onclick=" window.location = '/invent/';">Инвентаризация</button>
+        <!-- Национальный каталог -->
+        <div class="ae-menu-card ae-catalog" onclick="window.location = '/natcat/';">
+            <span class="ae-card-number">05</span>
+            <div class="ae-icon"><i class="bi bi-journal-check"></i></div>
+            <div class="ae-card-title">Национальный каталог</div>
+        </div>
 
-                    <button type="button" id="nk_button" class="btn btn-warning m-1 shadow" onclick=" window.location = '/natcat/';">Национальный каталог</button>
-
-                    <button type="button" id="dispenser_button" class="btn btn-danger m-1 shadow" onclick=" window.location = '/dispenser-tasks/';">Задания на выгрузку</button>
-
-                        </div>
-                    </div>
-            </div>
+        <!-- Задания на выгрузку -->
+        <div class="ae-menu-card ae-dispenser" onclick="window.location = '/dispenser-tasks/';">
+            <span class="ae-card-number">06</span>
+            <div class="ae-icon"><i class="bi bi-cloud-upload"></i></div>
+            <div class="ae-card-title">Выгрузка</div>
+        </div>
     </div>
 </div>
 {% endblock %}

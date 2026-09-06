@@ -17,22 +17,6 @@ from .forms import DocumentFilterForm, DocumentCreateForm
 from django.conf import settings
 from .models import Document
 
-# def dispenser_tasks(request):
-#
-#     # dispenser = dispenser_task_init()
-#     # print(dispenser)
-#     taskid='8fc39d82-5d32-49fa-9bcd-fa1bfe3e78f9'
-#     task_status = dispenser_task_status(taskid)
-#     inn = '7712035729'
-#     get_part_status, get_part_info = get_participants(inn)
-#     print(get_part_info['productGroups'])
-#
-#
-#     return render(request, 'dispenser-tasks.html')
-
-
-
-
 
 def document_list(request):
     status_mods, data_mods = mods_info()

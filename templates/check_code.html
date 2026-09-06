@@ -3,66 +3,130 @@
 {% block content %}
 <script>
     window.onload = function(){
-    document.title = "Проверка кодов маркировки";
 
-
-
-    }
+    document.title = "Проверка кода";
+     }
 </script>
-<!--    const element = document.getElementById('searchInput');-->
-<!--    hideKeyboard(element);-->
-        <div class="card position-absolute top-50 start-50 translate-middle shadow" style="background-color: #F7F7F7" id="main_check">
-            <div class="card-header bg-secondary text-light text-center">
-                <div class="container">
-                    <div class="row justify-content-md-start">
-                        <div class="col-1 position-absolute top-5 start-0">
-                           <button type="button" class="btn btn-sm btn-dark" onclick=" window.location = '/';" title="меню">&#9776</button>
-                        </div>
-                        <div class="col">
-                            <div class="mt-1">Проверка кода маркировки</div>
-                        </div>
+<link rel="stylesheet" href="{% static 'css/ae_check_code.css' %}">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<div class="ae-check-container">
+    <!-- Декоративные фоновые элементы -->
+    <div class="ae-check-bg ae-top-left">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="ae-check-bg ae-bottom-right">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+    <div class="ae-check-bg ae-center">𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃</div>
+
+
+
+    <!-- Основная карточка -->
+    <div class="card position-absolute top-50 start-50 translate-middle shadow" style="background-color: #F7F7F7" id="main_check">
+        <div class="card-header bg-secondary text-light text-center">
+            <div class="container">
+                <div class="row justify-content-md-start">
+                    <div class="col-1 position-absolute top-5 start-0">
+                        <button type="button" class="btn btn-sm btn-dark" onclick="window.location = '/';" title="меню">
+                            <i class="bi bi-house-fill"></i>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <div class="mt-1">Проверка кода маркировки</div>
                     </div>
                 </div>
             </div>
-          <div class="card-body ">
+        </div>
+
+        <div class="card-body">
             <h5 class="card-title text-center p-3"></h5>
 
-                <div class="input-group py-1 px-3" >
-                        <input  inputmode="none" id="searchInput" onfocus="SendCode();" autocomplete="off"  autocapitalize="off" spellcheck="false" autofocus="autofocus" name="check_code" class="form-control " placeholder="" >
-                </div>
-              <div class="logo logo_sm text-center py-3">
-<!--                    <b>CHECK CODE	&emsp;</b>-->
-                    <img src="{% static '/img/barcode_scanner_2.png' %}" alt="" class="logo__img_sm logo__img_sm1" style="width: 80px !important; height: 80px !important;">
-              </div>
+            <div class="input-group py-1 px-3">
+                <input inputmode="none"
+                       id="searchInput"
+                       onfocus="SendCode();"
+                       autocomplete="off"
+                       autocapitalize="off"
+                       spellcheck="false"
+                       autofocus="autofocus"
+                       name="check_code"
+                       class="form-control"
+                       placeholder="Наведите сканер на код">
+            </div>
 
-          </div>
-            <div class="card-footer text-center" style="zoom:80%">
+            <div class="logo logo_sm text-center py-3">
+                <img src="{% static '/img/barcode_scanner_2.png' %}" alt="" class="logo__img_sm logo__img_sm1" style="width: 80px !important; height: 80px !important;">
+            </div>
+        </div>
+
+        <div class="card-footer text-center" style="zoom:80%">
             Отсканируй код маркировки на товаре
-          </div>
+        </div>
+    </div>
+
+    <!-- Карточка ответа - УБИРАЕМ КОНФЛИКТУЮЩИЕ КЛАССЫ position-absolute top-50 start-50 translate-middle -->
+    <div class="card bg-white" style="display: none; width: 100%; max-width: 480px; margin-top: 20px;" id="response_check">
+        <div class="card-header text-primary fw-bold" id="card_header" style="display: none;">
         </div>
 
-        <div class="card position-absolute top-50 start-50 translate-middle bg-white" style=" display: none" id="response_check">
-            <div class="card-header text-primary fw-bold" id="card_header" style="display: none; zoom:80%">
-
-          </div>
-          <div class="card-body" style="zoom:85%;">
+        <div class="card-body" style="">
             <div class="text-center" id="message-valid-text" style="">
-
             </div>
-            <div class="text-center" id="message-leading-symbol-text" style="zoom: 95%">
-
+            <div class="text-center" id="message-leading-symbol-text" style="">
             </div>
 
+            <p id="message-bar-text" class="card-text text-center"></p>
 
-
-                    <p id="message-bar-text" class="card-text text-center"></p>
-                    <div class="text-end" id="button_close" style="display: none; ">
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="ButtonClose();">Закрыть</button>
-                    </div>
-
-          </div>
-            <div class="card-footer text-center text-danger fw-bold" id="card_footer" style="display: none; zoom:80%">
-
-          </div>
+            <div class="text-end" id="button_close" style="display: none; ">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="ButtonClose();">
+                    <i class="bi bi-x-lg"></i> Закрыть
+                </button>
+            </div>
         </div>
+
+        <div class="card-footer text-center text-danger fw-bold" id="card_footer" style="display: none; zoom:80%">
+        </div>
+    </div>
+</div>
+
+<!-- ВРЕМЕННЫЙ ОТЛАДОЧНЫЙ СКРИПТ -->
+<script>
+// Переопределяем VisibleAbout для принудительного показа
+window.VisibleAbout = function() {
+    console.log('VisibleAbout вызвана!');
+    var main = document.getElementById('main_check');
+    var resp = document.getElementById('response_check');
+
+    if (main) {
+        main.style.display = 'none';
+        console.log('main скрыт');
+    }
+
+    if (resp) {
+        resp.style.display = 'block';
+        resp.style.position = 'fixed';
+        resp.style.top = '50%';
+        resp.style.left = '50%';
+        resp.style.transform = 'translate(-50%, -50%)';
+        resp.style.width = '100%';
+        resp.style.maxWidth = '480px';
+        resp.style.zIndex = '99999';
+        resp.style.border = '5px solid #00ff00';
+        resp.style.background = '#ffffff';
+        resp.style.boxShadow = '0 0 50px rgba(0,0,0,0.3)';
+        resp.style.borderRadius = '16px';
+        console.log('response показан');
+    }
+
+    document.getElementById('card_header').style.display = 'block';
+    document.getElementById('button_close').style.display = 'block';
+
+    if (!document.getElementById('message-bar-text').innerHTML) {
+        document.getElementById('message-bar-text').innerHTML = '<h3>Тестовое сообщение</h3><p>VisibleAbout() сработала!</p>';
+    }
+
+    console.log('VisibleAbout выполнена!');
+};
+
+console.log('VisibleAbout переопределена!');
+</script>
+
 {% endblock %}

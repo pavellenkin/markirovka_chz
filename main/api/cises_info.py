@@ -9,6 +9,7 @@ from main.api.unified_authentication_true_api import auth, load_token
 # метод API отдающий подробную информацию о КИ
 def info_ki(code):
     print("INFO_KI: ", code)
+    print("INFO_KI(length): ", len(code))
     while True:
         # загружаем сохраненный токен, если его нет, то получаем его
         status_load, token = load_token()

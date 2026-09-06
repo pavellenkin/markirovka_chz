@@ -1,0 +1,640 @@
+/* ============================================
+   AE INVENT SEARCH - Стили для поиска артикулов
+   Префикс: ae- (Auto-Euro)
+   Версия: 1.0
+   ============================================ */
+
+/* ---------- Подключение шрифтов ---------- */
+@import url('https://fonts.cdnfonts.com/css/gilroy-bold');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css');
+
+
+/* ============================================ */
+/*           КАРТОЧКА search_art                */
+/* ============================================ */
+
+#search_art {
+    background: #ffffff !important;
+    border: 2px solid #696969 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    overflow: hidden !important;
+    z-index: 2 !important;
+    display: none !important;
+}
+
+/* Шапка карточки */
+#search_art .card-header {
+    background: #1f1f1f !important;
+    color: #ffffff !important;
+    border-radius: 14px 14px 0 0 !important;
+    padding: 14px 20px !important;
+    border-bottom: none !important;
+    min-height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    letter-spacing: 0.3px !important;
+}
+
+/* Тело карточки */
+#search_art .card-body {
+    padding: 20px !important;
+}
+
+/* Контейнер поиска */
+.search-container {
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+/* Поле ввода артикула */
+#articleSearchInput {
+    width: 100% !important;
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+    border: 2px solid #696969 !important;
+    border-radius: 10px !important;
+    margin-bottom: 10px !important;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif !important;
+    background: #ffffff !important;
+    color: #1f1f1f !important;
+    outline: none !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+    text-align: center !important;
+    min-height: 48px !important;
+}
+
+#articleSearchInput:focus {
+    border-color: #b8860b !important;
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1) !important;
+}
+
+#articleSearchInput::placeholder {
+    color: #b0b0b0 !important;
+    font-size: 14px !important;
+    text-align: center !important;
+}
+
+/* Информация о количестве */
+.info {
+    color: #696969 !important;
+    margin-bottom: 15px !important;
+    font-size: 14px !important;
+    text-align: center !important;
+}
+
+/* Результаты поиска */
+#searchResults {
+    max-height: 10rem !important;
+    overflow-y: auto !important;
+    border: 1px solid #e8e8ec !important;
+    border-radius: 10px !important;
+}
+
+/* Элемент результата */
+.result-item {
+    padding: 10px 14px !important;
+    border-bottom: 1px solid #e8e8ec !important;
+    cursor: pointer !important;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif !important;
+    font-size: 14px !important;
+    transition: background 0.2s ease !important;
+    color: #1f1f1f !important;
+}
+
+.result-item:hover {
+    background-color: #f5f5f7 !important;
+}
+
+.result-item:last-child {
+    border-bottom: none !important;
+}
+
+/* Подсветка найденного текста */
+.highlight {
+    background-color: #ffd700 !important;
+    font-weight: 700 !important;
+    padding: 0 2px !important;
+    border-radius: 2px !important;
+}
+
+/* Сообщение "ничего не найдено" */
+.empty-message {
+    padding: 20px !important;
+    text-align: center !important;
+    color: #999 !important;
+    font-size: 13px !important;
+}
+
+/* Кнопка "Записать" под результатами */
+.select-custom {
+    padding: 12px !important;
+    text-align: center !important;
+    background-color: #f8f9fa !important;
+    border-top: 1px solid #e8e8ec !important;
+}
+
+.select-btn {
+    padding: 8px 20px !important;
+    background-color: #3a8c6b !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif !important;
+    font-weight: 600 !important;
+    transition: background 0.3s ease !important;
+}
+
+.select-btn:hover {
+    background-color: #2d7056 !important;
+}
+
+/* Футер карточки */
+#search_art .card-footer {
+    padding: 14px 20px !important;
+    border-top: 1px solid #e8e8ec !important;
+    background: transparent !important;
+}
+
+
+
+#search_art .card-footer .btn-dark {
+    background: #1f1f1f !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 8px 20px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+}
+
+#search_art .card-footer .btn-dark:hover {
+    background: #333333 !important;
+}
+
+
+/* ============================================ */
+/*           МОДАЛЬНОЕ ОКНО                     */
+/* ============================================ */
+
+.modal-content {
+    border-radius: 16px !important;
+    border: 2px solid #696969 !important;
+    overflow: hidden !important;
+}
+
+.modal-header {
+    background: #1f1f1f !important;
+    color: #ffffff !important;
+    border-bottom: none !important;
+    padding: 14px 20px !important;
+    min-height: 52px !important;
+}
+
+.modal-header .btn-close {
+    filter: invert(1) !important;
+}
+
+.modal-body {
+    padding: 20px !important;
+}
+
+.modal-body .form-label {
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: #1f1f1f !important;
+}
+
+.modal-body .form-control {
+    border: 2px solid #696969 !important;
+    border-radius: 10px !important;
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif !important;
+    text-align: center !important;
+    min-height: 48px !important;
+}
+
+.modal-body .form-control:focus {
+    border-color: #b8860b !important;
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1) !important;
+}
+
+/* Список кодов */
+#codesListContainer {
+    max-height: 300px !important;
+    overflow-y: auto !important;
+}
+
+#codesListContainer .list-group-item {
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    border-color: #e8e8ec !important;
+    background: #fafafa !important;
+}
+
+#codesListContainer .list-group-item code {
+    font-size: 12px !important;
+    color: #1f1f1f !important;
+}
+
+#codesListContainer .list-group-item .btn-danger {
+    background: #b33c3c !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 6px !important;
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+}
+
+#codesListContainer .list-group-item .btn-danger:hover {
+    background: #8f2f2f !important;
+}
+
+/* Футер модального окна */
+#modal-footer_add-content {
+    padding: 14px 20px !important;
+    border-top: 1px solid #e8e8ec !important;
+    background: #fafafa !important;
+}
+
+#codesCount {
+    font-size: 14px !important;
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    background: #1f1f1f !important;
+    color: #ffffff !important;
+}
+
+#modal-footer_add-content .btn-outline-danger {
+    border: 2px solid #b33c3c !important;
+    color: #b33c3c !important;
+    border-radius: 8px !important;
+    padding: 6px 16px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+}
+
+#modal-footer_add-content .btn-outline-danger:hover {
+    background: #b33c3c !important;
+    color: #ffffff !important;
+}
+
+#modal-footer_add-content .btn-success {
+    background: #3a8c6b !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 8px 20px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+}
+
+#modal-footer_add-content .btn-success:hover {
+    background: #2d7056 !important;
+}
+
+#modal-footer_add-content .btn-dark {
+    background: #1f1f1f !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 8px 20px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+}
+
+#modal-footer_add-content .btn-dark:hover {
+    background: #333333 !important;
+}
+
+
+/* ============================================ */
+/*        АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ И ТСД         */
+/* ============================================ */
+
+@media (max-width: 768px) {
+
+
+    #search_art .card-header {
+        padding: 10px 16px !important;
+        min-height: 44px !important;
+        font-size: 14px !important;
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    #search_art .card-body {
+        padding: 16px !important;
+    }
+
+    #articleSearchInput {
+        padding: 10px 14px !important;
+        font-size: 15px !important;
+        min-height: 44px !important;
+    }
+
+    #articleSearchInput::placeholder {
+        font-size: 12px !important;
+    }
+
+    .info {
+        font-size: 13px !important;
+    }
+
+    .result-item {
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+    }
+
+    #search_art .card-footer {
+        padding: 10px 16px !important;
+    }
+
+
+
+    /* Модальное окно на мобильных */
+    .modal-body {
+        padding: 16px !important;
+    }
+
+    .modal-body .form-control {
+        padding: 10px 14px !important;
+        font-size: 15px !important;
+        min-height: 44px !important;
+    }
+
+    #modal-footer_add-content {
+        padding: 10px 16px !important;
+    }
+
+    #modal-footer_add-content .btn-success,
+    #modal-footer_add-content .btn-dark,
+    #modal-footer_add-content .btn-outline-danger {
+        padding: 6px 16px !important;
+        font-size: 12px !important;
+    }
+
+    #codesCount {
+        font-size: 12px !important;
+        padding: 4px 12px !important;
+    }
+
+    #codesListContainer .list-group-item {
+        padding: 8px 12px !important;
+        font-size: 12px !important;
+    }
+}
+
+/* Специально для ТСД Honeywell CK65 (480x800) */
+@media (width: 480px) and (height: 800px) {
+    #search_art {
+        max-width: 100% !important;
+        border-radius: 12px !important;
+        margin-top: 10px !important;
+    }
+
+    #search_art .card-header {
+        min-height: 38px !important;
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+        border-radius: 10px 10px 0 0 !important;
+    }
+
+    #search_art .card-body {
+        padding: 12px !important;
+    }
+
+    #articleSearchInput {
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        min-height: 38px !important;
+    }
+
+    #articleSearchInput::placeholder {
+        font-size: 11px !important;
+    }
+
+    .info {
+        font-size: 12px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .result-item {
+        padding: 6px 10px !important;
+        font-size: 12px !important;
+    }
+
+    #searchResults {
+        max-height: 8rem !important;
+    }
+
+    #search_art .card-footer {
+        padding: 8px 12px !important;
+    }
+
+
+
+    /* Модальное окно на ТСД */
+    .modal-dialog {
+        margin: 10px !important;
+    }
+
+    .modal-body {
+        padding: 12px !important;
+    }
+
+    .modal-body .form-control {
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        min-height: 38px !important;
+    }
+
+    #modal-footer_add-content {
+        padding: 8px 12px !important;
+    }
+
+    #modal-footer_add-content .btn-success,
+    #modal-footer_add-content .btn-dark,
+    #modal-footer_add-content .btn-outline-danger {
+        font-size: 11px !important;
+        padding: 5px 12px !important;
+    }
+
+    #codesCount {
+        font-size: 11px !important;
+        padding: 3px 10px !important;
+    }
+
+    #codesListContainer .list-group-item {
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+    }
+
+    #codesListContainer .list-group-item code {
+        font-size: 10px !important;
+    }
+}
+
+/* Для очень маленьких экранов (до 400px) */
+@media (max-width: 400px) {
+    #search_art .card-header {
+        font-size: 12px !important;
+        padding: 6px 10px !important;
+        min-height: 34px !important;
+    }
+
+    #search_art .card-body {
+        padding: 10px !important;
+    }
+
+    #articleSearchInput {
+        font-size: 13px !important;
+        padding: 6px 10px !important;
+        min-height: 34px !important;
+    }
+
+    .result-item {
+        font-size: 11px !important;
+        padding: 5px 8px !important;
+    }
+
+
+
+    .modal-body .form-control {
+        font-size: 13px !important;
+        padding: 6px 10px !important;
+        min-height: 34px !important;
+    }
+
+    #modal-footer_add-content .btn-success,
+    #modal-footer_add-content .btn-dark,
+    #modal-footer_add-content .btn-outline-danger {
+        font-size: 10px !important;
+        padding: 4px 10px !important;
+    }
+}
+
+
+/* ============================================ */
+/*        ПРИНУДИТЕЛЬНЫЕ СТИЛИ                  */
+/* ============================================ */
+
+/* Убираем конфликтующие стили у карточки */
+#search_art.position-absolute {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+}
+
+/* Когда карточка видима */
+#search_art[style*="display: block"] {
+    display: block !important;
+}
+
+/* На десктопе позиционируем через JS */
+@media (min-width: 769px) {
+    #search_art.ae-visible {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 99999 !important;
+    }
+}
+
+/* ===== Отступы для мобильных ===== */
+@media (max-width: 768px) {
+    #search_art {
+        max-width: 460px !important;
+        width: 92% !important;
+        /* Отступы слева и справа через padding контейнера */
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        /* Или можно через calc */
+        /* width: calc(100% - 30px) !important; */
+    }
+}
+
+/* Для очень маленьких экранов (до 400px) */
+@media (max-width: 400px) {
+    #search_art {
+        width: 94% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* Для ТСД */
+@media (width: 480px) and (height: 800px) {
+    #search_art {
+        width: 96% !important;
+        max-width: 100% !important;
+    }
+}
+
+#search_art .btn-secondary {
+    background: #696969 !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 8px 24px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+    box-shadow: none !important;
+}
+
+#search_art .btn-secondary:hover {
+    background: #1f1f1f !important;
+}
+
+#search_art .btn-warning {
+    background: #fea200 !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 8px 24px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+    box-shadow: none !important;
+}
+
+#search_art .btn-warning:hover {
+    background: #bf7a00 !important;
+}
+
+@media (max-width: 768px) {
+    #search_art .btn-secondary {
+        padding: 6px 20px !important;
+        font-size: 12px !important;
+        border-radius: 8px !important;
+    }
+
+    #search_art .btn-warning {
+        padding: 6px 20px !important;
+        font-size: 12px !important;
+        border-radius: 8px !important;
+    }
+
+    #search_art .btn-warning:active {
+        background: #1f1f1f !important;
+    }
+
+    #search_art .btn-secondary:active {
+        background: #1f1f1f !important;
+    }
+
+}
+
+

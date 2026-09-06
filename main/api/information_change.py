@@ -1,5 +1,6 @@
 from main.api.single_method_for_creating_documents import method_create_doc, check_status_document
 import json
+from django.conf import settings
 """
 Метод: POST
  /lk/documents/create
@@ -45,10 +46,12 @@ Content-Type: application/json
 
 """
 
-def information_change(ki, production_date, expiration_date):
+def information_change(ki, production_date, expiration_date, product_group = "autofluids"):
     type_doc = "CIS_INFORMATION_CHANGE"
+    participant_inn = settings.PARTICIPANT_INN
+    print(participant_inn)
     body_doc = {
-        "participantInn": "7712035729",
+        "participantInn": str(participant_inn),
         "codes": [
             {
                 "code": [
@@ -62,10 +65,11 @@ def information_change(ki, production_date, expiration_date):
     create_doc, message = method_create_doc(
         type_doc=type_doc,
         body_doc=body_doc,
-        format_doc="MANUAL"
+        format_doc="MANUAL",
+        product_group = product_group
     )
     if create_doc is True:
-        st, doc = check_status_document(message)
+        st, doc = check_status_document(message, product_group = product_group)
         if st is True:
             try:
                 temp_doc = json.loads(doc)

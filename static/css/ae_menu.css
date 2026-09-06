@@ -1,0 +1,785 @@
+/* ============================================
+   AE MENU - Эксклюзивные стили для меню
+   Префикс: ae- (Auto-Euro)
+   Версия: 3.1 - Убран серый эффект при наведении
+   ============================================ */
+
+/* ---------- Подключение шрифтов ---------- */
+@import url('https://fonts.cdnfonts.com/css/gilroy-bold');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css');
+
+
+/* ============================================ */
+/*           СТИЛИ ДЛЯ ДЕСКТОПА                  */
+/* ============================================ */
+
+@media (min-width: 769px) {
+    .ae-body,
+    .ae-main-content,
+    .ae-menu-container {
+        font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+        background-color: #f7f7f9;
+    }
+
+    .ae-menu-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #f7f7f9;
+        position: relative;
+    }
+
+    /* Декоративные фоновые элементы */
+    .ae-bg-decoration {
+        position: fixed;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.04;
+        font-size: 120px;
+        color: #1f1f1f;
+    }
+    .ae-bg-decoration.ae-top-left {
+        top: 20px;
+        left: 20px;
+        transform: rotate(-15deg);
+    }
+    .ae-bg-decoration.ae-bottom-right {
+        bottom: 20px;
+        right: 20px;
+        transform: rotate(15deg);
+    }
+    .ae-bg-decoration.ae-center {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        font-size: 200px;
+        opacity: 0.03;
+    }
+
+    /* Кнопка ADMIN */
+    .ae-admin-wrapper {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+    }
+
+    .ae-admin-btn {
+        background: #ffffff;
+        border: 2px solid #696969;
+        color: #1f1f1f;
+        border-radius: 12px;
+        padding: 10px 24px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .ae-admin-btn:hover {
+        background: #1f1f1f;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .ae-admin-btn i {
+        font-size: 16px;
+        margin-right: 0;
+    }
+
+    /* Логотип и заголовок */
+    .ae-header-block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin-bottom: 40px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .ae-header-logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        background: #ffffff;
+        padding: 8px;
+        object-fit: contain;
+        flex-shrink: 0;
+        margin-right: 0;
+    }
+
+    .ae-header-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ae-header-title {
+        color: #1f1f1f;
+        font-weight: 700;
+        font-size: 24px;
+        margin: 0;
+        letter-spacing: 0.3px;
+        line-height: 1.2;
+    }
+
+    .ae-header-subtitle {
+        color: #696969;
+        font-size: 14px;
+        font-weight: 400;
+        margin-top: 2px;
+        letter-spacing: 0.2px;
+    }
+
+    /* Статус-бар */
+    .ae-status-bar {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 40px;
+        padding: 10px 32px;
+        background: #ffffff;
+        border-radius: 30px;
+        border: 1px solid #e8e8ec;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        position: relative;
+        z-index: 1;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .ae-status-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #1f1f1f;
+        padding: 0;
+    }
+
+    .ae-status-item .bi {
+        font-size: 14px !important;
+        margin-right: 0;
+    }
+
+    .ae-status-label {
+        color: #696969;
+        font-weight: 400;
+        font-size: 13px;
+        display: inline;
+        margin-right: 0;
+    }
+
+    .ae-status-value {
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .ae-status-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3a8c6b;
+        margin-right: 0;
+        animation: ae-pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes ae-pulse-dot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .ae-status-divider {
+        width: 1px;
+        height: 20px;
+        background: #e8e8ec;
+        margin: 0;
+    }
+
+    .ae-timer-display {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        color: #2d6a9f;
+        min-width: 60px;
+        display: inline-block;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+    }
+
+    /* Сетка карточек */
+    .ae-menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        width: 100%;
+        max-width: 900px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .ae-menu-card {
+        background: #ffffff;
+        border: 2px solid #696969;
+        border-radius: 16px;
+        padding: 28px 16px 22px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 170px;
+        text-decoration: none;
+        color: #1f1f1f;
+        position: relative;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Эффекты при наведении для десктопа (без серого фона) */
+    .ae-menu-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.10);
+        border-color: #1f1f1f;
+    }
+
+    .ae-menu-card .ae-icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+        line-height: 1;
+        color: #1f1f1f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .ae-menu-card:hover .ae-icon {
+        transform: scale(1.10);
+    }
+
+    .ae-menu-card .ae-icon i {
+        font-size: 40px;
+        transition: all 0.3s ease;
+    }
+
+    .ae-menu-card .ae-card-title {
+        font-weight: 600;
+        font-size: 16px;
+        color: #1f1f1f;
+        margin: 0;
+        transition: color 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .ae-menu-card .ae-card-desc {
+        font-size: 12px;
+        color: #696969;
+        margin-top: 4px;
+        font-weight: 400;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Номер карточки */
+    .ae-menu-card .ae-card-number {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        color: #d0d0d5;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+        display: block;
+    }
+
+    .ae-menu-card:hover .ae-card-number {
+        color: #696969;
+    }
+
+    /* Цветовые акценты для иконок */
+    .ae-menu-card.ae-check .ae-icon i { color: #2d6a9f; }
+    .ae-menu-card.ae-edit .ae-icon i { color: #3a8c6b; }
+    .ae-menu-card.ae-invent .ae-icon i { color: #b8860b; }
+    .ae-menu-card.ae-catalog .ae-icon i { color: #8b6b8b; }
+    .ae-menu-card.ae-dispenser .ae-icon i { color: #b33c3c; }
+    .ae-menu-card.ae-utilization .ae-icon i { color: #6b4c3b; }
+}
+
+
+/* ============================================ */
+/*        СТИЛИ ДЛЯ МОБИЛЬНЫХ И ТСД              */
+/* ============================================ */
+
+@media (max-width: 768px) {
+    .ae-body,
+    .ae-main-content,
+    .ae-menu-container {
+        font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+        background-color: #f7f7f9;
+    }
+
+    .ae-menu-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 16px 12px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        background-color: #f7f7f9;
+        position: relative;
+    }
+
+    /* Декоративные фоновые элементы */
+    .ae-bg-decoration {
+        display: none;
+    }
+
+    /* Кнопка ADMIN (скрыта на мобильных) */
+    .ae-admin-wrapper {
+        display: none !important;
+    }
+
+    /* Логотип и заголовок */
+    .ae-header-block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        margin-top: 10px;
+        position: relative;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .ae-header-logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        background: #ffffff;
+        padding: 6px;
+        object-fit: contain;
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+
+    .ae-header-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ae-header-title {
+        color: #1f1f1f;
+        font-weight: 700;
+        font-size: 18px;
+        margin: 0;
+        letter-spacing: 0.2px;
+        line-height: 1.2;
+    }
+
+    .ae-header-subtitle {
+        color: #696969;
+        font-size: 11px;
+        font-weight: 400;
+        margin-top: 1px;
+        letter-spacing: 0.1px;
+    }
+
+    /* Статус-бар (компактный) */
+    .ae-status-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        padding: 6px 16px;
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid #e8e8ec;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 460px;
+        min-height: 32px;
+    }
+
+    .ae-status-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        color: #1f1f1f;
+        flex-shrink: 0;
+        padding: 0 6px;
+    }
+
+    .ae-status-item:first-child {
+        padding-left: 0;
+    }
+
+    .ae-status-item:last-child {
+        padding-right: 0;
+    }
+
+    .ae-status-item .bi {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px !important;
+        line-height: 1;
+        flex-shrink: 0;
+        margin-right: 4px;
+    }
+
+    .ae-status-label {
+        color: #696969;
+        font-weight: 400;
+        font-size: 10px;
+        white-space: nowrap;
+        margin-right: 3px;
+        display: inline;
+    }
+
+    .ae-status-value {
+        font-weight: 600;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .ae-status-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #3a8c6b;
+        flex-shrink: 0;
+        margin-right: 5px;
+        animation: none;
+    }
+
+    .ae-status-divider {
+        width: 1px;
+        height: 16px;
+        background: #e8e8ec;
+        flex-shrink: 0;
+        margin: 0 4px;
+    }
+
+    .ae-timer-display {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        color: #2d6a9f;
+        min-width: 44px;
+        display: inline-block;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+    }
+
+    /* Сетка карточек (2 колонки) */
+    .ae-menu-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        width: 100%;
+        max-width: 460px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Скрываем карточки: Национальный каталог и Выгрузка */
+    .ae-menu-card.ae-catalog,
+    .ae-menu-card.ae-dispenser {
+        display: none !important;
+    }
+
+    .ae-menu-card {
+        background: #ffffff;
+        border: 2px solid #696969;
+        border-radius: 14px;
+        padding: 20px 10px 16px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 130px;
+        text-decoration: none;
+        color: #1f1f1f;
+        position: relative;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        overflow: visible;
+    }
+
+    /* Без эффектов наведения на мобильных */
+    .ae-menu-card::before,
+    .ae-menu-card::after {
+        display: none;
+    }
+
+    .ae-menu-card:active {
+        transform: scale(0.96);
+        background: #f0f0f2;
+    }
+
+    .ae-menu-card .ae-icon {
+        font-size: 34px;
+        margin-bottom: 8px;
+        line-height: 1;
+        color: #1f1f1f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: none;
+    }
+
+    .ae-menu-card .ae-icon i {
+        font-size: 34px;
+        transition: none;
+    }
+
+    .ae-menu-card .ae-card-title {
+        font-weight: 600;
+        font-size: 14px;
+        color: #1f1f1f;
+        margin: 0;
+        line-height: 1.3;
+        position: relative;
+        z-index: 1;
+    }
+
+    .ae-menu-card .ae-card-desc {
+        font-size: 10px;
+        color: #696969;
+        margin-top: 2px;
+        font-weight: 400;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Номер карточки (скрыт на мобильных) */
+    .ae-menu-card .ae-card-number {
+        display: none;
+    }
+
+    /* Цветовые акценты для иконок */
+    .ae-menu-card.ae-check .ae-icon i { color: #2d6a9f; }
+    .ae-menu-card.ae-edit .ae-icon i { color: #3a8c6b; }
+    .ae-menu-card.ae-invent .ae-icon i { color: #b8860b; }
+    .ae-menu-card.ae-catalog .ae-icon i { color: #8b6b8b; }
+    .ae-menu-card.ae-dispenser .ae-icon i { color: #b33c3c; }
+    .ae-menu-card.ae-utilization .ae-icon i { color: #6b4c3b; }
+}
+
+/* Дополнительная адаптация для очень маленьких экранов (до 400px) */
+@media (max-width: 400px) {
+    .ae-menu-card {
+        min-height: 105px;
+        padding: 14px 6px 12px;
+        border-radius: 10px;
+    }
+
+    .ae-menu-card .ae-icon i {
+        font-size: 26px;
+    }
+
+    .ae-menu-card .ae-card-title {
+        font-size: 12px;
+    }
+
+    .ae-header-title {
+        font-size: 14px;
+    }
+
+    .ae-header-logo {
+        width: 34px;
+        height: 34px;
+        padding: 4px;
+        margin-right: 8px;
+    }
+
+    .ae-header-subtitle {
+        font-size: 9px;
+    }
+
+    .ae-menu-grid {
+        gap: 8px;
+    }
+
+    .ae-status-item {
+        font-size: 9px;
+        padding: 0 3px;
+    }
+
+    .ae-status-item .bi {
+        font-size: 9px !important;
+        margin-right: 3px;
+    }
+
+    .ae-status-value {
+        font-size: 9px;
+    }
+
+    .ae-status-bar {
+        padding: 4px 10px;
+        min-height: 24px;
+        margin-bottom: 16px;
+    }
+
+    .ae-status-label {
+        display: none;
+    }
+
+    .ae-timer-display {
+        font-size: 9px;
+        min-width: 30px;
+    }
+
+    .ae-status-dot {
+        width: 5px;
+        height: 5px;
+        margin-right: 3px;
+    }
+
+    .ae-status-divider {
+        margin: 0 2px;
+    }
+}
+
+/* Специально для ТСД Honeywell CK65 (480x800) */
+@media (width: 480px) and (height: 800px) {
+    .ae-menu-container {
+        padding: 10px 10px;
+        min-height: 100vh;
+        justify-content: flex-start;
+    }
+
+    .ae-header-block {
+        margin-bottom: 14px;
+        margin-top: 6px;
+    }
+
+    .ae-header-logo {
+        width: 38px;
+        height: 38px;
+        padding: 4px;
+        margin-right: 8px;
+    }
+
+    .ae-header-title {
+        font-size: 15px;
+    }
+
+    .ae-header-subtitle {
+        font-size: 9px;
+    }
+
+    .ae-status-bar {
+        padding: 4px 8px;
+        margin-bottom: 14px;
+        min-height: 24px;
+    }
+
+    .ae-status-item {
+        font-size: 9px;
+        padding: 0 2px;
+    }
+
+    .ae-status-item .bi {
+        font-size: 9px !important;
+        margin-right: 2px;
+    }
+
+    .ae-status-value {
+        font-size: 9px;
+    }
+
+    .ae-timer-display {
+        font-size: 9px;
+        min-width: 30px;
+        letter-spacing: 0.2px;
+    }
+
+    .ae-status-dot {
+        width: 5px;
+        height: 5px;
+        margin-right: 2px;
+    }
+
+    .ae-status-divider {
+        margin: 0 2px;
+    }
+
+    .ae-status-label {
+        display: none;
+    }
+
+    .ae-menu-grid {
+        gap: 8px;
+    }
+
+    .ae-menu-card {
+        min-height: 110px;
+        padding: 14px 6px 12px;
+        border-radius: 10px;
+    }
+
+    .ae-menu-card .ae-icon i {
+        font-size: 26px;
+    }
+
+    .ae-menu-card .ae-card-title {
+        font-size: 12px;
+    }
+}
+
+.ae-check-admin-btn {
+    background: #ffffff;
+    border: 2px solid #696969;
+    color: #1f1f1f;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.ae-check-admin-btn:hover {
+    background: #1f1f1f;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ae-check-admin-btn i {
+    font-size: 16px;
+}

@@ -405,6 +405,10 @@ def check_code(request):
                         status_ex = en_dict[0]['cisInfo']['statusEx']
                     except KeyError:
                         status_ex = ""
+                    try:
+                        quantity_in_pack = en_dict[0]['cisInfo']['quantityInPack']
+                    except KeyError:
+                        quantity_in_pack = ""
 
                     child = en_dict[0]['cisInfo']['child']
                     if status_ex:
@@ -623,6 +627,7 @@ def check_code(request):
                                 "producer_name_comp": producer_name_comp,
                                 "product_group": product_group,
                                 "product_group_id": product_group_id,
+                                "quantity_in_pack": quantity_in_pack,
                                 "owner": owner,
                                 "validity_info": validity_info,
                                 "leading_symbol_info": leading_symbol_info,

@@ -384,10 +384,9 @@ export_status = {}
 
 @cache_control(no_cache=True)
 def write_off_export_excel(request):
-    """Экспорт акта в Excel с подробной информацией из API"""
+    """Экспорт акта в Excel (синхронный)"""
     if request.method == "POST":
         act_number = request.POST.get("act_number", "").strip()
-        export_id = request.POST.get("export_id", "")
 
         if not act_number:
             return JsonResponse({"status": "error", "message": "Номер акта не указан"})
@@ -420,25 +419,27 @@ def write_off_export_excel(request):
         if not codes:
             return JsonResponse({"status": "error", "message": "Нет кодов для экспорта после очистки"})
 
-        # ===== ВСЕГДА ИСПОЛЬЗУЕМ АСИНХРОННЫЙ РЕЖИМ =====
-        # Если export_id не передан - генерируем его
-        if not export_id:
-            export_id = 'export_' + str(int(time.time() * 1000)) + '_' + ''.join(
-                random.choices('0123456789abcdef', k=6))
+        # Получаем информацию о кодах
+        results = info_ki_batch(codes)
 
-        # Запускаем фоновую обработку
-        thread = threading.Thread(
-            target=process_export_background,
-            args=(export_id, act_number, codes)
+        # Создаём Excel
+        wb = create_export_excel(act_number, results)
+
+        print(act_number)
+
+        # Имя файла: Акт_номер_время.xlsx
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # Просто заменяем недопустимые символы на _
+        safe_act_number = re.sub(r'[^a-zA-Z0-9\-_]', '_', act_number)
+        filename = f"Акт_{safe_act_number}_{timestamp}"
+
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
-        thread.daemon = True
-        thread.start()
-
-        return JsonResponse({
-            "status": "processing",
-            "export_id": export_id,
-            "message": f"Начинаем обработку {len(codes)} кодов"
-        })
+        from urllib.parse import quote
+        response['Content-Disposition'] = f"attachment; filename*=UTF-8''{quote(filename + '.xlsx')}"
+        wb.save(response)
+        return response
 
 def process_export_background(export_id, act_number, codes):
     """Фоновая обработка экспорта"""
@@ -483,73 +484,36 @@ def process_export_sync(act_number, codes):
     wb.save(response)
     return response
 
+
 @cache_control(no_cache=True)
 def write_off_export_status(request):
-    """Получение статуса фонового экспорта"""
+    """Получение статуса экспорта из сессии"""
     if request.method == "GET":
-        export_id = request.GET.get("export_id", "")
+        progress = request.session.get('export_progress', {})
 
-        if not export_id or export_id not in export_status:
+        if not progress:
             return JsonResponse({"status": "error", "message": "Экспорт не найден"})
 
-        data = export_status[export_id]
-
-        if data['status'] == 'ready':
+        if progress.get('status') == 'ready':
             return JsonResponse({
                 'status': 'ready',
-                'message': data.get('message', 'Готово к скачиванию'),
-                'progress': data.get('progress', 100),
-                'total': data.get('total', 0),
-                'download_url': f"/write-off/download-export/?export_id={export_id}"
+                'message': progress.get('message', 'Готово'),
+                'progress': progress.get('progress', 100),
+                'total': progress.get('total', 0)
             })
-        elif data['status'] == 'error':
+        elif progress.get('status') == 'error':
             return JsonResponse({
                 'status': 'error',
-                'message': data.get('message', 'Ошибка обработки')
+                'message': progress.get('message', 'Ошибка обработки')
             })
         else:
             return JsonResponse({
                 'status': 'processing',
-                'progress': data.get('progress', 0),
-                'total': data.get('total', 0),
-                'message': data.get('message', 'Обработка...')
+                'progress': progress.get('progress', 0),
+                'total': progress.get('total', 0),
+                'message': progress.get('message', 'Обработка...')
             })
 
-
-@cache_control(no_cache=True)
-def write_off_download_export(request):
-    """Скачивание готового экспорта"""
-    if request.method == "GET":
-        export_id = request.GET.get("export_id", "")
-
-        if not export_id or export_id not in export_status:
-            return JsonResponse({"status": "error", "message": "Экспорт не найден"})
-
-        data = export_status[export_id]
-
-        if data['status'] != 'ready':
-            return JsonResponse({"status": "error", "message": "Экспорт ещё не готов"})
-
-        act_number = data.get('act_number', '')
-        results = data.get('results', {})
-
-        wb = create_export_excel(act_number, results)
-
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        # Имя файла только латиница
-        import re
-        safe_act_number = re.sub(r'[^a-zA-Z0-9]', '_', act_number)
-        filename = f"Act_{safe_act_number}_{timestamp}"
-
-        # Удаляем из хранилища
-        del export_status[export_id]
-
-        response = HttpResponse(
-            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
-        response['Content-Disposition'] = f'attachment; filename="{filename}.xlsx"'
-        wb.save(response)
-        return response
 
 @cache_control(no_cache=True)
 def write_off_get_act_codes(request):

@@ -81,7 +81,6 @@ path('accounts/', include('django.contrib.auth.urls')),
     path('write-off/delete-act/', write_off_delete_act, name='write_off_delete_act'),
     path('write-off/export-excel/', write_off_export_excel, name='write_off_export_excel'),
     path('write-off/export-status/', write_off_export_status, name='write_off_export_status'),
-    path('write-off/download-export/', write_off_download_export, name='write_off_download_export'),
 
 ]
 

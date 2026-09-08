@@ -1285,13 +1285,9 @@
 // ============================================ //
 
 var woExportId = null;
-var woExportActNumber = '';
 
 function exportExcelWithProgress(actNumber) {
     console.log('📊 Экспорт акта:', actNumber);
-
-    woExportId = 'export_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
-    woExportActNumber = actNumber;
 
     var modal = document.getElementById('woExportModal');
     if (!modal) {
@@ -1305,49 +1301,45 @@ function exportExcelWithProgress(actNumber) {
     document.getElementById('woExportMessage').textContent = 'Отправка запроса...';
     document.getElementById('woExportProgressBar').style.width = '10%';
     document.getElementById('woExportProgressText').textContent = '10%';
-    document.getElementById('woExportDownloadBtn').style.display = 'inline-flex';
     modal.style.display = 'flex';
 
-    console.log('✅ Модальное окно показано');
+    // ✅ Просто создаём форму и отправляем
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/write-off/export-excel/';
 
-    $.ajax({
-        url: '/write-off/export-excel/',
-        method: 'POST',
-        dataType: 'json',
-        headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        },
-        data: {
-            act_number: actNumber,
-            export_id: woExportId
-        },
-        success: function(data) {
-            console.log('Ответ сервера:', data);
-            if (data.status === 'processing') {
-                document.getElementById('woExportMessage').textContent = data.message || 'Обработка...';
-                document.getElementById('woExportProgressBar').style.width = '30%';
-                document.getElementById('woExportProgressText').textContent = '30%';
-                setTimeout(woCheckExportStatus, 1000);
-            } else if (data.status === 'error') {
-                document.getElementById('woExportStatus').style.display = 'none';
-                document.getElementById('woExportResult').style.display = 'block';
-                document.getElementById('woExportResultMessage').textContent = '❌ ' + (data.message || 'Ошибка обработки');
-                document.getElementById('woExportDownloadBtn').style.display = 'none';
-            } else {
-                document.getElementById('woExportStatus').style.display = 'none';
-                document.getElementById('woExportResult').style.display = 'block';
-                document.getElementById('woExportResultMessage').textContent = 'Готово к скачиванию!';
-                document.getElementById('woExportDownloadBtn').dataset.downloadUrl = data.download_url;
-            }
-        },
-        error: function(jqxhr, status, errorMsg) {
-            console.error('Ошибка отправки:', status, errorMsg);
-            document.getElementById('woExportStatus').style.display = 'none';
-            document.getElementById('woExportResult').style.display = 'block';
-            document.getElementById('woExportResultMessage').textContent = '❌ Ошибка: ' + errorMsg;
-            document.getElementById('woExportDownloadBtn').style.display = 'none';
-        }
-    });
+    var csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    form.appendChild(csrfInput);
+
+    var actInput = document.createElement('input');
+    actInput.type = 'hidden';
+    actInput.name = 'act_number';
+    actInput.value = actNumber;
+    form.appendChild(actInput);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    // ✅ После отправки показываем прогресс и ждём скачивания
+    document.getElementById('woExportMessage').textContent = 'Файл формируется...';
+    document.getElementById('woExportProgressBar').style.width = '80%';
+    document.getElementById('woExportProgressText').textContent = '80%';
+
+    // Через 3 секунды показываем результат
+    setTimeout(function() {
+        document.getElementById('woExportStatus').style.display = 'none';
+        document.getElementById('woExportResult').style.display = 'block';
+        document.getElementById('woExportResultMessage').textContent = 'Файл должен скачаться автоматически';
+        document.getElementById('woExportDownloadBtn').style.display = 'none';
+        woShowToast('Файл скачан!', 'success');
+        setTimeout(function() {
+            woCloseExportModal();
+        }, 2000);
+    }, 3000);
 }
 
 function woCheckExportStatus() {
@@ -1409,15 +1401,19 @@ function woDownloadExport() {
     console.log('Скачивание файла:', downloadUrl);
 
     if (downloadUrl) {
-        // Создаём ссылку с атрибутом download
+        // ✅ Получаем номер акта из URL или из переменной
+        var actNumber = woExportActNumber || 'акт';
+        var timestamp = new Date().toISOString().slice(0,19).replace(/[:-]/g, '');
+        var filename = `Акт_${actNumber}_${timestamp}.xlsx`;
+
         var link = document.createElement('a');
         link.href = downloadUrl;
-        link.download = '';  // Пусть сервер задаёт имя
+        link.download = filename;  // Явно задаём имя
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
-        woShowToast('📥 Начинается скачивание...', 'success');
+        woShowToast('Начинается скачивание...', 'success');
         setTimeout(function() {
             woCloseExportModal();
         }, 2000);
@@ -1435,8 +1431,15 @@ function woCloseExportModal() {
     document.getElementById('woExportResult').style.display = 'none';
     document.getElementById('woExportProgressBar').style.width = '0%';
     document.getElementById('woExportProgressText').textContent = '0%';
-    woExportId = null;
-    woExportActNumber = '';
+}
+
+// Экспорт из окна просмотра
+function woExportFromView() {
+    if (currentViewActNumber) {
+        exportExcelWithProgress(currentViewActNumber);
+    } else {
+        woShowToast('Номер акта не найден', 'error');
+    }
 }
 
 // ===== ЭКСПОРТ ИЗ ОКНА ПРОСМОТРА =====

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Проверка кода идентификации</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            padding: 24px 12px;
+        }
+
+        /* ===== Блок ввода ===== */
+        .input-card {
+            max-width: 780px;
+            margin: 0 auto 20px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 14px;
+            padding: 20px;
+        }
+        .input-card-title {
+            color: #cfcfcf;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        .cis-input {
+            background: #0d0d0d;
+            border: 1px solid #2a2a2a;
+            color: #e0e0e0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .cis-input:focus {
+            background: #0d0d0d;
+            color: #e0e0e0;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+        .btn-verify {
+            background: #0d6efd;
+            color: #fff;
+            border: none;
+            padding: 0 24px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-verify:hover {
+            background: #0b5ed7;
+            color: #fff;
+        }
+        .btn-verify:disabled {
+            background: #2a2a2a;
+            color: #6c6c6c;
+            cursor: not-allowed;
+        }
+
+        /* ===== Шапка карточки ===== */
+        .card-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: nowrap;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.15rem;
+            line-height: 1.3;
+            color: #1a1a1a;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        .error-card .card-title {
+            color: #dc3545;
+        }
+        .card-indicators {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .indicator {
+            font-size: 1.35rem;
+            line-height: 1;
+            cursor: help;
+            transition: transform 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .indicator:hover {
+            transform: scale(1.12);
+        }
+        .indicator-ok      { color: #198754; }
+        .indicator-warning { color: #ffc107; }
+        .indicator-error   { color: #dc3545; }
+        .indicator-unknown { color: #6c757d; }
+
+        .card-dismiss {
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 1rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-dismiss:hover {
+            background: rgba(0, 0, 0, 0.08);
+            color: #1a1a1a;
+        }
+        .error-card .card-dismiss:hover {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+
+        /* ===== Основная карточка ===== */
+        .result-card {
+            background: #f5f5f5;
+            color: #1a1a1a;
+            border-radius: 14px;
+            padding: 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            max-width: 780px;
+            margin: 0 auto;
+        }
+        .result-card hr.hr-blurry {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #b8b8b8, transparent);
+            margin: 14px 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.95rem;
+            gap: 16px;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-row .label {
+            color: #6a6a6a;
+            flex-shrink: 0;
+        }
+        .info-row .value {
+            color: #1a1a1a;
+            font-weight: 500;
+            text-align: right;
+            word-break: break-all;
+        }
+
+        /* Баннер статуса */
+        .status-banner {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .status-banner-ok {
+            background: #d1e7dd;
+            color: #0f5132;
+            border-left: 4px solid #198754;
+        }
+        .status-banner-error {
+            background: #f8d7da;
+            color: #842029;
+            border-left: 4px solid #dc3545;
+        }
+
+        /* Кнопка раскрытия списка */
+        .btn-child-toggle {
+            background: #e9ecef;
+            color: #1a1a1a;
+            border: 1px solid #d0d0d0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-child-toggle:hover {
+            background: #dcdfe3;
+        }
+
+        /* Список «Единиц внутри» как ссылки */
+        .child-list {
+            background: #e9e9e9;
+            padding: 10px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .child-item {
+            display: block;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #0d6efd;
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            word-break: break-all;
+            transition: background 0.15s, color 0.15s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .child-item:hover {
+            background: #dbe9ff;
+            color: #0a58ca;
+            border-color: #b6d0ff;
+        }
+
+        /* ===== Карточка ошибки ===== */
+        .error-card {
+            background: #f5f5f5;
+            color: #1a1a1a;
+            border-left: 4px solid #dc3545;
+            border-radius: 14px;
+            padding: 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            max-width: 780px;
+            margin: 0 auto;
+        }
+        .error-card .error-message {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background: #e9e9e9;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: #721c24;
+            word-break: break-all;
+            font-size: 0.9rem;
+        }
+
+        /* ===== JSON-блок ===== */
+        .raw-json-block {
+            max-width: 780px;
+            margin: 20px auto 0;
+            background: #050805;
+            border: 1px solid #0f3d0f;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0, 255, 0, 0.06);
+        }
+        .raw-json-block .raw-header {
+            background: #0a140a;
+            color: #4dff4d;
+            padding: 10px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #0f3d0f;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .raw-json-block .raw-header:hover { background: #0d1c0d; }
+        .raw-json-block .raw-content {
+            padding: 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.55;
+            color: #4dff4d;
+            background: #050805;
+            max-height: 420px;
+            overflow: auto;
+            white-space: pre;
+            margin: 0;
+        }
+        .raw-json-block .raw-content::-webkit-scrollbar {
+            width: 10px; height: 10px;
+        }
+        .raw-json-block .raw-content::-webkit-scrollbar-thumb {
+            background: #0f3d0f;
+            border-radius: 6px;
+        }
+        .raw-json-block .raw-content::-webkit-scrollbar-track {
+            background: #050805;
+        }
+        .json-key { color: #7ee787; }
+        .json-string { color: #a5d6ff; }
+        .json-number { color: #ffa657; }
+        .json-bool { color: #ff7b72; }
+        .json-null { color: #8b949e; }
+
+        /* Подсказка в пустом режиме */
+        .empty-hint {
+            color: #8a8a8a;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <div id="callbackContainer">
+
+        <!-- ============ ПОЛЕ ВВОДА ============ -->
+        <div class="input-card">
+            <div class="input-card-title">
+                <i class="bi bi-upc-scan me-2"></i> Проверка кода идентификации
+            </div>
+            <div class="input-group">
+                <input type="text" id="cisInput" class="form-control cis-input"
+                       value="{{ cis|default:'' }}">
+                <button type="button" id="btnCheck" class="btn btn-verify">
+                    <i class="bi bi-search me-1"></i> Проверить
+                </button>
+            </div>
+            <div id="cisError" class="text-danger small mt-2" style="display:none;"></div>
+
+            {% if content == 'empty' %}
+                <div class="empty-hint">
+                    Введите код идентификации для проверки в системе
+                </div>
+            {% endif %}
+        </div>
+
+        {% if content == 'success' %}
+
+            <div id="resultBlock">
+
+                <!-- ============ КАРТОЧКА УСПЕХА ============ -->
+                <div class="result-card">
+
+                    <div class="card-header-row">
+                        <div class="card-title">
+                            <i class="bi bi-shield-check me-2"></i> Результат проверки кода
+                        </div>
+
+                        <div class="card-indicators">
+
+                            <!-- Кнопка «Назад» — показывается при навигации из списка -->
+                            <button type="button" id="btnBack" class="card-dismiss"
+                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Вернуться к предыдущему коду"
+                                    style="display:none;">
+                                <i class="bi bi-arrow-left"></i>
+                            </button>
+
+                            <!-- Индикатор структуры -->
+                            <span class="indicator indicator-{{ leading_status }}"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-placement="top"
+                                  title="{{ leading_tooltip }}">
+                                {% if leading_status == 'ok' %}
+                                    <i class="bi bi-check-circle-fill"></i>
+                                {% elif leading_status == 'warning' %}
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                {% elif leading_status == 'error' %}
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                {% else %}
+                                    <i class="bi bi-question-circle-fill"></i>
+                                {% endif %}
+                            </span>
+
+                            <!-- Индикатор валидации сервисом -->
+                            <span class="indicator indicator-{{ validity_status }}"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-placement="top"
+                                  title="{{ validity_tooltip }}">
+                                {% if validity_status == 'ok' %}
+                                    <i class="bi bi-check-circle-fill"></i>
+                                {% elif validity_status == 'warning' %}
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                {% elif validity_status == 'error' %}
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                {% else %}
+                                    <i class="bi bi-question-circle-fill"></i>
+                                {% endif %}
+                            </span>
+
+                            <!-- Крестик закрытия -->
+                            <button type="button" class="card-dismiss" data-dismiss-card
+                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Закрыть">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+
+                        </div>
+                    </div>
+
+                    {% if status_check %}
+                        <div class="status-banner {% if status_check_ok %}status-banner-ok{% else %}status-banner-error{% endif %}">
+                            <i class="bi {% if status_check_ok %}bi-check-circle-fill{% else %}bi-x-circle-fill{% endif %} me-2"></i>
+                            {{ status_check }}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-2 small text-black">Информация о товаре:</div>
+
+                    {% if product_name %}
+                        <div class="info-row">
+                            <span class="label">Наименование</span>
+                            <span class="value">{{ product_name }}</span>
+                        </div>
+                    {% endif %}
+
+                    <div class="info-row">
+                        <span class="label">GTIN</span>
+                        <span class="value">{{ product_gtin }}</span>
+                    </div>
+
+                    {% if product_group %}
+                        <div class="info-row">
+                            <span class="label">Товарная группа</span>
+                            <span class="value">{{ product_group }}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if text_package_type %}
+                        <div class="info-row">
+                            <span class="label">Тип упаковки</span>
+                            <span class="value">{{ text_package_type }}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if general_package_type == 'GROUP' or general_package_type == 'SET' or general_package_type == 'BOX' or general_package_type == 'ATK' %}
+                        <div class="info-row">
+                            <span class="label">Количество в упаковке</span>
+                            <span class="value">{{ child_count }}</span>
+                        </div>
+                    {% elif quantity_in_pack %}
+                        <div class="info-row">
+                            <span class="label">Количество в упаковке</span>
+                            <span class="value">{{ quantity_in_pack }}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if producer_name_comp %}
+                        <div class="info-row">
+                            <span class="label">{{ type_producer }}</span>
+                            <span class="value">{{ producer_name_comp }}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if owner %}
+                        <div class="info-row">
+                            <span class="label">Владелец</span>
+                            <span class="value">{{ owner }}{% if owner_inn %} (ИНН {{ owner_inn }}){% endif %}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if emission_date %}
+                        <div class="info-row">
+                            <span class="label">Дата эмиссии</span>
+                            <span class="value">{{ emission_date }}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if introduced_date %}
+                        <div class="info-row">
+                            <span class="label">Дата ввода в оборот</span>
+                            <span class="value">{{ introduced_date }}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if produced_date and produced_date != 'Отсутствует' %}
+                        <div class="info-row">
+                            <span class="label">Дата производства</span>
+                            <span class="value">{{ produced_date }}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if expire_date and expire_date != 'Отсутствует' %}
+                        <div class="info-row">
+                            <span class="label">Срок годности</span>
+                            <span class="value">{{ expire_date }}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if state_status_ex == 'visible' %}
+                        <div class="info-row">
+                            <span class="label">Доп. статус</span>
+                            <span class="value">{{ status_ex_text }}</span>
+                        </div>
+                    {% endif %}
+
+                    {% if child %}
+                        <hr class="hr hr-blurry">
+                        <div class="mb-2">
+                            <button type="button" class="btn-child-toggle"
+                                    data-bs-toggle="collapse" data-bs-target="#childCollapse">
+                                <i class="bi bi-box-seam me-1"></i>
+                                Единиц внутри: {{ child_count }}
+                                <i class="bi bi-chevron-down ms-1"></i>
+                            </button>
+                        </div>
+                        <div class="collapse" id="childCollapse">
+                            <div class="child-list">
+                                {% for c in child %}
+                                    <a href="#"
+                                       class="child-item"
+                                       data-cis="{{ c }}"
+                                       title="Проверить этот код">{{ c }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                <!-- ============ БЛОК С ОРИГИНАЛЬНЫМ JSON ============ -->
+                <div class="raw-json-block">
+                    <div class="raw-header" data-bs-toggle="collapse" data-bs-target="#rawJsonCollapse">
+                        <span><i class="bi bi-terminal me-2"></i> RAW API RESPONSE</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="collapse" id="rawJsonCollapse">
+                        <pre class="raw-content" id="rawJsonPre">{{ data_json|default:'' }}</pre>
+                    </div>
+                </div>
+
+            </div>
+
+        {% elif content == 'false' %}
+
+            <!-- ============ КАРТОЧКА ОШИБКИ ============ -->
+            <div class="error-card">
+
+                <div class="card-header-row">
+                    <div class="card-title">
+                        <i class="bi bi-shield-check me-2"></i> Результат проверки кода
+                    </div>
+
+                    <div class="card-indicators">
+
+                        <button type="button" id="btnBack" class="card-dismiss"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Вернуться к предыдущему коду"
+                                style="display:none;">
+                            <i class="bi bi-arrow-left"></i>
+                        </button>
+
+                        <button type="button" class="card-dismiss" data-dismiss-card
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Закрыть">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-2 small text-black">Сообщение сервиса:</div>
+                <div class="error-message">{{ data }}</div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    /* ============ Стек истории переходов ============ */
+    const cisStack = [];
+
+    /* ============ Тултипы ============ */
+    function initTooltips() {
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+            if (el._tooltipInitialized) return;
+            new bootstrap.Tooltip(el);
+            el._tooltipInitialized = true;
+        });
+    }
+
+    /* ============ Подсветка JSON ============ */
+    function highlightJson() {
+        const pre = document.getElementById('rawJsonPre');
+        if (!pre) return;
+
+        let text = pre.textContent;
+        text = text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        text = text.replace(
+            /"(\\.|[^"\\])*"(\s*:)?/g,
+            function (match) {
+                if (/:\s*$/.test(match)) {
+                    return '<span class="json-key">' + match + '</span>';
+                }
+                return '<span class="json-string">' + match + '</span>';
+            }
+        );
+
+        text = text.replace(
+            /\b(-?\d+(\.\d+)?([eE][+-]?\d+)?)\b/g,
+            '<span class="json-number">$1</span>'
+        );
+
+        text = text
+            .replace(/\btrue\b/g, '<span class="json-bool">true</span>')
+            .replace(/\bfalse\b/g, '<span class="json-bool">false</span>')
+            .replace(/\bnull\b/g, '<span class="json-null">null</span>');
+
+        pre.innerHTML = text;
+    }
+
+    /* ============ Показ / скрытие кнопки «Назад» ============ */
+    function updateBackButton() {
+        document.querySelectorAll('#btnBack').forEach(btn => {
+            btn.style.display = cisStack.length > 0 ? 'inline-flex' : 'none';
+        });
+    }
+
+    /* ============ Отправка кода на проверку ============ */
+    async function checkCode(opts = {}) {
+        const input = document.getElementById('cisInput');
+        const btnCheck = document.getElementById('btnCheck');
+        const errorBox = document.getElementById('cisError');
+        const container = document.getElementById('callbackContainer');
+
+        if (!input || !btnCheck) return;
+
+        const cis = input.value.trim();
+        if (!cis) {
+            errorBox.textContent = 'Введите код идентификации';
+            errorBox.style.display = 'block';
+            input.focus();
+            return;
+        }
+        errorBox.style.display = 'none';
+
+        if (opts.pushHistory && input.dataset.loadedCis) {
+            cisStack.push(input.dataset.loadedCis);
+        }
+
+        if (!opts.silent) {
+            btnCheck.disabled = true;
+            btnCheck.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-1"></span> Проверка...';
+        }
+
+        try {
+            const url = new URL(window.location.href);
+            url.searchParams.set('cis', cis);
+
+            const response = await fetch(url.toString(), {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+            const html = await response.text();
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContainer = doc.getElementById('callbackContainer');
+            if (!newContainer) {
+                throw new Error('Не удалось разобрать ответ сервера');
+            }
+
+            container.innerHTML = newContainer.innerHTML;
+
+            window.history.replaceState({}, '', url.toString());
+
+            const newInput = document.getElementById('cisInput');
+            if (newInput) {
+                newInput.dataset.loadedCis = newInput.value.trim();
+                newInput.focus();
+            }
+
+            highlightJson();
+            initTooltips();
+            updateBackButton();
+
+        } catch (err) {
+            const btn = document.getElementById('btnCheck');
+            const box = document.getElementById('cisError');
+            if (box) {
+                box.textContent = 'Ошибка запроса: ' + err.message;
+                box.style.display = 'block';
+            }
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-search me-1"></i> Проверить';
+            }
+        }
+    }
+
+    /* ============ Возврат на предыдущий код ============ */
+    function goBack() {
+        if (cisStack.length === 0) return;
+        const prevCis = cisStack.pop();
+
+        const input = document.getElementById('cisInput');
+        if (!input) return;
+        input.value = prevCis;
+
+        checkCode({ silent: true });
+    }
+
+    /* ============ Клик по кнопке «Проверить» ============ */
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('#btnCheck');
+        if (!btn) return;
+        e.preventDefault();
+        e.stopPropagation();
+        checkCode();
+    });
+
+    /* ============ Enter в поле ввода ============ */
+    document.addEventListener('keydown', function (e) {
+        if (e.target && e.target.id === 'cisInput' && e.key === 'Enter') {
+            e.preventDefault();
+            checkCode();
+        }
+    });
+
+    /* ============ Клик по коду из списка «Единиц внутри» ============ */
+    document.addEventListener('click', function (e) {
+        const item = e.target.closest('.child-item');
+        if (!item) return;
+        e.preventDefault();
+
+        const cis = item.dataset.cis;
+        if (!cis) return;
+
+        const input = document.getElementById('cisInput');
+        if (!input) return;
+        input.value = cis;
+
+        checkCode({ pushHistory: true });
+    });
+
+    /* ============ Клик по кнопке «Назад» ============ */
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('#btnBack');
+        if (!btn) return;
+        e.preventDefault();
+        goBack();
+    });
+
+    /* ============ Клик по крестику — скрывает блок результата ============ */
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('[data-dismiss-card]');
+        if (!btn) return;
+        e.preventDefault();
+
+        const resultBlock = btn.closest('#resultBlock');
+        if (resultBlock) {
+            resultBlock.style.display = 'none';
+        } else {
+            const errCard = btn.closest('.error-card');
+            if (errCard) errCard.style.display = 'none';
+        }
+
+        const input = document.getElementById('cisInput');
+        if (input) input.focus();
+    });
+
+    /* ============ Инициализация при загрузке ============ */
+    (function markLoadedCis() {
+        const input = document.getElementById('cisInput');
+        if (input) {
+            input.dataset.loadedCis = input.value.trim();
+        }
+    })();
+
+    highlightJson();
+    initTooltips();
+    updateBackButton();
+</script>
+</body>
+</html>

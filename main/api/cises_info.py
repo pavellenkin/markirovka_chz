@@ -36,10 +36,10 @@ def info_ki(code):
         try:
             send = requests.post(url,  headers=header, json=data, timeout=7)
             print("Status Code: ", send.status_code, "\n")
-            print("Response: ", send.content.decode(), "\n")
+            # print("Response: ", send.content.decode(), "\n")
             # проверка статуса запроса и получение сообщения от сервера
             if send.status_code == 200:
-                print("RETURN OK CONTENT")
+                print("RETURN CONTENT: SUCCESS")
                 return True, send.content.decode()
             elif send.status_code == 401:
                 print("Exception: REBASE TOKEN")

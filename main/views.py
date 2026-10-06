@@ -1,7 +1,9 @@
 import json
 import re
 import sys
-from django.http import JsonResponse, HttpResponse
+from pprint import pprint
+
+from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
 from main.api.guide_api import status_codes, types_of_packaging
@@ -281,6 +283,175 @@ def replace_separator(code):
     return code
 
 
+# views.py
+
+def callback_code(request):
+    if request.method != "GET":
+        return HttpResponseNotAllowed(['GET'])
+
+    callback_cis = request.GET.get('cis')
+
+    # Если параметра нет — показываем только поле ввода
+    if not callback_cis:
+        return render(request, 'callback-code.html', {
+            'content': 'empty',
+            'cis': '',
+        })
+
+    print("INPUT CODE: \n\t", callback_cis)
+    print("\nINPUT CODE ENCODE: \n\t", callback_cis.encode())
+
+    STATUS_ICONS = {
+        'success': '<i class="bi bi-check-circle-fill text-success"></i>',
+        'warning': '<i class="bi bi-exclamation-triangle-fill text-warning"></i>',
+        'error': '<i class="bi bi-x-circle-fill text-danger"></i>',
+        'unknown': '<i class="bi bi-question-circle-fill text-secondary"></i>',
+        'bug': '<i class="bi bi-bug-fill text-danger"></i>',
+    }
+
+    # ============ СТРУКТУРА DATAMATRIX ============
+    if callback_cis[:3] == "]d2":
+        print("\nЛидирующий символ НАЙДЕН")
+        check_code_input = callback_cis.replace("]d2", "")
+        check_code_input = replace_separator(check_code_input)
+        leading_status = 'ok'
+        leading_tooltip = 'Структура Datamatrix корректная'
+        leading_symbol_info = f'<span class="text-success">{STATUS_ICONS["success"]} Структура Datamatrix КОРРЕКТНАЯ</span><hr class="hr hr-blurry" />'
+    elif callback_cis[:5] == "]C100":
+        check_code_input = callback_cis.replace("]C100", "")
+        leading_status = 'unknown'
+        leading_tooltip = 'Структура Datamatrix неизвестна'
+        leading_symbol_info = f'<span class="text-secondary">{STATUS_ICONS["unknown"]} Структура Datamatrix НЕИЗВЕСТНА</span><hr class="hr hr-blurry" />'
+    elif callback_cis[:3] == "]d1":
+        check_code_input = callback_cis.replace("]d1", "")
+        check_code_input = replace_separator(check_code_input)
+        leading_status = 'warning'
+        leading_tooltip = 'Структура Datamatrix некорректная'
+        leading_symbol_info = f'<span class="text-warning">{STATUS_ICONS["warning"]} Структура Datamatrix НЕКОРРЕКТНАЯ</span><hr class="hr hr-blurry" />'
+    else:
+        check_code_input = callback_cis.replace("]d1", "")
+        check_code_input = replace_separator(check_code_input)
+        leading_status = 'error'
+        leading_tooltip = 'Структура Datamatrix неизвестна'
+        leading_symbol_info = f'<span class="text-danger">{STATUS_ICONS["error"]} Структура Datamatrix НЕИЗВЕСТНА</span><hr class="hr hr-blurry" />'
+
+    # ============ ПРОВЕРКА СЕРВИСОМ ============
+    response_validity, valid_text = code_validity(check_code_input)
+    if response_validity is True:
+        validity_status = 'ok'
+        validity_info = f'<span class="text-success">{STATUS_ICONS["success"]} Проверка сервисом - {valid_text}</span>'
+    else:
+        validity_status = 'error'
+        validity_info = f'<span class="text-danger">{STATUS_ICONS["error"]} Проверка сервисом - {valid_text}</span>'
+    validity_tooltip = f'Проверка сервисом — {valid_text}'
+
+    try:
+        spl_string = '\x1d'.join(check_code_input.split('\x1d')[:1])
+    except Exception:
+        spl_string = check_code_input[:31]
+
+    result, result_mess = info_ki(spl_string)
+    print("Connect API: ", result)
+
+    # ============ ОШИБКА ============
+    if not result:
+        return render(request, 'callback-code.html', {
+            'content': 'false',
+            'cis': check_code_input,
+            'data': result_mess,
+        })
+
+    # ============ УСПЕХ ============
+    en_dict = json.loads(result_mess)
+    request.session['data_base'] = en_dict
+
+    cis_info = en_dict[0].get('cisInfo', {})
+
+    product_name = cis_info.get('productName', '')
+    product_gtin = cis_info.get('gtin', 'Отсутствует')
+    product_group = cis_info.get('productGroup', '')
+    product_group_id = cis_info.get('productGroupId', '')
+    producer_name_comp = cis_info.get('producerName', '')
+    owner = cis_info.get('ownerName', '')
+    owner_inn = cis_info.get('ownerInn', '')
+    status_mark = cis_info.get('status', '')
+    emission_date = cis_info.get('emissionDate', '').split('T')[0]
+    introduced_date = cis_info.get('introducedDate', '').split('T')[0]
+    emission_type = cis_info.get('emissionType', '')
+    status_ex = cis_info.get('statusEx', '')
+    quantity_in_pack = cis_info.get('quantityInPack', '')
+
+    child = cis_info.get('child', [])
+    general_package_type = cis_info.get('generalPackageType', '')
+
+    try:
+        text_package_type = types_of_packaging(general_package_type)
+    except Exception:
+        text_package_type = ''
+
+    if emission_type in ('FOREIGN', 'CROSSBORDER'):
+        type_producer = 'Импортер'
+    else:
+        type_producer = 'Производитель'
+
+    message_status_codes = status_codes(status_mark)
+    if message_status_codes == 'В обороте':
+        status_check = 'Товар введен в оборот'
+        status_check_ok = True
+    else:
+        status_check = message_status_codes
+        status_check_ok = False
+
+    if status_ex and status_ex != 'EMPTY':
+        state_status_ex = 'visible'
+        status_ex_text = status_codes(status_ex)
+    else:
+        state_status_ex = 'invisible'
+        status_ex_text = ''
+
+    try:
+        produced_date = cis_info.get('producedDate', '').split('T')[0] or 'Отсутствует'
+    except Exception:
+        produced_date = 'Отсутствует'
+
+    try:
+        expire_date = cis_info.get('expirationDate', '').split('T')[0] or 'Отсутствует'
+    except Exception:
+        expire_date = 'Отсутствует'
+
+    context = {
+        'content': 'success',
+        'cis': check_code_input,
+        'leading_status': leading_status,
+        'leading_tooltip': leading_tooltip,
+        'validity_status': validity_status,
+        'validity_tooltip': validity_tooltip,
+
+        'product_name': product_name,
+        'product_gtin': product_gtin,
+        'product_group': product_group,
+        'product_group_id': product_group_id,
+        'producer_name_comp': producer_name_comp,
+        'type_producer': type_producer,
+        'owner': owner,
+        'owner_inn': owner_inn,
+        'status_check': status_check,
+        'status_check_ok': status_check_ok,
+        'emission_date': emission_date,
+        'introduced_date': introduced_date,
+        'produced_date': produced_date,
+        'expire_date': expire_date,
+        'status_ex_text': status_ex_text,
+        'state_status_ex': state_status_ex,
+        'text_package_type': text_package_type,
+        'general_package_type': general_package_type,
+        'quantity_in_pack': quantity_in_pack,
+        'child': child,
+        'child_count': len(child),
+
+        'data_json': json.dumps(en_dict, ensure_ascii=False, indent=2),
+    }
+    return render(request, 'callback-code.html', context)
 
 @cache_control(no_cache=True)
 def check_code(request):

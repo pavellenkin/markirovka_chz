@@ -67,7 +67,7 @@ def load_token():
     try:
         with open('temp.cfg', 'r') as file:
             content = file.read()
-            print("LOAD TOKEN")
+            print("\n* * * LOAD TOKEN * * *")
         return True, content.replace("\n","").replace("\t", "")
     except Exception:
         import sys

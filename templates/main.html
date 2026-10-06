@@ -7,6 +7,75 @@
 <!-- Мета-тег для правильного масштабирования на ТСД -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
+<style>
+    /* ===== Кнопки в правом верхнем углу ===== */
+    .ae-admin-wrapper {
+        position: absolute;
+        top: 20px;
+        right: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 10;
+    }
+
+    /* Убираем стандартную стрелку Bootstrap у dropdown-toggle */
+    .ae-admin-btn.dropdown-toggle::after {
+        display: none;
+    }
+
+    /* Иконка-шеврон внутри кнопки */
+    .ae-admin-btn .ae-dropdown-caret {
+        margin-left: 6px;
+        font-size: 0.8em;
+        transition: transform 0.2s;
+    }
+    .ae-admin-btn[aria-expanded="true"] .ae-dropdown-caret {
+        transform: rotate(180deg);
+    }
+
+    /* Тёмное выпадающее меню */
+    .ae-dropdown-menu {
+        background: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 10px;
+        padding: 6px;
+        min-width: 240px;
+        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
+        margin-top: 8px;
+    }
+
+    .ae-dropdown-item {
+        color: #cfcfcf;
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 0.92rem;
+        transition: background 0.15s, color 0.15s;
+        display: flex;
+        align-items: center;
+    }
+
+    .ae-dropdown-item:hover,
+    .ae-dropdown-item:focus {
+        background: #2a2a2a;
+        color: #fff;
+    }
+
+    .ae-dropdown-item i {
+        color: #8a8a8a;
+        font-size: 1rem;
+    }
+
+    .ae-dropdown-item:hover i {
+        color: #0d6efd;
+    }
+
+    .ae-dropdown-divider {
+        border-color: #2a2a2a;
+        margin: 4px 0;
+    }
+</style>
+
 <script>
     window.onload = function() {
         document.title = "Главная: меню";
@@ -49,11 +118,37 @@
         <i class="bi bi-qr-code-scan"></i>
     </div>
 
-    <!-- Кнопка ADMIN -->
+    <!-- Кнопки в правом верхнем углу -->
     <div class="ae-admin-wrapper">
+
+        <!-- Кнопка «Дополнительно» с выпадающим меню -->
+        <div class="dropdown">
+            <button type="button" class="ae-admin-btn dropdown-toggle"
+                    id="aeMoreDropdown" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                <i class="bi bi-grid-3x3-gap-fill"></i> Дополнительно
+                <i class="bi bi-chevron-down ae-dropdown-caret"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end ae-dropdown-menu"
+                aria-labelledby="aeMoreDropdown">
+                <li>
+                    <a class="dropdown-item ae-dropdown-item" href="/dm-slicer/">
+                        <i class="bi bi-file-earmark-pdf me-2"></i> Форматирование
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item ae-dropdown-item" href="/callback-code/">
+                        <i class="bi bi-upc-scan me-2"></i> Проверка кода (dev)
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Кнопка «Настройки» -->
         <button type="button" class="ae-admin-btn" onclick="window.location = '/settings/';">
             <i class="bi bi-gear-fill"></i> Настройки
         </button>
+
     </div>
 
     <!-- Логотип и заголовок -->

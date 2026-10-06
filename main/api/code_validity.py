@@ -4,6 +4,8 @@ from unicodedata import normalize
 from main.api.unified_authentication_true_api import auth, load_token
 import requests
 from textwrap import wrap
+import urllib3
+
 
 """
 {FNC1}010461008041021521e'?xOJHdNYNFl\u001D91EE11\u001D92T5OX4wpd5QPymkC3U/aJZQrishzxCOeJUi/grI7GxIo=
@@ -27,6 +29,8 @@ def format_code(code):
     return code
 
 def code_validity(code):
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
     numb_attempts = 0
     while True:
         if numb_attempts >= 12:
@@ -37,7 +41,7 @@ def code_validity(code):
             if not status_load:
                 status, token = auth()
             url = "https://markirovka.crpt.ru/api/v3/true-api/cises/check"
-            print("VALIDITY_CODE: ", code)
+            print("\nVALIDITY_CODE: \n\t", code)
             request = {
                 "codes":[f"{code}"]
             }
@@ -45,17 +49,16 @@ def code_validity(code):
                 "accept": "application/json",
                 "Authorization": f"Bearer {token}",
             }
+            print("\n* * * VALIDITY * * * ")
             send = requests.post(url, headers=header, json=request, verify=False)
-            print("Status Code: ", send.status_code, "\n")
-            print("VALIDITY")
-            print("Response: ", send.content.decode(), "\n")
+            print("Status Code: ", send.status_code, "\tResponse: ", send.content.decode())
             response_result = json.loads(send.content.decode())['result']
 
             if response_result is True:
-                print("✅ КИ валиден | ", response_result)
+                print("✅ \tКИ валиден | ", response_result)
                 return True, 'КИ валиден'
             else:
-                print("⚠️ КИ не валиден | ", response_result)
+                print("⚠️ \tКИ не валиден | ", response_result)
                 return False, 'КИ не валиден'
         except Exception:
             import sys
